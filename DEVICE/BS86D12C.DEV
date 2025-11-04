@@ -1,0 +1,268 @@
+ 
+
+
+;;;;;/******************************************Disclaimer****************************************************//**
+;;;;;*The material offered by Holtek Semiconductor Inc. (including its subsidiaries, hereinafter 
+;;;;;*collectively referred to as “HOLTEK”), including but not limited to technical documentation and 
+;;;;;*code, is provided “as is”, only for your reference, and may be superseded by updates. HOLTEK 
+;;;;;*reserves the right to revise the offered material at any time without prior notice. You shall use the 
+;;;;;*offered material at your own risk. HOLTEK disclaims any expressed, implied, or statutory warranties, 
+;;;;;*including but not limited to accuracy, suitability for commercialization, satisfactory quality, 
+;;;;;*specifications, characteristics, functions, fitness for a particular purpose, and non-infringement of 
+;;;;;*any third-party’s rights. HOLTEK disclaims all liability arising from the offered material and its 
+;;;;;*application. In addition, HOLTEK does not recommend the use of HOLTEK’s products where there is 
+;;;;;*a risk of personal hazard due to malfunction or other reasons. HOLTEK hereby declares that it does 
+;;;;;*not authorize the use of these products in life-saving, life-sustaining, or safety-critical components. 
+;;;;;*Any use of HOLTEK’s products in life-saving, sustaining, or safety applications is entirely at your risk, 
+;;;;;*and you agree to defend, indemnify, and hold HOLTEK harmless from any damages, claims, suits, or 
+;;;;;*expenses resulting from such use.
+;;;;;************************************************************************************************************/
+
+;;;;;/***********************************Intellectual Property*************************************************//**
+;;;;;*The offered material, including but not limited to the content, data, examples, materials, graphs, 
+;;;;;*and trademarks, is the intellectual property of HOLTEK (and its licensors, where applicable) and is 
+;;;;;*protected by copyright law and other intellectual property laws.
+;;;;;************************************************************************************************************/
+
+
+
+
+;;;;;/*********************************************************************************************************//**
+;;;;;* file    BS86D12C.dev
+;;;;;* brief   BS86D12C Asm/C code Define
+;;;;;* version V1.00
+;;;;;* date    11/24/2020
+;;;;;* author  BSI
+;;;;;*************************************************************************************************************
+;;;;;*
+;;;;;* <h2><center>Copyright (C) 2020 Best Solution electronics Inc. All rights reserved</center></h2>
+;;;;;*
+;;;;;************************************************************************************************************/
+
+#define V4G0 0
+#define V4G5 5
+#define TOUCH_HW_VERSION    V4G0
+#define TKeyAmount  12
+
+;;;;;/*
+                #include "BS86D12C.INC"
+                #include "..\DEVICE\Holtek.mac"
+                
+                ifndef  TouchKeyAmount
+                        #define TouchKeyAmount  TKeyAmount
+                endif
+                
+                
+                ;//============================================================
+                ;//RAM
+                #define RAMAmount       4
+                #define RAMbank0Address 080H
+                #define RAMbank1Address 080H
+                #define RAMbank2Address 080H
+                #define RAMbank3Address 080H
+                
+                ;//============================================================
+                ;//SMOD
+                #define HL_CLK         0
+                #define IDLE_EN        1
+                
+                ;//============================================================
+                ;//HIRC
+                #define HIRC_S0        4
+                #define HIRC_S1        5
+
+                #define HIRC_B0        CTRL.HIRC_S0
+                #define HIRC_B1        CTRL.HIRC_S1
+
+                ;============================================================
+                #define MP1             MP1L
+                #define BP              MP1H
+
+                ;//============================================================
+                ;//Interrupt
+                #define EXT_INT_ADDR    04H
+                #define TKM_INT_ADDR    08H
+                #define TB0_INT_ADDR    0CH
+                #define CTM0P_INT_ADDR  10H
+                #define CTM0A_INT_ADDR  14H
+                #define PTM0P_INT_ADDR  18H
+                #define PTM0A_INT_ADDR  1CH
+                #define SIM_INT_ADDR    20H
+                #define EE_INT_ADDR     24H
+                #define UART0_INT_ADDR  28H
+                #define LVD_INT_ADDR    2CH
+                #define ADC_INT_ADDR    30H
+                #define TB1_INT_ADDR    34H
+                #define UART1_INT_ADDR  38H
+                #define MF_INT_ADDR     3CH
+                
+                ;============================================================
+                ;WDTC
+                #define WDT_ENABLE     00001010B<<3
+                #define WDT_8MS        WDT_ENABLE|0 ;   8 MS
+                #define WDT_32MS       WDT_ENABLE|1 ;  32 MS
+                #define WDT_128MS      WDT_ENABLE|2 ; 128 MS
+                #define WDT_512MS      WDT_ENABLE|3 ; 512 MS (default)
+                #define WDT_1S         WDT_ENABLE|4 ;1024 MS
+                #define WDT_2S         WDT_ENABLE|5 ;2048 MS
+                #define WDT_4S         WDT_ENABLE|6 ;4096 MS
+                #define WDT_8S         WDT_ENABLE|7 ;8192 MS
+
+                ;============================================================
+                ;;;;;//IIC
+                #define IIC_INT_ADDR            SIM_INT_ADDR
+                #define IIC_INT_ENABLE          IICE
+                #define IIC_INT_CTRL            IICC0
+                #define IIC_INT_FLG             IICF
+                #define IIC_ADDR_MATCH_WAKEUP   IAMWU
+                #define IIC_ADDR                IICA
+                #define IIC_DATA                IICD
+                #define IIC_TimeOutCtrl         IICTOC
+                #define IIC_TimeOut             IICTOF
+                #define IIC_TimeOut_ENABLE      IICTOEN
+                #define IIC_BUSY_FLAG           HBB
+
+                ;===IIC SDA===
+                IIC_SDA_ON_PD7  MACRO
+                                CLR     SDAPS0
+                                CLR     SDAPS1
+                                ENDM
+                IIC_SDA_ON_PA3  MACRO
+                                SET     SDAPS0
+                                CLR     SDAPS1
+                                ENDM
+                IIC_SDA_ON_PC3  MACRO
+                                CLR     SDAPS0
+                                SET     SDAPS1
+                                ENDM
+                IIC_SDA_ON_PC7  MACRO
+                                SET     SDAPS0
+                                SET     SDAPS1
+                                ENDM
+                                
+                ;===IIC SCL===
+                IIC_SCL_ON_PD6  MACRO
+                                CLR     SCLPS0
+                                CLR     SCLPS1
+                                ENDM
+                IIC_SCL_ON_PA1  MACRO
+                                SET     SCLPS0
+                                CLR     SCLPS1
+                                ENDM
+                IIC_SCL_ON_PC2  MACRO
+                                CLR     SCLPS0
+                                SET     SCLPS1
+                                ENDM
+                IIC_SCL_ON_PC6  MACRO
+                                SET     SCLPS0
+                                SET     SCLPS1
+                                ENDM
+                
+                
+                
+                
+                
+                 ;============================================================
+                ;;;;;//time base        ;;source used
+                #define TouchTimeBase_ClockSource   PSCR
+                #define TouchTimeBase_Control       TBC
+                #define TouchTimeBase_INT_Enable    TB0E
+                #define TouchTimeBase_Enable        TB0ON
+        
+                ;============================================================
+                #define TouchKey_INT_Enable         TKME
+                #define TouchKey_INT_Flag           TKMF
+                
+                ;============================================================
+                ;;;;;//MCU INIT
+                MCU_HARDWARE_INITIAL    MACRO
+
+                                ;;;;;//-SET WDT
+                                MOV     A,WDT_128MS
+                                MOV     WDTC,A
+                                SET_SYS_CLOCK
+                                ENDM
+
+
+                RELOAD_SYS_CLOCK MACRO
+                                ;;;;;//-SET SYSTEM CLOCK
+                                SET_SYS_CLOCK
+                                ENDM
+
+
+                SET_SYS_CLOCK   MACRO
+                                ;;;;;//-SET SYSTEM CLOCK
+                        if SystemClock==0   ;8M
+                                CLR     HIRC_B0
+                                CLR     HIRC_B1
+                        endif
+                        if SystemClock==1   ;12M
+                                SET     HIRC_B0
+                                CLR     HIRC_B1
+                        endif
+                        if SystemClock==2   ;16M
+                                CLR     HIRC_B0
+                                SET     HIRC_B1
+                        endif
+                        
+                                ;//SELECT fSUB
+                                CLR     CKS2
+                                CLR     CKS1
+                                CLR     CKS0
+                                SET     IDLEN
+                                SET     HLCLK
+                                
+                                ENDM
+                
+                ;============================================================
+                ;;;;;//CLRAT RAM
+                CLEAR_RAM_DATA  MACRO
+                                MOV   A,RAMAmount
+                                MOV   [RAMbank0Address],A
+                                
+                                
+                        CLR_RAM_LOOP:
+                                DEC   [RAMbank0Address]
+                                MOV   A,[RAMbank0Address]
+                                MOV   BP,A
+                                
+                        if RAMbank0Address == 080h
+                                MOV   A,80H
+                        else
+                                MOV     A,RAMbank0Address
+                                SZ      BP
+                                MOV   A,80H
+                        endif
+                                MOV   MP1,A
+                                CLR   IAR1
+                                SIZA    MP1
+                                JMP     $-3
+                                SZ    [RAMbank0Address]
+                                JMP   CLR_RAM_LOOP
+                                ENDM
+;;;;;*/
+
+
+;;;;;/*
+ifdef _INCLUDE_C_
+;;;;;*/
+        #include "BS86D12C.H"
+        
+        #ifndef  TouchKeyAmount
+                #define TouchKeyAmount  TKeyAmount
+        #endif
+        
+;;;;;/*
+endif
+;;;;;*/
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,543 @@
+ 
+
+
+
+ ;;;;;/******************************************Disclaimer****************************************************//**
+;;;;;*The material offered by Holtek Semiconductor Inc. (including its subsidiaries, hereinafter 
+;;;;;*collectively referred to as “HOLTEK”), including but not limited to technical documentation and 
+;;;;;*code, is provided “as is”, only for your reference, and may be superseded by updates. HOLTEK 
+;;;;;*reserves the right to revise the offered material at any time without prior notice. You shall use the 
+;;;;;*offered material at your own risk. HOLTEK disclaims any expressed, implied, or statutory warranties, 
+;;;;;*including but not limited to accuracy, suitability for commercialization, satisfactory quality, 
+;;;;;*specifications, characteristics, functions, fitness for a particular purpose, and non-infringement of 
+;;;;;*any third-party’s rights. HOLTEK disclaims all liability arising from the offered material and its 
+;;;;;*application. In addition, HOLTEK does not recommend the use of HOLTEK’s products where there is 
+;;;;;*a risk of personal hazard due to malfunction or other reasons. HOLTEK hereby declares that it does 
+;;;;;*not authorize the use of these products in life-saving, life-sustaining, or safety-critical components. 
+;;;;;*Any use of HOLTEK’s products in life-saving, sustaining, or safety applications is entirely at your risk, 
+;;;;;*and you agree to defend, indemnify, and hold HOLTEK harmless from any damages, claims, suits, or 
+;;;;;*expenses resulting from such use.
+;;;;;************************************************************************************************************/
+
+;;;;;/***********************************Intellectual Property*************************************************//**
+;;;;;*The offered material, including but not limited to the content, data, examples, materials, graphs, 
+;;;;;*and trademarks, is the intellectual property of HOLTEK (and its licensors, where applicable) and is 
+;;;;;*protected by copyright law and other intellectual property laws.
+;;;;;************************************************************************************************************/
+
+
+
+
+;;;;;/*********************************************************************************************************//**
+;;;;;// * @file    SYSTEM_DEFINE.ext
+;;;;;// * @version V1.00
+;;;;;// * @date    11/13/2020
+;;;;;// * @brief   The header file of the SYSTEM_DEFINE library.
+;;;;;// *************************************************************************************************************
+;;;;;// * @attention
+;;;;;// * <h2><center>Copyright (C) Best Solution Inc. All rights reserved</center></h2>
+;;;;;// ************************************************************************************************************/
+
+;;;;;/* ---------------------------------------------------------------------- */
+;;;;;/* C exported function,register                                           */
+;;;;;/* ---------------------------------------------------------------------- */
+;;;;;/*
+ifdef _INCLUDE_C_
+;;;;;*/
+;;;;;//---------------------------------------------------------------
+#ifndef SYSTEM_DEFINE_DEF
+
+/*******************<CommandsForWorkshop>************************/
+#define WORK_SHOP_COMMAND     1
+#define WORK_SHOP_SAMPLE      0
+#define ___EN                 1
+#define ___CH                 0
+#define ___CH_S               0
+
+#if(WORK_SHOP_COMMAND)
+  //$int
+  #if(___EN)
+    //$name = Interrupt_Funtion
+    //$input1 = Address,Title
+    //$output1 = no
+    //$directions = Interrupt the function instruction, fill in the interrupt Address and Title, write the interrupt execution program between Interrupt_Funtion(Address,Title) and Function_End
+
+    #define Interrupt_Funtion(Address,Title)         void __attribute((interrupt(Address))) Title(void){         
+    #define   Function_End                            }
+    
+    #if(BLOCK_CODE)
+Interrupt_Funtion(4,Interrupt_Extemal)
+
+  Function_End
+    #endif
+
+    #if(WORK_SHOP_SAMPLE)
+      Interrupt_Funtion(4,Interrupt_Extemal)
+      Function_End
+    #endif
+
+  #endif
+
+  #if(___CH)
+    //$name = 中斷函數
+    //$input1 = 中斷地址,中斷函數名稱
+    //$output1 = 無
+    //$directions = 中斷函數指令，填寫中斷地址以及名稱后，在Interrupt_Funtion(Address,Title)和Function_End之間寫入中斷執行的程序
+
+    #define Interrupt_Funtion(Address,Title)         void __attribute((interrupt(Address))) Title(void){         
+    #define   Function_End                            }
+    
+    #if(BLOCK_CODE)
+Interrupt_Funtion(4,Interrupt_Extemal)
+
+  Function_End
+    #endif
+
+    #if(WORK_SHOP_SAMPLE)
+      Interrupt_Funtion(4,Interrupt_Extemal)
+      Function_End
+    #endif
+
+  #endif
+
+    #if(___CH_S)
+    //$name = 中断函数
+    //$input1 = 中断地址,中断函数名称
+    //$output1 = 无
+    //$directions = 中断函数指令，填写中断地址以及名称后，在Interrupt_Funtion(Address,Title)和Function_End之间写入中断执行的程序
+
+    #define Interrupt_Funtion(Address,Title)         void __attribute((interrupt(Address))) Title(void){         
+    #define   Function_End                            }
+    
+    #if(BLOCK_CODE)
+Interrupt_Funtion(4,Interrupt_Extemal)
+
+  Function_End
+    #endif
+
+    #if(WORK_SHOP_SAMPLE)
+      Interrupt_Funtion(4,Interrupt_Extemal)
+      Function_End
+    #endif
+
+  #endif
+
+#endif  
+
+
+#if(WORK_SHOP_COMMAND)
+  //$system
+  #if(___EN)
+    //$name = For loop
+    //$input1 = The content of the loop is executed n times
+    //$output1 = no
+    //$directions= For the following... to Next content loop execution n times
+    
+    #define   For(n)               int i;\
+                                    for(i=0;i<n;i++){
+    #define   Next                 }
+    
+     #if(BLOCK_CODE)
+      For(Loop N times)
+        //Execute n times
+
+
+      Next  //If the loop is not over, execute For, and continue to go down when it ends
+    #endif
+
+    #if(WORK_SHOP_SAMPLE)
+For(Loop N times)
+//Execute n times,The variable i will increase from 0 to n
+      
+  Next  //If the loop is not over, execute For, and continue to go down when it ends
+    #endif
+    
+  #endif
+  
+  #if(___CH)
+    //$name = For循環
+    //$input1 = 循環內容執行n次
+    //$output1 = 無
+    //$directions= 以下至Next的內容循環執行 n 次
+
+        #define   For(n)               int i;\
+                                    for(i=0;i<n;i++){
+    #define   Next                 }
+    
+
+    #if(BLOCK_CODE)
+For(   )
+//執行n次內容,變量i將從0依次增加到n
+
+
+  Next  //若循環未結束，則執行For，結束則繼續往下走
+    #endif
+
+
+
+    #if(WORK_SHOP_SAMPLE)
+      For(循環n次)
+        //執行n次內容
+      Next  //若循環未結束，則執行For，結束則繼續往下走
+    #endif
+  #endif
+
+      #if(___CH_S)
+      //$name = For循环
+      //$input1 = 循环内容执行n次
+      //$output1 = 无
+      //$directions= 以下至Next的内容循环执行 n 次
+
+      #define   For(n)               int i;\
+                                    for(i=0;i&lt;n;i++){
+      #define   Next                 }
+
+      #if(BLOCK_CODE)
+For(   )    
+//执行n次内容,变量i将从0依次增加到n
+
+
+  Next  //若循环未结束，则执行For，结束则继续往下走
+      #endif
+
+
+      #if(WORK_SHOP_SAMPLE)
+      For(循环n次)
+
+      //执行n次内容
+      Next  //若循环未结束，则执行For，结束则继续往下走
+      #endif
+      #endif
+
+#endif
+
+
+#if(WORK_SHOP_COMMAND)
+  //$system
+  #if(___EN)
+    //$name = While condition
+    //$input1 = condition
+    //$output1 = no
+    //$directions = the following... to Wend content loop execution When the condition is satisfied.Stop the loop until the condition isn't satisfied and keep going
+    
+    #define   While(__text)          while(__text){
+      
+    #define   Wend                    }
+
+    #if(BLOCK_CODE)
+While(   )
+//If the condition is satisfied, execute the content, otherwise  continue to go down
+
+
+  Wend  //Return While to continue the loop
+    #endif
+
+    #if(WORK_SHOP_SAMPLE)
+      While(Judgment or Boolean)
+        //If the condition is satisfied, execute the content, otherwise  continue to go down
+      Wend  //Return While to continue the loop
+    #endif
+
+  #endif
+    
+  #if(___CH)
+    //$name =While 條件
+    //$input1 =條件
+    //$output1 = 無
+    //$directions = 當條件滿足時循環執行以下至Wend的內容，直到條件不滿足時結束循環後繼續往下走
+
+    #define   While(__text)          while(__text){
+      
+    #define   Wend                    }
+
+    #if(BLOCK_CODE)
+While(   )
+//條件滿足執行內容，否則繼續往下走
+
+
+  Wend  //返回While繼續循環
+#endif
+
+    #if(WORK_SHOP_SAMPLE)
+      While(判斷式或者布林)
+        //條件滿足執行內容，否則繼續往下走
+      Wend  //返回While繼續循環
+    #endif
+  #endif
+
+    #if(___CH_S)
+    //$name =While 条件
+    //$input1 =条件
+    //$output1 = 无
+    //$directions = 当条件满足时循环执行以下至Wend的内容，直到条件不满足时结束循环后继续往下走
+
+    #define   While(__text)          while(__text){
+    #define   Wend                    }
+
+    #if(BLOCK_CODE)
+While(   )
+//条件满足执行内容，否则继续往下走
+
+
+
+Wend  //返回While继续循环
+#endif
+
+    #if(WORK_SHOP_SAMPLE)
+    While(判断式或者布林)
+
+    //条件满足执行内容，否则继续往下走
+    Wend  //返回While继续循环
+    #endif
+    #endif
+
+#endif
+
+
+
+#if(WORK_SHOP_COMMAND)
+  //$system
+  #if(___EN)
+    //$name = if condition
+    //$input1 = condition
+    //$output1 = no
+    //$directions = if
+
+    #define   If(__text)             if(__text)
+    #define   Then                  {
+    #define   Endif                 }
+
+     #if(BLOCK_CODE)
+If(    )
+Then
+
+  Endif
+    #endif
+
+    #if(WORK_SHOP_SAMPLE)
+     : If(condition)
+    ↓:    Then
+    ———————— The procedure that is executed when the condition is true ——————————————
+    ↑:    Endif
+    #endif
+
+
+
+    //$name =ElseIf condition
+    //$input2 = condition
+    //$output2 = no
+    //$directions = Else if
+
+    #define   ElseIf(__text)         else\
+                                     if(__text)
+    #define   Then                  {
+    #define   EndElseIf             }
+
+     #if(BLOCK_CODE)
+ElseIf(     )
+Then
+
+  EndElseIf
+    #endif
+
+    #if(WORK_SHOP_SAMPLE)
+    Otherwise if: ElseIf(condition)
+    ↓:    Then
+    ———————— The procedure that is executed when the condition is true ——————————————
+    ↑:    Endif
+    #endif
+
+
+    
+    //$name = Else
+    //$input3 = no
+    //$output3 = no
+    //$directions = Else
+    #define   Else                  else
+    #define   Then                  {
+    #define   Endif                 }
+
+#if(BLOCK_CODE)
+Else
+Then
+
+  Endif
+    #endif
+
+    #if(WORK_SHOP_SAMPLE)
+    Otherwise: Else
+    ↓:    Then
+    ———————— The procedure performed when all else fails ——————————————
+    ↑:    Endif
+    #endif
+
+
+  #endif
+    
+  #if(___CH)
+    //$name = if 條件
+    //$input1 = 條件
+    //$output1 = 無
+    //$directions = 如果
+
+    #define   If(__text)             if(__text)
+    #define   Then                  {
+    #define   Endif                 }
+
+     #if(BLOCK_CODE)
+If(    )
+Then
+
+  Endif
+    #endif
+
+    #if(WORK_SHOP_SAMPLE)
+    如果: If(條件)
+    ↓:    Then
+    ————————條件成立時執行的程序——————————————
+    ↑:    Endif
+    #endif
+
+
+    //$name =ElseIf 條件
+    //$input2 = 條件
+    //$output2 = 無
+    //$directions = 否則如果
+
+    #define   ElseIf(__text)         else\
+                                     if(__text)
+    #define   Then                  {
+    #define   EndElseIf             }
+
+     #if(BLOCK_CODE)
+ElseIf(     )
+Then
+
+  EndElseIf
+    #endif
+
+    #if(WORK_SHOP_SAMPLE)
+    否則如果: ElseIf(條件)
+    ↓:    Then
+    ————————條件成立時執行的程序——————————————
+    ↑:    Endif
+    #endif
+
+
+    //$name = 否則
+    //$input3 = 無
+    //$output3 = 無
+    //$directions = 否則
+
+    #define   Else                  else
+    #define   Then                  {
+    #define   Endif                 }
+
+#if(BLOCK_CODE)
+Else
+Then
+
+  Endif
+    #endif
+
+    #if(WORK_SHOP_SAMPLE)
+    否則:  Else
+    ↓:    Then
+    ————————其他條件都不成立時執行的程序——————————————
+    ↑:    Endif
+    #endif
+
+  #endif
+
+  #if(___CH_S)
+    //$name = if 条件
+    //$input1 = 条件
+    //$output1 = 无
+    //$directions = 如果
+
+    #define   If(__text)             if(__text)
+    #define   Then                  {
+    #define   Endif                 }
+
+     #if(BLOCK_CODE)
+If(    )
+Then
+
+  Endif
+    #endif
+
+    #if(WORK_SHOP_SAMPLE)
+    如果: If(条件)
+    ↓:    Then
+    ————————条件成立时执行的程序——————————————
+    ↑:    Endif
+    #endif
+
+
+    //$name =ElseIf 条件
+    //$input2 = 条件
+    //$output2 = 无
+    //$directions = 否则如果
+
+    #define   ElseIf(__text)         else\
+                                     if(__text)
+    #define   Then                  {
+    #define   EndElseIf             }
+
+     #if(BLOCK_CODE)
+ElseIf(     )
+Then
+
+  EndElseIf
+    #endif
+
+    #if(WORK_SHOP_SAMPLE)
+    否则如果: ElseIf(条件)
+    ↓:    Then
+    ————————条件成立时执行的程序——————————————
+    ↑:    Endif
+    #endif
+
+
+    //$name = 否则
+    //$input3 = 无
+    //$output3 = 无
+    //$directions = 否则
+
+    #define   Else                  else
+    #define   Then                  {
+    #define   Endif                 }
+
+#if(BLOCK_CODE)
+Else
+Then
+
+  Endif
+    #endif
+
+    #if(WORK_SHOP_SAMPLE)
+    否则:  Else
+    ↓:    Then
+    ————————其他条件都不成立时执行的程序——————————————
+    ↑:    Endif
+    #endif
+
+  #endif
+
+#endif
+
+
+
+
+
+
+/*******************<\CommandsForWorkshop>************************/
+    
+    
+
+#endif
+
+;;;;;//--------------------------------------------------------------------------
+;;;;;/*
+endif
+;;;;;*/

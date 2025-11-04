@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<tkproject>
+    <tkwsinfo>
+        <version>4.1.2</version>
+    </tkwsinfo>
+    <project>
+        <mcu>BS86D12C</mcu>
+        <package>28 SOP-A</package>
+        <projecttype>Touch</projecttype>
+        <path>D:\Data_User\Holtek\BS86D12C_Tusay</path>
+        <name>BS86D12C_Tusay</name>
+        <libconfig>
+            <component>
+                <lib>MAIN_PROGRAM</lib>
+                <files>
+                    <file name="MAIN_PROGRAM.EXT" />
+                    <file name="MAIN_PROGRAM.INC" />
+                    <file name="MAIN_PROGRAM_V300.asm" />
+                </files>
+            </component>
+        </libconfig>
+    </project>
+    <mcuconfig>
+        <component>
+            <rect x="466" y="75" width="160" hight="40" />
+            <lib>BS86D12C_CTOUCH</lib>
+            <attrib name="DebounceTimes">2</attrib>
+            <attrib name="MaximumKeyHoldTime">4S</attrib>
+            <attrib name="__KEY10_EN">False</attrib>
+            <attrib name="__KEY11_EN">False</attrib>
+            <attrib name="__KEY12_EN">False</attrib>
+            <attrib name="__KEY1_EN">True</attrib>
+            <attrib name="__KEY2_EN">True</attrib>
+            <attrib name="__KEY3_EN">True</attrib>
+            <attrib name="__KEY4_EN">True</attrib>
+            <attrib name="__KEY5_EN">True</attrib>
+            <attrib name="__KEY6_EN">True</attrib>
+            <attrib name="__KEY7_EN">True</attrib>
+            <attrib name="__KEY8_EN">True</attrib>
+            <attrib name="__KEY9_EN">False</attrib>
+            <files>
+                <file name="BS86D12C_CTOUCH.EXT" />
+                <file name="BS86D12C_CTOUCH.INC" />
+                <file name="BS86D12C_CTOUCH.INI" />
+                <file name="BS86D12C_CTOUCH_EN.pdf" />
+                <file name="BS86D12C_CTOUCH_SIM.pdf" />
+                <file name="BS86D12C_CTOUCH_TRA.pdf" />
+                <file name="BS86D12C_CTOUCH_V512.OBJ" />
+                <file name="Language.ini" />
+                <file name="Lib.ico" />
+                <file name="Touch.png" />
+            </files>
+            <child>
+                <perip_pin index="0" support_pin="1">
+                    <match_pin>0</match_pin>
+                </perip_pin>
+                <perip_pin index="1" support_pin="1">
+                    <match_pin>1</match_pin>
+                </perip_pin>
+                <perip_pin index="2" support_pin="1">
+                    <match_pin>2</match_pin>
+                </perip_pin>
+                <perip_pin index="3" support_pin="1">
+                    <match_pin>3</match_pin>
+                </perip_pin>
+                <perip_pin index="4" support_pin="1">
+                    <match_pin>4</match_pin>
+                </perip_pin>
+                <perip_pin index="5" support_pin="1">
+                    <match_pin>5</match_pin>
+                </perip_pin>
+                <perip_pin index="6" support_pin="1">
+                    <match_pin>6</match_pin>
+                </perip_pin>
+                <perip_pin index="7" support_pin="1">
+                    <match_pin>7</match_pin>
+                </perip_pin>
+                <perip_pin index="8" support_pin="1">
+                    <match_pin>-1</match_pin>
+                </perip_pin>
+                <perip_pin index="9" support_pin="1">
+                    <match_pin>-1</match_pin>
+                </perip_pin>
+                <perip_pin index="10" support_pin="1">
+                    <match_pin>-1</match_pin>
+                </perip_pin>
+                <perip_pin index="11" support_pin="1">
+                    <match_pin>-1</match_pin>
+                </perip_pin>
+            </child>
+        </component>
+        <component>
+            <rect x="631" y="75" width="160" hight="40" />
+            <lib>USER_PROGRAM_C</lib>
+            <files>
+                <file name="Language.ini" />
+                <file name="Lib.ico" />
+                <file name="USER_PROGRAM_C.C" />
+                <file name="USER_PROGRAM_C.EXT" />
+                <file name="USER_PROGRAM_C.INC" />
+                <file name="USER_PROGRAM_C_EN.pdf" />
+                <file name="USER_PROGRAM_C_SIM.pdf" />
+                <file name="USER_PROGRAM_C_TRA.pdf" />
+            </files>
+            <child />
+        </component>
+    </mcuconfig>
+    <usrwnd>
+        <download flag="0" />
+        <voltage flag="5" />
+    </usrwnd>
+</tkproject>

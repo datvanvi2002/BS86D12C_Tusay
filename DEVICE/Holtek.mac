@@ -1,0 +1,190 @@
+
+ifndef HOLTEK_MAC
+#define HOLTEK_MAC
+
+;.............................
+_SETB   MACRO REG,BIT
+IF ((OFFSET REG)>>8) >0
+        LSET    REG.BIT
+ELSE
+        SET    REG.BIT
+ENDIF
+        ENDM
+_CLRB   MACRO REG,BIT
+IF ((OFFSET REG)>>8) >0
+        LCLR    REG.BIT
+ELSE
+        CLR    REG.BIT
+ENDIF
+        ENDM
+;.............................
+_SET    MACRO REG
+IF ((OFFSET REG)>>8) >0
+        LSET    REG
+ELSE
+        SET    REG
+ENDIF
+        ENDM
+_CLR    MACRO REG
+IF ((OFFSET REG)>>8) >0
+        LCLR    REG
+ELSE
+        CLR    REG
+ENDIF
+        ENDM
+;.............................
+_SZ     MACRO REG,BIT
+IF ((OFFSET REG)>>8) >0
+        LSZ    REG.BIT
+ELSE
+        SZ     REG.BIT
+ENDIF
+        ENDM
+
+_SNZ    MACRO REG,BIT
+IF ((OFFSET REG)>>8) >0
+        LSNZ   REG.BIT
+ELSE
+        SNZ    REG.BIT
+ENDIF
+        ENDM
+;.............................
+_MOVAR  MACRO REG
+IF ((OFFSET REG)>>8) >0
+        LMOV    A,REG
+ELSE
+        MOV    A,REG
+ENDIF
+        ENDM
+
+_MOVRA  MACRO REG
+IF ((OFFSET REG)>>8) >0
+        LMOV    REG,A
+ELSE
+        MOV    REG,A
+ENDIF
+        ENDM
+
+_SWAPA  MACRO REG
+IF ((OFFSET REG)>>8) >0
+        LSWAPA   REG
+ELSE
+        SWAPA    REG
+ENDIF
+        ENDM
+;.............................
+_ADDM   MACRO   REG
+IF ((OFFSET REG)>>8) >0
+        LADDM   A,REG
+ELSE
+        ADDM    A,REG
+ENDIF
+        ENDM
+;.............................
+_XORM   MACRO   REG
+IF ((OFFSET REG)>>8) >0
+        LXORM   A,REG
+ELSE
+        XORM    A,REG
+ENDIF
+        ENDM
+
+_ORM    MACRO   REG
+IF ((OFFSET REG)>>8) >0
+        LORM    A,REG
+ELSE
+        ORM     A,REG
+ENDIF
+        ENDM
+
+_ANDM   MACRO   REG
+IF ((OFFSET REG)>>8) >0
+        LANDM   A,REG
+ELSE
+        ANDM    A,REG
+ENDIF
+        ENDM
+
+
+_RL     MACRO   REG
+IF ((OFFSET REG)>>8) >0
+        LRL     REG
+ELSE
+        RL      REG
+ENDIF
+        ENDM
+
+_RR     MACRO   REG
+IF ((OFFSET REG)>>8) >0
+        LRR     REG
+ELSE
+        RR      REG
+ENDIF
+        ENDM
+
+_RLA    MACRO   REG
+IF ((OFFSET REG)>>8) >0
+        LRLA    REG
+ELSE
+        RLA     REG
+ENDIF
+        ENDM
+
+_RRA   MACRO   REG
+IF ((OFFSET REG)>>8) >0
+        LRRA    REG
+ELSE
+        RRA     REG
+ENDIF
+        ENDM
+
+_RLC    MACRO   REG
+IF ((OFFSET REG)>>8) >0
+        LRLC    REG
+ELSE
+        RLC     REG
+ENDIF
+        ENDM
+
+_RRC    MACRO   REG
+IF ((OFFSET REG)>>8) >0
+        LRRC    REG
+ELSE
+        RRC     REG
+ENDIF
+        ENDM
+
+_RLCA   MACRO   REG
+IF ((OFFSET REG)>>8) >0
+        LRLCA   REG
+ELSE
+        RLCA    REG
+ENDIF
+        ENDM
+
+_RRCA   MACRO   REG
+IF ((OFFSET REG)>>8) >0
+        LRRCA   REG
+ELSE
+        RRCA    REG
+ENDIF
+        ENDM
+
+_DECA   MACRO   REG
+IF ((OFFSET REG)>>8) >0
+        LDECA   REG
+ELSE
+        DECA    REG
+ENDIF
+        ENDM
+
+
+_INCA   MACRO   REG
+IF ((OFFSET REG)>>8) >0
+        LINCA   REG
+ELSE
+        INCA    REG
+ENDIF
+        ENDM
+        
+endif

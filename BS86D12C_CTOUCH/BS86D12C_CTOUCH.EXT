@@ -1,0 +1,1389 @@
+ 
+
+
+ ;;;;;/******************************************Disclaimer****************************************************//**
+;;;;;*The material offered by Holtek Semiconductor Inc. (including its subsidiaries, hereinafter 
+;;;;;*collectively referred to as “HOLTEK”), including but not limited to technical documentation and 
+;;;;;*code, is provided “as is”, only for your reference, and may be superseded by updates. HOLTEK 
+;;;;;*reserves the right to revise the offered material at any time without prior notice. You shall use the 
+;;;;;*offered material at your own risk. HOLTEK disclaims any expressed, implied, or statutory warranties, 
+;;;;;*including but not limited to accuracy, suitability for commercialization, satisfactory quality, 
+;;;;;*specifications, characteristics, functions, fitness for a particular purpose, and non-infringement of 
+;;;;;*any third-party’s rights. HOLTEK disclaims all liability arising from the offered material and its 
+;;;;;*application. In addition, HOLTEK does not recommend the use of HOLTEK’s products where there is 
+;;;;;*a risk of personal hazard due to malfunction or other reasons. HOLTEK hereby declares that it does 
+;;;;;*not authorize the use of these products in life-saving, life-sustaining, or safety-critical components. 
+;;;;;*Any use of HOLTEK’s products in life-saving, sustaining, or safety applications is entirely at your risk, 
+;;;;;*and you agree to defend, indemnify, and hold HOLTEK harmless from any damages, claims, suits, or 
+;;;;;*expenses resulting from such use.
+;;;;;************************************************************************************************************/
+
+;;;;;/***********************************Intellectual Property*************************************************//**
+;;;;;*The offered material, including but not limited to the content, data, examples, materials, graphs, 
+;;;;;*and trademarks, is the intellectual property of HOLTEK (and its licensors, where applicable) and is 
+;;;;;*protected by copyright law and other intellectual property laws.
+;;;;;************************************************************************************************************/
+
+
+
+
+;;;;;/*********************************************************************************************************//**
+;;;;;// * @file    BS86D12C_CTOUCH.ext
+;;;;;// * @version V1.00
+;;;;;// * @date    11/13/2020
+;;;;;// * @brief   The header file of the BS86D12C_CTOUCH library.
+;;;;;// *************************************************************************************************************
+;;;;;// * @attention
+;;;;;// * <h2><center>Copyright (C) Best Solution Inc. All rights reserved</center></h2>
+;;;;;// ************************************************************************************************************/
+
+;;;;;///* Includes ------------------------------------------------------------------------------------------------*/
+;;;;;///* ==================================================================================================================================================*/
+
+;;;;;///** @addtogroup BS86D12C_CTOUCH
+;;;;;//  * @{
+;;;;;//  */
+;;;;;///* ---------------------------------------------------------------------------------------------------------*/
+;;;;;///* Exported constants --------------------------------------------------------------------------------------*/
+;;;;;///* ---------------------------------------------------------------------------------------------------------*/
+;;;;;///** @defgroup CALCULATE_POSITION_exported_constants BS86D12C_CTOUCH exported constants
+;;;;;//  * @{
+;;;;;//  */
+;;;;;///**
+;;;;;//  * @}
+;;;;;//  */
+;;;;;///* ---------------------------------------------------------------------------------------------------------*/
+
+;;;;;///* ---------------------------------------------------------------------------------------------------------*/
+;;;;;///* Exported functions --------------------------------------------------------------------------------------*/
+;;;;;///* ---------------------------------------------------------------------------------------------------------*/
+;;;;;///** @defgroup  CALCULATE_POSITION_exported_functions BS86D12C_CTOUCH exported functions
+;;;;;//  * @{
+;;;;;//  */
+;;;;;//
+;;;;;///* ---------------------------------------------------------------------- */
+;;;;;///* assembly exported function,register                                    */
+;;;;;///* ---------------------------------------------------------------------- */
+
+;;;;;///************************************************/
+;;;;;///***** LIBRARY EXTERNAL REFERENCE FOR ASM CODE   */
+;;;;;///*************************************************/
+;;;;;/*-SUBROUTIN
+ifndef BS86D12C_CTOUCH_DEF
+    EXTERN  _BS86D12C_CTOUCH_INITIAL        :NEAR   ;;;;;//library initial
+    EXTERN  _BS86D12C_CTOUCH                :NEAR   ;;;;;//scan all touch input
+    EXTERN  _LIBRARY_RESET                  :NEAR   ;;;;;//library reset
+
+ifndef MAIN_PROGRAM_DEF
+    EXTERN  _BS86D12C_CTOUCH_HALT_PREPARE   :NEAR   ;;;;;//Sleep code, working time is WDT
+    EXTERN  _BS86D12C_CTOUCH_HALT_WAKEUP    :NEAR   ;;;;;//Check any Halt Wakeup
+    EXTERN  _BS86D12C_CTOUCH_RETURN_MAIN    :NEAR   ;;;;;//Ready to enter work mode
+    EXTERN  _GET_KEY_BITMAP                 :NEAR   ;;;;;//get key status with level
+    EXTERN  _GET_ENV_VALUE                  :NEAR   ;;;;;//get environment value
+    EXTERN  _GET_REF_VALUE                  :NEAR   ;;;;;//get reference value
+    EXTERN  _GET_RCC_VALUE                  :NEAR   ;;;;;//get internal CAP. value
+    EXTERN  _GET_LIB_VER                    :NEAR   ;;;;;//get library version
+endif
+    EXTERN  _GET_KEY_AMOUNT                 :NEAR   ;;;;;//get key amount value
+    EXTERN  _SET_KEY_THR                    :NEAR   ;;;;;//SET key threshold
+
+
+    ;;;;;//-DATA DEFINE
+    EXTERN  _GLOBE_VARIES                   :BYTE   ;;;;;//globe varies which define in HXT_REFERENCE.INC
+    EXTERN  _KEY_REF                        :BYTE   ;;;;;//key Reference data RAM
+    EXTERN  _KEY_STATUS                     :BYTE   ;;;;;//
+    EXTERN  _TKS_TIME_BASE                  :BYTE   ;;;;;//
+    EXTERN  _STANDBY_TIME                   :BYTE   ;;;;;//
+    EXTERN  _STANDBY_TIME_CTRL              :BYTE   ;;;;;//
+    EXTERN  _KEY_IO_SEL                     :BYTE   ;;;;;//
+    EXTERN  _KEY_DATA                       :BYTE   ;;;;;//
+    EXTERN  _KEY_THR                        :BYTE   ;;;;;//
+    EXTERN  _BALANCE_CAP                    :BYTE   ;;;;;//
+
+    ;;;;;//-FLAG DEFINE
+    EXTERN  _SCAN_CYCLEF                    :BIT    ;;;;;//scan one cycle flag
+    EXTERN  _ANY_KEY_PRESSF                 :BIT    ;;;;;//any key pressed flag
+    EXTERN  _TKS_ACTIVEF                    :BIT    ;;;;;//library running
+    EXTERN  _TKS_63MSF                      :BIT    ;;;;;//63ms time flag
+    EXTERN  _TKS_250MSF                     :BIT    ;;;;;//250ms time flag
+    EXTERN  _TKS_500MSF                     :BIT    ;;;;;//500ms time flag
+    EXTERN  _FORCE_CALIBRATEF               :BIT    ;;;;;//force all key re-calibrate flag
+endif
+;;;;;//---------------------------------------------------------------
+;;;;;*/
+;;;;;//--------------------------------------------------------------------------
+
+;;;;;/* ---------------------------------------------------------------------- */
+;;;;;/* C exported function,register                                           */
+;;;;;/* ---------------------------------------------------------------------- */
+;;;;;/*
+ifdef _INCLUDE_C_
+;;;;;*/
+;;;;;//---------------------------------------------------------------
+;;;;;//*************************************************
+;;;;;//***** LIBRARY EXTERNAL REFERENCE FOR C CODE     *
+;;;;;//*************************************************
+;;;;;//;-SUBROUTIN
+#ifndef BS86D12C_CTOUCH_DEF
+	extern  void    BS86D12C_CTOUCH_INITIAL();              ;;;;;//library initial
+	extern  void    BS86D12C_CTOUCH();                      ;;;;;//scan all touch input
+	extern  void    LIBRARY_RESET();                        ;;;;;//Library Reset
+	
+	#ifndef MAIN_PROGRAM_DEF
+	extern  void    BS86D12C_CTOUCH_HALT_PREPARE();         ;;;;;//Sleep code, working time is WDT
+	extern  void    BS86D12C_CTOUCH_HALT_WAKEUP();          ;;;;;//Check any Halt Wakeup
+	extern  void    BS86D12C_CTOUCH_RETURN_MAIN();          ;;;;;//Ready to enter work mode
+	extern  void    GET_KEY_BITMAP();                       ;;;;;//get key status with level
+	extern  void    GET_ENV_VALUE();                        ;;;;;//get environment value
+	extern  void    GET_REF_VALUE();                        ;;;;;//get reference value
+	extern  void    GET_RCC_VALUE();                        ;;;;;//get internal CAP. value
+	extern  void    GET_LIB_VER();                          ;;;;;//get library version
+	#endif
+	
+	extern  void    GET_KEY_AMOUNT();                       ;;;;;//get key amount value
+	extern  void    SET_KEY_THR();                          ;;;;;//set key threshold
+	extern  void    KEY_WAKEUP();
+
+//---------------------------------------------------------------
+#ifdef  _CCV3_
+    ;;;;;//-FLAG DEFINE IN BANK0 FOR C Compiler V3
+    ;;;;;//-DATA DEFINE
+    ;;;;;//-DEFINE BANK0 RAM
+    extern  unsigned char   TKS_TIME_BASE;                  ;;;;;//
+    extern  unsigned char   STANDBY_TIME;                   ;;;;;//
+    extern  unsigned char   STANDBY_TIME_CTRL;              ;;;;;//
+    extern  unsigned char   GLOBE_VARIES[];                 ;;;;;//globe varies which define in HXT_REFERENCE.INC
+    extern  unsigned char   KEY_IO_SEL[];                   ;;;;;//
+    extern  unsigned char   KEY_DATA[];                     ;;;;;//
+    extern  unsigned char   KEY_THR[];                      ;;;;;//key threshold
+    extern  unsigned char   BALANCE_CAP[];                  ;;;;;//RCC
+    typedef struct {
+            unsigned char b0 : 1;
+            unsigned char b1 : 1;
+            unsigned char b2 : 1;
+            unsigned char b3 : 1;
+            unsigned char b4 : 1;
+            unsigned char b5 : 1;
+            unsigned char b6 : 1;
+            unsigned char b7 : 1;
+    } _FLAG_bits;
+
+    typedef union {
+            _FLAG_bits bits;
+            unsigned char   byte;
+    }_TKS_FLAGA_type;
+
+    extern _TKS_FLAGA_type      TKS_FLAGA;
+
+    #define FORCE_CALIBRATEF    TKS_FLAGA.bits.b0
+    #define TKS_ACTIVEF         TKS_FLAGA.bits.b1
+    #define SCAN_CYCLEF         TKS_FLAGA.bits.b2
+    #define ANY_KEY_PRESSF      TKS_FLAGA.bits.b3
+    #define TKS_63MSF           TKS_FLAGA.bits.b4
+    #define TKS_250MSF          TKS_FLAGA.bits.b5
+    #define TKS_500MSF          TKS_FLAGA.bits.b6
+
+    #else
+    ;;;;;//-_CCV2_
+    ;;;;;//-DATA DEFINE
+    ;;;;;//-DEFINE BANK0 RAM
+    #pragma rambank0
+    extern  unsigned char   TKS_TIME_BASE;          ;;;;//
+    extern  unsigned char   SAMPLE_TIMES;           ;;;;//
+    extern  unsigned char   STANDBY_TIME;           ;;;;//
+    extern  unsigned char   STANDBY_TIME_CTRL;      ;;;;//
+    extern  unsigned char   GLOBE_VARIES[];         ;;;;//globe varies which define in HXT_REFERENCE.INC
+    extern  unsigned char   KEY_IO_SEL[];           ;;;;//
+    extern  unsigned char   KEY_DATA[];             ;;;;//
+    extern  unsigned char   KEY_THR[];              ;;;;//
+    ;;;;;//-FLAG DEFINE IN BANK0 FOR C Compiler V2
+    extern  bit     SCAN_CYCLEF;                    ;;;;;//scan one cycle flag
+    extern  bit     ANY_KEY_PRESSF;                 ;;;;;//any key pressed flag
+    extern  bit     TKS_ACTIVEF;                    ;;;;;//library running
+    extern  bit     TKS_63MSF;                      ;;;;;//63ms time flag
+    extern  bit     TKS_250MSF;                     ;;;;;//250ms time flag
+    extern  bit     TKS_500MSF;                     ;;;;;//500ms time flag
+    extern  bit     FORCE_CALIBRATEF;               ;;;;;//force all key re-calibrate flag
+
+    ;;;;;//-DEFINE OTHER BANK RAM
+    #pragma norambank
+    extern  unsigned char   KEY_REF[];              ;;;;;//key Reference data RAM
+    extern  unsigned char   KEY_STATUS[];           ;;;;;//
+    extern  unsigned char   BALANCE_CAP[];                  ;;;;;//RCC
+
+    #endif
+
+#endif
+
+
+    #ifndef WORK_SHOP_COMMAND
+    #define WORK_SHOP_COMMAND     1
+    #endif
+
+    #ifndef ___EN
+    #define ___EN                    1
+    #endif
+
+    #ifndef ___CH
+    #define ___CH                    0
+    #endif
+
+    #ifndef ___CH_S
+    #define ___CH_S                    0
+    #endif
+
+
+/*******************<CommandsForWorkshop>************************/
+
+#if(WORK_SHOP_COMMAND)
+  //$constant
+  #if(___EN)
+    //$name = KEY1
+    //$directions = KEY1
+    #define KEY1                  1
+  #endif
+
+  #if(___CH)
+    //$name = 按鍵1
+    //$directions = 按鍵1
+    #define KEY1                  1
+  #endif
+
+  #if(___CH_S)
+    //$name = 按键1
+    //$directions = 按键1
+    #define KEY1                  1
+  #endif  
+#endif
+
+#if(WORK_SHOP_COMMAND)
+  //$constant
+  #if(___EN)
+    //$name = KEY2
+    //$directions = KEY2
+    #define KEY2                  2
+  #endif
+
+  #if(___CH)
+    //$name = 按鍵2
+    //$directions = 按鍵2
+    #define KEY2                  2
+  #endif
+
+  #if(___CH_S)
+    //$name = 按键2
+    //$directions = 按键2
+    #define KEY2                  2
+  #endif    
+#endif
+
+#if(WORK_SHOP_COMMAND)
+  //$constant
+  #if(___EN)
+    //$name = KEY3
+    //$directions = KEY3
+    #define KEY3                  3
+  #endif
+
+  #if(___CH)
+    //$name = 按鍵3
+    //$directions = 按鍵3
+    #define KEY3                  3
+  #endif
+
+  #if(___CH_S)
+    //$name = 按键3
+    //$directions = 按键3
+    #define KEY3                  3
+  #endif   
+#endif
+
+#if(WORK_SHOP_COMMAND)
+  //$constant
+  #if(___EN)
+    //$name = KEY4
+    //$directions = KEY4
+    #define KEY4                  4
+  #endif
+
+  #if(___CH)
+    //$name = 按鍵4
+    //$directions = 按鍵4
+    #define KEY4                  4
+  #endif
+
+  #if(___CH_S)
+    //$name = 按键4
+    //$directions = 按键4
+    #define KEY4                  4
+  #endif   
+#endif
+
+#if(WORK_SHOP_COMMAND)
+  //$constant
+  #if(___EN)
+    //$name = KEY5
+    //$directions = KEY5
+    #define KEY5                  5
+  #endif
+
+  #if(___CH)
+    //$name = 按鍵5
+    //$directions = 按鍵5
+    #define KEY5                  5
+  #endif  
+
+  #if(___CH_S)
+    //$name = 按键5
+    //$directions = 按键5
+    #define KEY5                  5
+  #endif 
+#endif
+
+
+#if(WORK_SHOP_COMMAND)
+  //$constant
+  #if(___EN)
+    //$name = KEY6
+    //$directions = KEY6
+    #define KEY6                  6
+  #endif
+
+  #if(___CH)
+    //$name = 按鍵6
+    //$directions = 按鍵6
+    #define KEY6                  6
+  #endif
+
+  #if(___CH_S)
+    //$name = 按键6
+    //$directions = 按键6
+    #define KEY6                  6
+  #endif   
+#endif
+
+#if(WORK_SHOP_COMMAND)
+  //$constant
+  #if(___EN)
+    //$name = KEY7
+    //$directions = KEY7
+    #define KEY7                  7
+  #endif
+
+  #if(___CH)
+    //$name = 按鍵7
+    //$directions = 按鍵7
+    #define KEY7                  7
+  #endif
+
+  #if(___CH_S)
+    //$name = 按键7
+   //$directions = 按键7
+    #define KEY7                  7
+  #endif   
+#endif
+
+#if(WORK_SHOP_COMMAND)
+  //$constant
+  #if(___EN)
+    //$name = KEY8
+    //$directions = KEY8
+    #define KEY8                  8
+  #endif
+
+  #if(___CH)
+    //$name = 按鍵8
+    //$directions = 按鍵8
+    #define KEY8                  8
+  #endif
+
+  #if(___CH_S)
+    //$name = 按键8
+    //$directions = 按键8
+    #define KEY8                  8
+  #endif   
+#endif
+
+#if(WORK_SHOP_COMMAND)
+  //$constant
+  #if(___EN)
+    //$name = KEY9
+    //$directions = KEY9
+    #define KEY9                  9
+  #endif
+
+  #if(___CH)
+    //$name = 按鍵9
+    //$directions = 按鍵9
+    #define KEY9                  9
+  #endif
+
+  #if(___CH_S)
+    //$name = 按键9
+    //$directions = 按键9
+    #define KEY9                  
+  #endif   
+#endif
+
+
+#if(WORK_SHOP_COMMAND)
+  //$constant
+  #if(___EN)
+    //$name = KEY10
+    //$directions = KEY10
+    #define KEY10                  10
+  #endif
+
+  #if(___CH)
+    //$name = 按鍵10
+    //$directions = 按鍵10
+    #define KEY10                  10
+  #endif
+
+  #if(___CH_S)
+    //$name = 按键10
+    //$directions = 按键10
+    #define KEY10                  10
+  #endif   
+#endif
+
+#if(WORK_SHOP_COMMAND)
+  //$constant
+  #if(___EN)
+    //$name = KEY11
+    //$directions = KEY11
+    #define KEY11                 11 
+  #endif
+
+  #if(___CH)
+    //$name = 按鍵11
+    //$directions = 按鍵11
+    #define KEY11                 11 
+  #endif 
+
+  #if(___CH_S)
+    //$name = 按键11
+    //$directions = 按键11
+    #define KEY11                  11
+  #endif  
+#endif
+
+#if(WORK_SHOP_COMMAND)
+  //$constant
+  #if(___EN)
+    //$name = KEY12
+    //$directions = KEY12
+    #define KEY12                 12    
+  #endif
+
+  #if(___CH)
+    //$name = 按鍵12
+    //$directions = 按鍵12
+    #define KEY12                 12    
+  #endif
+
+  #if(___CH_S)
+    //$name = 按键12
+    //$directions = 按键12
+    #define KEY12                  12
+  #endif   
+#endif
+
+
+#if(WORK_SHOP_COMMAND)
+  //$byte
+  #if(___EN)
+    //$name = Touch standby time
+    //$directions = Sleep cycle counter, decremented to zero to sleep
+    //$directions = Reduced from 127 to 0 when sleep mode is on and no keys are pressed (Total time：127*63[ms]=8 [seconds])
+    //$directions = If you want to go to sleep for a short time, you can set this register to 0 directly
+    #define TouchStandbyTime        STANDBY_TIME
+  
+  #endif
+
+  #if(___CH)
+    //$name = 觸摸待機時間
+    //$directions = 休眠週期計數器，減爲 0會進入休眠
+    //$directions = 開啓休眠模式且無按鍵時會從 127 減至 0 （總共時間：127*63[毫秒]=8[秒]）
+    //$directions = 如果要短時間內進入休眠，可直接將該寄存器設置爲 0
+
+    #define TouchStandbyTime        STANDBY_TIME
+
+  #endif
+
+  #if(___CH_S)
+    //$name = 触摸待机时间
+    //$directions = 休眠周期计数器，减为0 会进入休眠
+    //$directions = 开启休眠模式且无按键时会从 127 减至 0 （总共时间:127*63[毫秒]=8[秒]）
+    //$directions = 如果要短时间内进入休眠，可直接将该寄存器设置为0
+
+    #define TouchStandbyTime        STANDBY_TIME
+
+  #endif
+#endif
+
+#if(WORK_SHOP_COMMAND)
+  //$byte
+  #if(___EN)
+    //$name = Sleep period setting
+    //$directions = Sleep period N (8~127) for N * 63 [ms]
+    //$directions = After writing to this RAM, the maximum value of the sleep cycle counter will be set to this value
+    //$directions = User can set the sleep cycle time according to actual needs
+
+    #define TouchStandbyTime_CTRL        STANDBY_TIME_CTRL
+  
+  #endif
+
+  #if(___CH)
+    //$name = 休眠週期設定
+    //$directions = 休眠週期設定，取值範圍 N(8~127)，時間爲 N * 63[毫秒]
+    //$directions = 對該 RAM 寫值後，休眠週期計數器的最大值會設為該數值
+    //$directions =用戶可根據實際需求設定休眠週期時間
+
+    #define TouchStandbyTime_CTRL        STANDBY_TIME_CTRL
+
+  #endif
+
+  #if(___CH_S)
+    //$name = 休眠周期设定
+    //$directions = 休眠周期设定，取值范围 N（8~127），时间为 N * 63[毫秒]
+    //$directions = 对该 RAM 写值后，休眠周期计数器的最大值会设为该数值
+    //$directions =用户可根据实际需求设定休眠周期时间
+
+    #define TouchStandbyTime_CTRL        STANDBY_TIME_CTRL
+
+  #endif
+#endif
+
+
+#if(WORK_SHOP_COMMAND)
+  //$bit
+  #if(___EN)
+    //$name = ScanCycleFlag
+    //$directions = All touch keys scan complete one cycle flag bit, about 10 [mS] per cycle
+    //$directions = Also the timing base for KeyDebounce
+
+    #define ScanCycleFlag        SCAN_CYCLEF
+
+  #endif
+
+  #if(___CH)
+    //$name = 觸摸鍵掃描完成標誌位
+    //$directions = 所有觸摸鍵掃描完成一個週期標誌位，每週期約10[毫秒]
+    //$directions =也是 KeyDebounce 的計時基準
+
+    #define ScanCycleFlag        SCAN_CYCLEF
+
+  #endif  
+
+  #if(___CH_S)
+    //$name = 触摸键扫描完成标志位
+    //$directions = 所有触摸键扫描完成一个周期标志位，每周期约10[毫秒]
+    //$directions =也是 KeyDebounce 的计时基准
+
+    #define ScanCycleFlag        SCAN_CYCLEF
+
+  #endif  
+#endif
+
+
+#if(WORK_SHOP_COMMAND)
+  //$bit
+  #if(___EN)
+    //$name = AnyTouchKeyPress
+    //$directions = Any touch button press
+
+    #define AnyTouchKeyPress        ANY_KEY_PRESSF
+
+  #endif
+
+  #if(___CH)
+    //$name = 任意觸摸按鍵按下
+    //$directions = 任意觸摸按鍵按下
+
+    #define AnyTouchKeyPress        ANY_KEY_PRESSF
+
+  #endif  
+
+  #if(___CH_S)
+    //$name = 任意触摸按键按下
+    //$directions = 任意触摸按键按下
+
+    #define AnyTouchKeyPress        ANY_KEY_PRESSF
+
+  #endif  
+#endif
+
+
+#if(WORK_SHOP_COMMAND)
+  //$bit
+  #if(___EN)
+    //$name = TouchKeys_ActiveFlag
+    //$directions = Touch the package to finish initializing and start running flags
+
+    #define TouchKeys_ActiveFlag        TKS_ACTIVEF
+
+  #endif
+
+  #if(___CH)
+    //$name = 觸摸軟件包運行標誌位
+    //$directions = 觸摸軟件包完成初始化，並開始運行標誌位
+
+    #define TouchKeys_ActiveFlag        TKS_ACTIVEF
+
+  #endif  
+
+  #if(___CH_S)
+    //$name = 触摸软件包运行标志位
+    //$directions = 触摸软件包完成初始化，并开始运行标志位
+
+    #define TouchKeys_ActiveFlag        TKS_ACTIVEF
+
+  #endif  
+#endif
+
+
+#if(WORK_SHOP_COMMAND)
+  //$bit
+  #if(___EN)
+    //$name = TKS_63mS_timer_flag
+    //$directions = TKS_63mS timer flag
+
+    #define TKS_63MSFlag        TKS_63MSF
+
+  #endif
+
+  #if(___CH)
+    //$name = TKS_63毫秒 計時器標誌位
+    //$directions = TKS_63毫秒 計時器標誌位
+
+    #define TKS_63MSFlag        TKS_63MSF
+
+  #endif  
+
+  #if(___CH_S)
+    //$name = 63毫秒 计时器标志位
+    //$directions = 63毫秒 计时器标志位
+
+    #define TKS_63MSFlag        TKS_63MSF
+
+  #endif  
+#endif
+
+
+#if(WORK_SHOP_COMMAND)
+  //$bit
+  #if(___EN)
+    //$name = TKS_250mS_timer_flag
+    //$directions = TKS_250mS timer flag
+
+    #define TKS_250MSFlag        TKS_250MSF
+
+  #endif
+
+  #if(___CH)
+    //$name = 250毫秒 計時器標誌位
+    //$directions = 250毫秒 計時器標誌位
+
+    #define TKS_250MSFlag        TKS_250MSF
+
+  #endif  
+
+  #if(___CH_S)
+    //$name = 250毫秒 计时器标志位
+    //$directions = 250毫秒 计时器标志位
+
+    #define TKS_250MSFlag        TKS_250MSF
+
+  #endif  
+#endif
+
+
+#if(WORK_SHOP_COMMAND)
+  //$bit
+  #if(___EN)
+    //$name = TKS_500mS_timer_flag
+    //$directions = TKS_500S timer flag
+
+    #define TKS_500MSFlag        TKS_500MSF
+
+  #endif
+
+  #if(___CH)
+    //$name = 500毫秒 計時器標誌位
+    //$directions = 500毫秒 計時器標誌位
+
+    #define TKS_500MSFlag        TKS_500MSF
+
+  #endif  
+
+  #if(___CH_S)
+    //$name = 500毫秒 计时器标志位
+    //$directions = 500毫秒 计时器标志位
+
+    #define TKS_500MSFlag        TKS_500MSF
+
+  #endif  
+#endif
+
+
+#if(WORK_SHOP_COMMAND)
+  //$bit
+  #if(___EN)
+    //$name = Force_Recalibration
+    //$directions = Force all touch keys, recalibrate the environment flag
+
+    #define Force_Recalibration        FORCE_CALIBRATEF
+
+  #endif
+
+  #if(___CH)
+    //$name = 強制重校正
+    //$directions = 強制所有觸摸鍵，對環境做重校正標誌位
+
+    #define Force_Recalibration        FORCE_CALIBRATEF
+
+  #endif  
+
+  #if(___CH_S)
+    //$name = 强制重校正
+    //$directions = 强制所有触摸键，对环境做重校正标志位
+
+    #define Force_Recalibration        FORCE_CALIBRATEF
+
+  #endif  
+#endif
+
+
+#if(WORK_SHOP_COMMAND)
+  //$bit
+  #if(___EN)
+    //$name = SleepFlag
+    //$directions = Sleep flag to determine if sleep mode can be entered
+
+    #define Halt_State        HALT_STATE
+
+  #endif
+
+  #if(___CH)
+    //$name = 休眠標誌位
+    //$directions = 休眠判斷標誌位，根據該標誌位判斷能否進入休眠模式
+
+    #define Halt_State        HALT_STATE
+
+  #endif  
+
+  #if(___CH_S)
+    //$name = 休眠标志位
+    //$directions = 休眠判断标志位，根据该标志位判断能否进入休眠模式
+
+    #define Halt_State        HALT_STATE
+
+  #endif  
+#endif
+
+#if(WORK_SHOP_COMMAND)
+  //$function
+  #if(___EN)
+    //$name = GetAllKeyData
+    //$input1 = no
+    //$output1 = no
+    //$directions = Get the state of the touch button and put it in DATA_BUF[0]、[1]...
+    //$directions = Bit0 of DATA_BUF[0] is the output of KEY1
+    //$directions = Bit1 of DATA_BUF[0] is the output of KEY2 ...
+
+    #define GetAllKeyData            GET_KEY_BITMAP();
+    
+
+
+    #if(BLOCK_CODE)
+GetAllKeyData//Get the state of the touch button and put it in DATA_BUF[0]、[1]...
+    #endif
+
+     #if(WORK_SHOP_SAMPLE)
+      GetAllKeyData //Get the state of the touch button and put it in DATA_BUF[0]、[1]...
+    #endif
+  
+  #endif
+
+  #if(___CH)
+    //$name = get 所有按鍵數據
+    //$input1 = 無
+    //$output1 = 無
+    //$directions = 取得觸摸按鍵狀態放入DATA_BUF[0]、[1]...
+    //$directions = DATA_BUF[0]的bit0 是KEY1的輸出
+    //$directions = DATA_BUF[0]的bit1 是KEY2的輸出 ...
+
+    #define GetAllKeyData            GET_KEY_BITMAP();
+
+    #if(BLOCK_CODE)
+GetAllKeyData //取得觸摸按鍵狀態放入DATA_BUF[0]、[1]...
+    #endif
+
+
+    #if(WORK_SHOP_SAMPLE)
+      GetAllKeyData //取得觸摸按鍵狀態放入DATA_BUF[0]、[1]...
+    #endif
+  #endif
+
+  #if(___CH_S)
+    //$name = get 所有按键数据
+    //$input1 = 无
+    //$output1 = 无
+    //$directions = 取得触摸按键状态放入DATA_BUF[0]、[1]...
+    //$directions = DATA_BUF[0]的bit0 是KEY1的输出
+    //$directions = DATA_BUF[0]的bit1 是KEY2的输出 ...
+
+    #define GetAllKeyData            GET_KEY_BITMAP();
+
+
+    #if(BLOCK_CODE)
+GetAllKeyData //取得触摸按键状态放入DATA_BUF[0]、[1]...
+    #endif
+
+
+    #if(WORK_SHOP_SAMPLE)
+      GetAllKeyData //取得触摸按键状态放入DATA_BUF[0]、[1]...
+    #endif
+  #endif
+#endif
+
+
+#if(WORK_SHOP_COMMAND)
+  //$function
+  #if(___EN)
+    //$name =   Get KeyN Status To Ram 
+    //$input1 = key
+    //$output1 = UserRam
+    //$directions = Get the state of the touch button N and put it in the RAM specified by USER
+    
+    #define GetKeyNStatusToRam(key,UserRam)         GET_KEY_BITMAP();\
+                                                    UserRam = (DATA_BUF[(key-1)/8] >> ((key-1)%8)) & 1;
+    
+
+    #if(BLOCK_CODE)
+unsigned char UserRam;
+GetKeyNStatusToRam(key,UserRam) //Get the state of the touch button N and put it in the RAM specified by USER
+    #endif
+
+
+    #if(WORK_SHOP_SAMPLE)
+      unsigned char UserRam;
+      GetKeyNStatusToRam(key,UserRam) //Get the state of the touch button N and put it in the RAM specified by USER
+    #endif
+
+  #endif
+
+  #if(___CH)
+    //$name = Get 觸摸按鍵N狀態，放到USER指定RAM
+    //$input1 = 觸摸按鍵
+    //$output1 =  USER指定RAM
+    //$directions = 取得觸摸按鍵N狀態，放到USER指定RAM
+
+    #define GetKeyNStatusToRam(key,UserRam)         GET_KEY_BITMAP();\
+                                                    UserRam = (DATA_BUF[(key-1)/8] >> ((key-1)%8)) & 1;
+
+    #if(BLOCK_CODE)
+unsigned char UserRam;
+GetKeyNStatusToRam(key,UserRam) //取得觸摸按鍵N狀態，放到USER指定RAM
+    #endif
+    
+    
+    #if(WORK_SHOP_SAMPLE)
+      unsigned char UserRam;
+      GetKeyNStatusToRam(key,UserRam) //取得觸摸按鍵N狀態，放到USER指定RAM
+    #endif
+  #endif
+
+  #if(___CH_S)
+    //$name = Get 触摸按键N状态，放到USER指定RAM
+    //$input1 = 触摸按键
+    //$output1 =  USER指定RAM
+    //$directions = 触摸按键N状态，放到USER指定RAM
+
+    #define GetKeyNStatusToRam(key,UserRam)         GET_KEY_BITMAP();\
+                                                    UserRam = (DATA_BUF[(key-1)/8] >> ((key-1)%8)) & 1;
+
+    #if(BLOCK_CODE)
+unsigned char UserRam;
+GetKeyNStatusToRam(key,UserRam) //触摸按键N状态，放到USER指定RAM
+    #endif
+    
+    
+    #if(WORK_SHOP_SAMPLE)
+      unsigned char UserRam;
+      GetKeyNStatusToRam(key,UserRam) //触摸按键N状态，放到USER指定RAM
+    #endif
+  #endif
+#endif
+
+#if(WORK_SHOP_COMMAND)
+  //$function
+  #if(___EN)
+    //$name =  Press KEYN to execute the function
+    //$input1 = key,Pressfunction
+    //$output1 = NO
+    //$directions = When KEYN is pressed, the Pressfunction is executed
+    
+    #define Press_key(key,Pressfunction)         GET_KEY_BITMAP();\
+                                           switch((DATA_BUF[(key-1)/8] >> ((key-1)%8)) & 1)\
+                                           {\
+                                           	  case 1:Pressfunction;\
+                                            	break;\
+                                            	default:\
+                                              break;\
+                                           }
+    
+
+    #if(BLOCK_CODE)
+Press_key(KEY1,DisplayMultiple(1234))// When KEY1 is pressed, execute DisplayMultiple(1234)
+    #endif
+
+
+    #if(WORK_SHOP_SAMPLE)
+    Press_key(KEY1,DisplayMultiple(1234))// When KEY1 is pressed, execute DisplayMultiple(1234)
+    #endif
+
+  #endif
+
+  #if(___CH)
+    //$name = 按下按鍵N，執行函數
+    //$input1 = 觸摸按鍵，按下執行函數
+    //$output1 =  無
+    //$directions = 按下按鍵N時，執行指定函數
+
+    #define Press_key(key,Pressfunction)         GET_KEY_BITMAP();\
+                                           switch((DATA_BUF[(key-1)/8] >> ((key-1)%8)) & 1)\
+                                           {\
+                                           	  case 1:Pressfunction;\
+                                            	break;\
+                                            	default:\
+                                              break;\
+                                           }
+
+    #if(BLOCK_CODE)
+Press_key(KEY1,DisplayMultiple(1234))//按下KEY1時，執行DisplayMultiple(1234)
+    #endif
+    
+    
+    #if(WORK_SHOP_SAMPLE)
+    Press_key(KEY1,DisplayMultiple(1234))//按下KEY1時，執行DisplayMultiple(1234)
+    #endif
+  #endif
+
+  #if(___CH_S)
+    //$name = 按下按键N，执行函数
+    //$input1 = 触摸按键，按下时执行的函数
+    //$output1 =  无
+    //$directions = 按下按键N时，执行指定函数
+
+    #define Press_key(key,Pressfunction)         GET_KEY_BITMAP();\
+                                           switch((DATA_BUF[(key-1)/8] >> ((key-1)%8)) & 1)\
+                                           {\
+                                           	  case 1:Pressfunction;\
+                                            	break;\
+                                            	default:\
+                                              break;\
+                                           }
+                                            
+
+    #if(BLOCK_CODE)
+Press_key(KEY1,DisplayMultiple(1234))//按下KEY1时，执行DisplayMultiple(1234)
+    #endif
+    
+    
+    #if(WORK_SHOP_SAMPLE)
+      Press_key(KEY1,DisplayMultiple(1234))//按下KEY1时，执行DisplayMultiple(1234)
+    #endif
+  #endif
+#endif
+
+
+
+#if(WORK_SHOP_COMMAND)
+  //$function
+  #if(___EN)
+    //$name =  Release KEYN to execute the function
+    //$input1 = key,Releasefunction
+    //$output1 = NO
+    //$directions = When KEYN is Release, the Releasefunction is executed
+    
+    #define Release_key(key,Releasefunction)         GET_KEY_BITMAP();\
+                                           switch((DATA_BUF[(key-1)/8] >> ((key-1)%8)) & 1)\
+                                           {\
+                                           	  case 0:Releasefunction\
+                                            	break;\
+                                            	default:\
+                                              break;\
+                                           }
+    
+
+    #if(BLOCK_CODE)
+Release_key(KEY1,DisplayMultiple(5678))// When KEY1 is Release, execute DisplayMultiple(5678)
+    #endif
+
+
+    #if(WORK_SHOP_SAMPLE)
+    Release_key(KEY1,DisplayMultiple(5678))// When KEY1 is Release, execute DisplayMultiple(5678)
+    #endif
+
+  #endif
+
+  #if(___CH)
+    //$name = 釋放按鍵N，執行函數
+    //$input1 = 觸摸按鍵，執行函數
+    //$output1 =  無
+    //$directions = 釋放按鍵N時，執行指定函數
+
+    #define Release_key(key,Releasefunction)         GET_KEY_BITMAP();\
+                                           switch((DATA_BUF[(key-1)/8] >> ((key-1)%8)) & 1)\
+                                           {\
+                                           	  case 0:Releasefunction\
+                                            	break;\
+                                            	default:\
+                                              break;\
+                                           }
+
+    #if(BLOCK_CODE)
+Release_key(KEY1,DisplayMultiple(5678))//釋放KEY1時，執行DisplayMultiple(5678)
+    #endif
+    
+    
+    #if(WORK_SHOP_SAMPLE)
+    Release_key(KEY1,DisplayMultiple(5678))//釋放KEY1時，執行DisplayMultiple(5678)
+    #endif
+  #endif
+
+  #if(___CH_S)
+    //$name = 释放按键N，执行函数
+    //$input1 = 触摸按键，执行的函数
+    //$output1 =  无
+    //$directions = 释放按键N时，执行指定函数
+
+    #define Release_key(key,Releasefunction)         GET_KEY_BITMAP();\
+                                           switch((DATA_BUF[(key-1)/8] >> ((key-1)%8)) & 1)\
+                                           {\
+                                           	  case 0:Releasefunction\
+                                            	break;\
+                                            	default:\
+                                              break;\
+                                           }
+                                            
+
+    #if(BLOCK_CODE)
+Release_key(KEY1,DisplayMultiple(5678))//释放KEY1时，执行DisplayMultiple(5678)
+    #endif
+    
+    
+    #if(WORK_SHOP_SAMPLE)
+      Release_key(KEY1,DisplayMultiple(5678))//释放KEY1时，执行DisplayMultiple(5678)
+    #endif
+  #endif
+#endif
+
+
+
+
+#if(WORK_SHOP_COMMAND)
+  //$function
+  #if(___EN)
+    //$name = SetKeyThreshold
+    //$input1 = key,Threshold
+    //$output1 = no
+    //$directions = Set key N threshold
+
+    #define SetKeyThreshold(key,Threshold)          DATA_BUF[0]=Threshold;\
+                                                    _acc=(key-1);\
+                                                    SET_KEY_THR();
+                                                    
+
+    #if(BLOCK_CODE)
+SetKeyThreshold(key,Threshold) //Set key N threshold
+    #endif
+    
+    #if(WORK_SHOP_SAMPLE)
+      SetKeyThreshold(key,Threshold) //Set key N threshold
+    #endif
+
+  #endif
+
+  #if(___CH)
+    //$name = 設置按鍵門檻
+    //$input1 = 按鍵，門檻
+    //$output1 = 無
+    //$directions = 設置按鍵N門檻
+
+    #define SetKeyThreshold(key,Threshold)          DATA_BUF[0]=Threshold;\
+                                                    _acc=(key-1);\
+                                                    SET_KEY_THR();
+                                                    
+
+    #if(BLOCK_CODE)
+SetKeyThreshold(key,Threshold) //設置按鍵N門檻
+    #endif
+    
+    
+    #if(WORK_SHOP_SAMPLE)
+      SetKeyThreshold(key,Threshold) //設置按鍵N門檻
+    #endif
+  #endif
+
+  #if(___CH_S)
+    //$name = 设置按键门槛
+    //$input1 = 按键，门槛
+    //$output1 = 无
+    //$directions = 设置按键N门槛
+
+    #define SetKeyThreshold(key,Threshold)          DATA_BUF[0]=Threshold;\
+                                                    _acc=(key-1);\
+                                                    SET_KEY_THR();
+
+    #if(BLOCK_CODE)
+SetKeyThreshold(key,Threshold) //设置按键N门槛
+    #endif
+    
+    #if(WORK_SHOP_SAMPLE)
+      SetKeyThreshold(key,Threshold) //设置按键N门槛
+    #endif
+  #endif
+#endif
+
+#if(WORK_SHOP_COMMAND)
+  //$function
+  #if(___EN)
+    //$name = GetKeyThreshold
+    //$input1 = key
+    //$output1 = UserRam
+    //$directions = Get key N threshold
+
+    #define GetKeyThreshold(Key,UserRam)            int temp;\
+                                                    temp=(int)&KEY_THR[Key-1];\
+                                                    _mp1l = temp;\
+                                                    _mp1h = temp>>8;\
+                                                    UserRam = _iar1;
+                             
+    #if(BLOCK_CODE)
+unsigned char UserRam;
+GetKeyThreshold(key,UserRam) //Get key N threshold to UserRam
+    #endif
+    
+    #if(WORK_SHOP_SAMPLE)
+      unsigned char UserRam;
+      GetKeyThreshold(key,UserRam) //Get key N threshold to UserRam
+    #endif
+
+  #endif
+
+  #if(___CH)
+    //$name = 取得按鍵門檻
+    //$input1 = 按鍵
+    //$output1 = USER指定RAM
+    //$directions = 取得按鍵N門檻
+
+    #define GetKeyThreshold(Key,UserRam)            int temp;\
+                                                    temp=(int)&KEY_THR[Key-1];\
+                                                    _mp1l = temp;\
+                                                    _mp1h = temp>>8;\
+                                                    UserRam = _iar1;
+                                                    
+    
+    #if(BLOCK_CODE)
+unsigned char UserRam;
+GetKeyThreshold(key,UserRam) //取得按鍵N門檻放到USER指定RAM
+    #endif
+    
+    
+    #if(WORK_SHOP_SAMPLE)
+      unsigned char UserRam;
+      GetKeyThreshold(key,UserRam) //取得按鍵N門檻放到USER指定RAM
+    #endif
+  #endif  
+
+  #if(___CH_S)
+    //$name = 取得按键门槛
+    //$input1 = 按键
+    //$output1 = USER指定RAM
+    //$directions = 取得按键N门槛
+
+    #define GetKeyThreshold(Key,UserRam)            int temp;\
+                                                    temp=(int)&KEY_THR[Key-1];\
+                                                    _mp1l = temp;\
+                                                    _mp1h = temp>>8;\
+                                                    UserRam = _iar1;
+                                                    
+    
+    #if(BLOCK_CODE)
+unsigned char UserRam;
+GetKeyThreshold(key,UserRam) //取得按键N门槛放到USER指定RAM
+    #endif
+    
+    
+    #if(WORK_SHOP_SAMPLE)
+      unsigned char UserRam;
+      GetKeyThreshold(key,UserRam) //取得按键N门槛放到USER指定RAM
+    #endif
+  #endif  
+#endif
+
+
+ 
+;;//************************************
+#if(WORK_SHOP_COMMAND)
+  //$function
+  #if(___EN)
+    //$name = Get_Lib_Ver
+    //$input1 = no
+    //$output1 = Version information
+    //$directions = READ Version information  
+
+    #define Get_Lib_Ver            GET_LIB_VER();
+                                                    
+
+    #if(BLOCK_CODE)
+//Store the software package version information in variables TEMP1 and TEMP2
+unsigned char TEMP1;
+unsigned char TEMP2;
+Get_Lib_Ver
+TEMP1 = DATA_BUF[0];
+TEMP2 = DATA_BUF[1]
+    #endif
+    
+    #if(WORK_SHOP_SAMPLE)
+      //Store the software package version information in variables TEMP1 and TEMP2
+      unsigned char TEMP1;
+      unsigned char TEMP2;
+      Get_Lib_Ver
+      TEMP1 = DATA_BUF[0];
+      TEMP2 = DATA_BUF[1]
+    #endif
+
+  #endif
+
+  #if(___CH)
+    //$name = 讀取版本資訊
+    //$input1 =無
+    //$output1 =觸摸軟件包版本資訊
+    //$directions = 讀取 觸摸軟件包 版本資訊
+     #define Get_Lib_Ver            GET_LIB_VER();
+
+    #if(BLOCK_CODE)
+//獲取軟件包的版本信息並存在變量 TEMP1 與 TEMP2 
+unsigned char TEMP1;
+unsigned char TEMP2;
+Get_Lib_Ver
+TEMP1 = DATA_BUF[0];
+TEMP2 = DATA_BUF[1]
+    #endif
+    
+    
+    #if(WORK_SHOP_SAMPLE)
+       //獲取軟件包的版本信息並存在變量 TEMP1 與 TEMP2 
+      unsigned char TEMP1;
+      unsigned char TEMP2;
+      Get_Lib_Ver
+      TEMP1 = DATA_BUF[0];
+      TEMP2 = DATA_BUF[1]
+    #endif
+  #endif
+
+  #if(___CH_S)
+    //$name = 读取版本资讯
+    //$input1 =无
+    //$output1 =触摸软件包版本资讯
+    //$directions = 读取 触摸软件包 版本资讯
+     #define Get_Lib_Ver            GET_LIB_VER();
+
+    #if(BLOCK_CODE)
+//获取软件包的版本信息并存在变量 TEMP1 与 TEMP2
+unsigned char TEMP1;
+unsigned char TEMP2;
+Get_Lib_Ver
+TEMP1 = DATA_BUF[0];
+TEMP2 = DATA_BUF[1]
+    #endif
+    
+    #if(WORK_SHOP_SAMPLE)
+       //获取软件包的版本信息并存在变量 TEMP1 与 TEMP2
+      unsigned char TEMP1;
+      unsigned char TEMP2;
+      Get_Lib_Ver
+      TEMP1 = DATA_BUF[0];
+      TEMP2 = DATA_BUF[1]
+    #endif
+  #endif
+#endif
+;;//************************************
+;;//************************************
+#if(WORK_SHOP_COMMAND)
+  //$function
+  #if(___EN)
+    //$name = Library_Reset
+    //$input1 = no
+    //$output1 =no
+    //$directions = Reset environment values and reference values, and clear key status bits.
+
+    #define Library_Reset            LIBRARY_RESET();
+                                                    
+
+    #if(BLOCK_CODE)
+Library_Reset
+    #endif
+    
+    #if(WORK_SHOP_SAMPLE)
+      Library_Reset
+    #endif
+
+  #endif
+
+  #if(___CH)
+    //$name = 軟件包復位
+    //$input1 =無
+    //$output1 =無
+    //$directions = 重新平衡環境值與參考值，清除按鍵狀態位。
+     #define Library_Reset            LIBRARY_RESET();
+
+    #if(BLOCK_CODE)
+Library_Reset
+    #endif
+    
+    #if(WORK_SHOP_SAMPLE)
+       Library_Reset
+    #endif
+  #endif
+
+  #if(___CH_S)
+    //$name = 软件包复位
+    //$input1 =无
+    //$output1 =无
+    //$directions = 重新平衡环境值与参考值，清除按键状态位。
+     #define Library_Reset            LIBRARY_RESET();
+
+    #if(BLOCK_CODE)
+Library_Reset
+    #endif
+    
+    #if(WORK_SHOP_SAMPLE)
+       Library_Reset
+    #endif
+  #endif
+#endif
+;;//************************************
+
+/*******************<\CommandsForWorkshop>************************/
+
+;;;;;//--------------------------------------------------------------------------
+;;;;;//--------------------------------------------------------------------------
+;;;;;/*
+endif
+;;;;;*/
+
+;;;;;///* ---------------------------------------------------------------------- */
+;;;;;///**
+;;;;;//  * @}
+;;;;;//  */
+;;;;;///* ---------------------------------------------------------------------------------------------------------*/
+;;;;;///**
+;;;;;//  * @}
+;;;;;//  */
+;;;;;///* ==================================================================================================================================================*/
+
