@@ -95,9 +95,10 @@ static int comp(float pt, int i)
         return i;
 }
 
-float _voltageRef = 3.0f; // Giả sử tham chiếu VDD là 5V
+
 int temperature_sensor_read(uint16_t adc_value) {
-    float voltage = ((float)adc_value) * _voltageRef / 4095.0f; // Chuyển đổi ADC sang điện áp
+	float _voltageRef = 5.0f; // Giả sử tham chiếu VDD là 5V
+    float voltage = (float)(adc_value) * _voltageRef / 4095.0f;
     float res = 0.0f;
     res = (1800.0f * voltage + 220.9f * 18.0f) / (2.209f * 18.0f - voltage);
 
@@ -105,25 +106,34 @@ int temperature_sensor_read(uint16_t adc_value) {
     front = 0;
     end = 399;
     mid = (front + end) / 2;
+    
     while (front < end && pgm_read_float(&PT100Tab[mid]) != res)  
         {
             if (pgm_read_float(&PT100Tab[mid]) < res)
+            {
                 if (pgm_read_float(&PT100Tab[mid + 1]) < res)
                     front = mid + 1;
                 else
-                    {
-                        mid = comp(res, mid);
-                        return mid;
-                    }
+                {
+                    mid = comp(res, mid);
+                    return mid;
+                }
+            }
+
             if (pgm_read_float(&PT100Tab[mid]) > res)
-                if (pgm_read_float(&PT100Tab[mid - 1]) > res)
-                    end = mid - 1;
+                {
+                    if (pgm_read_float(&PT100Tab[mid - 1]) > res)
+                    {
+                        end = mid - 1;
+                    }
+                    
                 else
                     {
                         mid = comp(res, mid - 1);
                         return mid;
                     }
             mid = front + (end - front) / 2;
+                }
         }
     return mid;
 }

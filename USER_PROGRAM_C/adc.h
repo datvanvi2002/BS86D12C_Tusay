@@ -16,4 +16,5 @@ unsigned int adc_read_channel(unsigned char channel);
 /// @param adc_value ADC value from pressure sensor
 /// @return 
 int temperature_sensor_read(uint16_t adc_value);
+
 #endif // ADC_H

@@ -19,4 +19,13 @@ void tm1640_show_1_to_9_on_grid1_to_9(void);
 void tm1640_walk_segments(uint8_t grid, uint16_t on_ms);
 void tm1640_walk_grids_a(uint16_t hold_ms);
 extern uint8_t TM1640_grid_order[16];
+
+void tm1640_keyring_only(uint8_t key_number);
+void tm1640_keyring_clear_all(void);
+void tm1640_keyring_clear(uint8_t key_number);
+void tm1640_keyring_add(uint8_t key_number);
+
+void tm1640_write_err(uint8_t led_number);
+void tm1640_write_end(uint8_t led_number);
+void tm1640_clear_led(uint8_t led_number);
 #endif // TM1640_H

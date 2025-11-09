@@ -8,6 +8,7 @@ Input Object File: D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ
 Input Object File: D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ
 Input Object File: D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ
 Input Object File: D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ
+Input Object File: D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\KEYIO.OBJ
 
 Input Library File: C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB
 Input Library File: C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\v3_lmrsc.lib
@@ -21,166 +22,224 @@ Input Library File: C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x
      00h     000ah     000ah    0001h      CODE               _USER_PROGRAM_C_HALT_WAKEUP (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
      00h     000bh     000bh    0001h      CODE               CTOUCH_VERSION (C:\Users\datva\AppData\Local\Temp\BS86D12C_CTOUCH_V512.OBJ)
      00h     000ch     000fh    0004h      CODE               TIME_BASE_INT (C:\Users\datva\AppData\Local\Temp\BS86D12C_CTOUCH_V512.OBJ)
-     00h     0010h     008dh    007eh      CODE               CTOUCH_INI (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ)
-     00h     008eh     00c8h    003bh      CODE               MAIN_PROGRAM (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ)
-     00h     00c9h     04e4h    041ch      CODE               CTOUCH_CODE (C:\Users\datva\AppData\Local\Temp\BS86D12C_CTOUCH_V512.OBJ)
-     00h     04e5h     04f2h    000eh      CODE               @ROMDATA_BASE (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
-     00h     04f3h     04ffh    000dh      CODE               itofaz (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     0500h     0533h    0034h      CODE               @builtin_holtek_ftsubadd (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     0534h     0568h    0035h      CODE               _builtin_holtek_ftmul (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     0569h     059ah    0032h      CODE               _builtin_holtek_ftdiv (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     059bh     05c5h    002bh      CODE               @builtin_holtek_ftol (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     05c6h     05dbh    0016h      CODE               @builtin_holtek_ftdecode (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     05dch     060ah    002fh      CODE               _builtin_holtek_ftnorm (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     060bh     0639h    002fh      CODE               @crom (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
-     00h     063ah     0891h    0258h      CODE               @crom (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
-     00h     0892h     0896h    0005h      CODE               @crom (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0897h     08adh    0017h      CODE               _delay_ms (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
-     00h     08aeh     08b3h    0006h      CODE               _SystemInit (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
-     00h     08b4h     08e9h    0036h      CODE               _USER_PROGRAM_C_INITIAL (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
-     00h     08eah     09c9h    00e0h      CODE               _USER_PROGRAM_C (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
-     00h     09cah     09cah    0001h      CODE               _USER_PROGRAM_C_RETURN_MAIN (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
-     00h     09cbh     09d1h    0007h      CODE               ___pgm_read_float_isra_0 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
-     00h     09d2h     0a63h    0092h      CODE               _comp (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
-     00h     0a64h     0a6bh    0008h      CODE               _adc_init_vdd_ref (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
-     00h     0a6ch     0a87h    001ch      CODE               _adc_read_channel (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
-     00h     0a88h     0b1eh    0097h      CODE               _pressure_sensor_read_mbar (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
-     00h     0b1fh     0c9eh    0180h      CODE               _temperature_sensor_read (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
-     00h     0c9fh     0cadh    000fh      CODE               _io_init_outputs (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
-     00h     0caeh     0cc6h    0019h      CODE               _touch_init (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
-     00h     0cc7h     0d0ch    0046h      CODE               _touch_read_key (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
-     00h     0d0dh     0d2ah    001eh      CODE               _touch_read_key_M1 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
-     00h     0d2bh     0d9fh    0075h      CODE               _touch_calibrate_idle (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
-     00h     0da0h     0e28h    0089h      CODE               _touch_scan_update (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
-     00h     0e29h     0e41h    0019h      CODE               _key_is_pressed (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
-     00h     0e42h     0e46h    0005h      CODE               _tm_delay_short (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0e47h     0e49h    0003h      CODE               _tm_clk_high (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0e4ah     0e4ch    0003h      CODE               _tm_clk_low (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0e4dh     0e4fh    0003h      CODE               _tm_din_high (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0e50h     0e52h    0003h      CODE               _tm_din_low (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0e53h     0e57h    0005h      CODE               _tm_start (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0e58h     0e5ch    0005h      CODE               _tm_stop (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0e5dh     0e6dh    0011h      CODE               _tm_write_byte (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0e6eh     0e73h    0006h      CODE               _tm_cmd (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0e74h     0e82h    000fh      CODE               _tm1640_clear_all (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0e83h     0e95h    0013h      CODE               _tm1640_init (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0e96h     0ea4h    000fh      CODE               _tm1640_write_fixed (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0ea5h     0ec0h    001ch      CODE               _tm1640_write_auto (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0ec1h     0ed9h    0019h      CODE               _tm1640_write_digit (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0edah     0ffbh    0122h      CODE               _tm1640_write_led (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     0ffch     1027h    002ch      CODE               _tm1640_show_1_to_9_on_grid1_to_9 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     1028h     1070h    0049h      CODE               _tm1640_walk_segments (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     1071h     109ch    002ch      CODE               _tm1640_walk_grids_a (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     109dh     10a8h    000ch      CODE               _uart0_init (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
-     00h     10a9h     10b4h    000ch      CODE               _uart0_send_byte (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
-     00h     10b5h     10c3h    000fh      CODE               _uart0_send_string (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
-     00h     10c4h     112ah    0067h      CODE               _uart0_send_number (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
-     00h     112bh     1161h    0037h      CODE               _builtin_holtek_divmodhi4_isr00 (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     1162h     1171h    0010h      CODE               _CROM2PROM (CROM2PROM)
+     00h     0010h     0012h    0003h      CODE               _tm_clk_high (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     0014h     0014h    0001h      CODE               @timer_ISR_code (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     0015h     0092h    007eh      CODE               CTOUCH_INI (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ)
+     00h     0093h     00cdh    003bh      CODE               MAIN_PROGRAM (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ)
+     00h     00ceh     04e9h    041ch      CODE               CTOUCH_CODE (C:\Users\datva\AppData\Local\Temp\BS86D12C_CTOUCH_V512.OBJ)
+     00h     04eah     04f6h    000dh      CODE               itofaz (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     04f7h     04fch    0006h      CODE               @crom (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     04fdh     04fdh    0001h      CODE               _USER_PROGRAM_C_RETURN_MAIN (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     0500h     053eh    003fh      CODE               @ROMDATA_BASE (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     053fh     0559h    001bh      CODE               ltofaz (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     055ah     058dh    0034h      CODE               @builtin_holtek_ftsubadd (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     058eh     05c2h    0035h      CODE               _builtin_holtek_ftmul (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     05c3h     05f4h    0032h      CODE               _builtin_holtek_ftdiv (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     05f5h     061fh    002bh      CODE               @builtin_holtek_ftol (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     0620h     064eh    002fh      CODE               _builtin_holtek_ftnorm (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     064fh     0664h    0016h      CODE               @builtin_holtek_ftdecode (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     0665h     066fh    000bh      CODE               @crom (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     0670h     08c7h    0258h      CODE               @crom (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
+     00h     08c8h     08e2h    001bh      CODE               _buzzer_start_ms (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     08e3h     08f9h    0017h      CODE               _delay_ms (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     08fah     0916h    001dh      CODE               _SystemInit (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     0917h     0937h    0021h      CODE               _USER_PROGRAM_C_INITIAL (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     0938h     0959h    0022h      CODE               __limit_data (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     095ah     0985h    002ch      CODE               _blink_err (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     0986h     0a3fh    00bah      CODE               _caculate_time_setup (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     0a40h     0a84h    0045h      CODE               _check_mode_process (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     0a85h     0c3dh    01b9h      CODE               _key_handle_service (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     0c3eh     0ccfh    0092h      CODE               _main_handle_servie (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     0cd0h     0df9h    012ah      CODE               _USER_PROGRAM_C (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     0dfah     0e00h    0007h      CODE               ___pgm_read_float_isra_0 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
+     00h     0e01h     0e92h    0092h      CODE               _comp (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
+     00h     0e93h     0e9ah    0008h      CODE               _adc_init_vdd_ref (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
+     00h     0e9bh     0eb6h    001ch      CODE               _adc_read_channel (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
+     00h     0eb7h     0f4dh    0097h      CODE               _pressure_sensor_read_mbar (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
+     00h     0f4eh     10cfh    0182h      CODE               _temperature_sensor_read (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
+     00h     10d0h     10deh    000fh      CODE               _io_init_outputs (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
+     00h     10dfh     10f7h    0019h      CODE               _touch_init (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
+     00h     10f8h     113dh    0046h      CODE               _touch_read_key (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
+     00h     113eh     115bh    001eh      CODE               _touch_read_key_M1 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
+     00h     115ch     11d0h    0075h      CODE               _touch_calibrate_idle (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
+     00h     11d1h     1259h    0089h      CODE               _touch_scan_update (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
+     00h     125ah     1272h    0019h      CODE               _key_is_pressed (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
+     00h     1273h     1277h    0005h      CODE               _tm_delay_short (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     1278h     127ah    0003h      CODE               _tm_clk_low (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     127bh     127dh    0003h      CODE               _tm_din_high (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     127eh     1280h    0003h      CODE               _tm_din_low (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     1281h     1285h    0005h      CODE               _tm_start (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     1286h     128ah    0005h      CODE               _tm_stop (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     128bh     129bh    0011h      CODE               _tm_write_byte (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     129ch     12a1h    0006h      CODE               _tm_cmd (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     12a2h     12b0h    000fh      CODE               _tm1640_clear_all (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     12b1h     12c3h    0013h      CODE               _tm1640_init (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     12c4h     12e1h    001eh      CODE               _tm1640_write_fixed (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     12e2h     12fdh    001ch      CODE               _tm1640_write_auto (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     12feh     1316h    0019h      CODE               _tm1640_write_digit (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     1317h     143bh    0125h      CODE               _tm1640_write_led (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     143ch     1467h    002ch      CODE               _tm1640_show_1_to_9_on_grid1_to_9 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     1468h     14b0h    0049h      CODE               _tm1640_walk_segments (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     14b1h     14dch    002ch      CODE               _tm1640_walk_grids_a (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     14ddh     14e5h    0009h      CODE               _tm1640_keyring_clear_all (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     14e6h     151bh    0036h      CODE               _tm1640_keyring_clear (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     151ch     1551h    0036h      CODE               _tm1640_keyring_add (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     1552h     158ah    0039h      CODE               _tm1640_keyring_only (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     158bh     15b2h    0028h      CODE               _tm1640_clear_led (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     15b3h     15e3h    0031h      CODE               _tm1640_write_err (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     15e4h     1614h    0031h      CODE               _tm1640_write_end (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     1615h     1620h    000ch      CODE               _uart0_init (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
+     00h     1621h     162ch    000ch      CODE               _uart0_send_byte (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
+     00h     162dh     163bh    000fh      CODE               _uart0_send_string (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
+     00h     163ch     16a2h    0067h      CODE               _uart0_send_number (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
+     00h     16a3h     178eh    00ech      CODE               _key_update (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\KEYIO.OBJ)
+     00h     178fh     17b3h    0025h      CODE               _builtin_holtek_divmodhi4_isr00 (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     17b4h     17f6h    0043h      CODE               _builtin_holtek_divmodsi4_isr00 (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     17f7h     1806h    0010h      CODE               _CROM2PROM (CROM2PROM)
      00h     0080h     00a0h    0021h      DATA     0.4545    CTOUCH_DATA0 (C:\Users\datva\AppData\Local\Temp\BS86D12C_CTOUCH_V512.OBJ)
      00h     00a1h     00a9h    0009h      DATA     18.444    MAIN_DATA (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ)
-     00h     00aah     00aah    0001h      DATA     96        @data_ra (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00abh     00abh    0001h      DATA     113       @data_rb (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00ach     00ach    0001h      DATA     116       @data_rc (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00adh     00adh    0001h      DATA     66        @data_rd (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00aeh     00aeh    0001h      DATA     65        @data_re (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00afh     00afh    0001h      DATA     29        @data_rf (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00b0h     00b0h    0001h      DATA     22        @data_rg (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00b1h     00b1h    0001h      DATA     6         @data_rh (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00b2h     00b7h    0006h      DATA     52.333    ftdata1 (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00b8h     00beh    0007h      DATA     21.286    ftdata2 (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00bfh     00c1h    0003h      DATA     2.6667    dtdata (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00e9h     00e9h    0001h      DATA     3         @HCCINIT___t63_cnt_2061 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
-     00h     00eah     00eah    0001h      DATA     2         @HCCINIT___key_prev_2060 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
-     00h     00ebh     00edh    0003h      DATA     1         @HCCINIT__voltageRef (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
-     00h     00eeh     00fdh    0010h      DATA     0         @HCCINIT_TM1640_grid_order (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00aah     00aah    0001h      DATA     3         @BITDATASEC (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00abh     00abh    0001h      DATA     199       @data_ra (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00ach     00ach    0001h      DATA     178       @data_rb (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00adh     00adh    0001h      DATA     161       @data_rc (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00aeh     00aeh    0001h      DATA     104       @data_rd (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00afh     00afh    0001h      DATA     95        @data_re (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00b0h     00b0h    0001h      DATA     54        @data_rf (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00b1h     00b1h    0001h      DATA     47        @data_rg (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00b2h     00b2h    0001h      DATA     9         @data_rh (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00b3h     00b8h    0006h      DATA     57.5      ftdata1 (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00b9h     00bbh    0003h      DATA     4.6667    dtdata (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00bch     00c2h    0007h      DATA     21.286    ftdata2 (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00e5h     00e6h    0002h      DATA     23        @HCCINIT_ui_led2 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00e7h     00e7h    0001h      DATA     15        @HCCINIT_grid10_state (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00e8h     00e8h    0001h      DATA     11        @HCCINIT_key23_state (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00e9h     00ech    0004h      DATA     11        @HCCINIT_g_time_tik_10ms (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00edh     00edh    0001h      DATA     9         @HCCINIT_key56_state (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00eeh     00eeh    0001h      DATA     7         @HCCINIT_grid11_state (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00efh     00f0h    0002h      DATA     6         @HCCINIT_sterilization_mode (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00f1h     00f2h    0002h      DATA     6         @HCCINIT_prg_state (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00f3h     00f4h    0002h      DATA     5         @HCCINIT_ui_led1 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00f5h     00f6h    0002h      DATA     4         @HCCINIT_key_led_timer (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00f7h     00f7h    0001h      DATA     4         @HCCINIT_buzzer_ticks (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00f8h     00f8h    0001h      DATA     3         @HCCINIT___t63_cnt_2186 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00f9h     00fch    0004h      DATA     3         @HCCINIT___tik_sup_2176 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00fdh     00fdh    0001h      DATA     3         @HCCINIT_danger_temp (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00feh     00ffh    0002h      DATA     2         @HCCINIT___adc_temp_2190 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
      01h     0080h     00afh    0030h      DATA     0         CTOUCH_DATA1 (C:\Users\datva\AppData\Local\Temp\BS86D12C_CTOUCH_V512.OBJ)
-     01h     00b0h     00b7h    0008h      DATA     0         @HCCINIT0_stable_cnt (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
-     01h     00b8h     00bfh    0008h      DATA     0         @HCCINIT0_pressed (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
-     01h     00c0h     00cfh    0010h      DATA     0         @HCCINIT0_baseline (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
+     01h     00b0h     00bdh    000eh      DATA     5.7857    @HCCINIT_system_config (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     01h     00beh     00beh    0001h      DATA     2         @HCCINIT___boot_started_2175 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     01h     00bfh     00bfh    0001h      DATA     2         @HCCINIT_s_hold_mask (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\KEYIO.OBJ)
+     01h     00c0h     00c0h    0001h      DATA     2         @HCCINIT_s_prev_raw (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\KEYIO.OBJ)
+     01h     00c1h     00c2h    0002h      DATA     1         @HCCINIT___count_2170 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     01h     00c3h     00d2h    0010h      DATA     0         @HCCINIT_TM1640_grid_order (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     01h     00d3h     00e2h    0010h      DATA     0         @HCCINIT_tm1640_last_data (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     01h     00e3h     00f2h    0010h      DATA     0         @HCCINIT_s_hold_ms (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\KEYIO.OBJ)
+     01h     00f3h     00f4h    0002h      DATA     1         @HCCINIT0___adc_pressure_2189 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     01h     00f5h     00fch    0008h      DATA     0         @HCCINIT0_stable_cnt (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
      02h     0080h     00afh    0030h      DATA     0         CTOUCH_DATA2 (C:\Users\datva\AppData\Local\Temp\BS86D12C_CTOUCH_V512.OBJ)
+     02h     00b0h     00bfh    0010h      DATA     0         @HCCINIT_s_stable_ms (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\KEYIO.OBJ)
+     02h     00c0h     00c7h    0008h      DATA     0         @HCCINIT0_pressed (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
+     02h     00c8h     00d7h    0010h      DATA     0         @HCCINIT0_baseline (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
      03h     0080h     00dfh    0060h      DATA     0         CTOUCH_DATA3 (C:\Users\datva\AppData\Local\Temp\BS86D12C_CTOUCH_V512.OBJ)
 
      Local Sections
 
      Bank    Start     End      Length     Class    AvgIns    Name
-     00h     00d5h     00d5h    0001h      LOCAL    4         _USER_PROGRAM_C_INITIAL (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
-     00h     00c6h     00c6h    0000h      LOCAL    0         _SystemInit (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _io_init_outputs (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _adc_init_vdd_ref (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _uart0_init (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
-     00h     00c5h     00c5h    0001h      LOCAL    2         _tm1640_init (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _tm_clk_high (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _tm_delay_short (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _tm_din_high (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c4h     00c4h    0001h      LOCAL    2         _tm1640_clear_all (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _tm_start (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _tm_din_low (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c2h     00c3h    0002h      LOCAL    2.5       _tm_write_byte (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _tm_clk_low (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _tm_stop (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c4h     00c4h    0001h      LOCAL    2         _tm_cmd (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c7h     00cbh    0005h      LOCAL    3.4       _tm1640_walk_grids_a (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c5h     00c6h    0002h      LOCAL    5.5       _tm1640_write_fixed (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c7h     00d0h    000ah      LOCAL    2.6       _tm1640_walk_segments (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c7h     00d1h    000bh      LOCAL    1.2727    _tm1640_show_1_to_9_on_grid1_to_9 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _Crom2Prom (CROM2PROM)
-     00h     00c7h     00c9h    0003h      LOCAL    8.6667    _tm1640_write_digit (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00cah     00d4h    000bh      LOCAL    7         _tm1640_write_led (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _builtin_holtek_ftsubadd (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _builtin_holtek_ftdecode (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _builtin_holtek_ftmul (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _builtin_holtek_ftol (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00c2h     00c9h    0008h      LOCAL    13.625    _builtin_holtek_divmodhi4_isr00 (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00c2h     00c3h    0002h      LOCAL    2         _uart0_send_byte (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
-     00h     00c4h     00c5h    0002h      LOCAL    12        _uart0_send_string (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
-     00h     00e1h     00e8h    0008h      LOCAL    5.875     _USER_PROGRAM_C (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _GET_KEY_BITMAP (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ)
-     00h     00cah     00d3h    000ah      LOCAL    2.7       _uart0_send_number (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
-     00h     00c2h     00c2h    0001h      LOCAL    2         _adc_read_channel (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _builtin_holtek_itof (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00c2h     00c3h    0002h      LOCAL    2         _pressure_sensor_read_mbar (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _builtin_holtek_uitof (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00c2h     00c2h    0000h      LOCAL    0         _builtin_holtek_ftdiv (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00d2h     00e0h    000fh      LOCAL    6         _temperature_sensor_read (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
-     00h     00c2h     00c4h    0003h      LOCAL    6         ___pgm_read_float_isra_0 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
-     00h     00c5h     00d1h    000dh      LOCAL    3.0769    _comp (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
-     00h     00c4h     00cah    0007h      LOCAL    2.5714    _touch_calibrate_idle (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
-     00h     00c2h     00c3h    0002h      LOCAL    2         _touch_read_key (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
-     00h     00cah     00cfh    0006h      LOCAL    2.6667    _touch_scan_update (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
-     00h     00c2h     00c2h    0001h      LOCAL    0         _key_is_pressed (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
-     00h     00c5h     00c9h    0005h      LOCAL    1.8       _tm1640_write_auto (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00d7h     00d7h    0001h      LOCAL    4         _USER_PROGRAM_C_INITIAL (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00c7h     00c7h    0000h      LOCAL    0         _SystemInit (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _io_init_outputs (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _adc_init_vdd_ref (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _uart0_init (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
+     00h     00c6h     00c6h    0001h      LOCAL    2         _tm1640_init (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _tm_clk_high (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _tm_delay_short (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _tm_din_high (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c5h     00c5h    0001h      LOCAL    2         _tm1640_clear_all (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _tm_start (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _tm_din_low (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c3h     00c4h    0002h      LOCAL    2.5       _tm_write_byte (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _tm_clk_low (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _tm_stop (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c5h     00c5h    0001h      LOCAL    2         _tm_cmd (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c9h     00d2h    000ah      LOCAL    2.6       _tm1640_walk_segments (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c6h     00c8h    0003h      LOCAL    18.667    _tm1640_write_fixed (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _Crom2Prom (CROM2PROM)
+     00h     00c9h     00d3h    000bh      LOCAL    1.2727    _tm1640_show_1_to_9_on_grid1_to_9 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c9h     00c9h    0001h      LOCAL    0         _tm1640_write_end (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00cch     00d6h    000bh      LOCAL    7.2727    _tm1640_write_led (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _builtin_holtek_ftsubadd (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _builtin_holtek_ftdecode (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _builtin_holtek_ftmul (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _builtin_holtek_ftol (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00c3h     00cah    0008h      LOCAL    12.125    _builtin_holtek_divmodhi4_isr00 (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00c9h     00cbh    0003h      LOCAL    8         _tm1640_write_digit (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c9h     00c9h    0001h      LOCAL    0         _tm1640_write_err (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c3h     00c4h    0002h      LOCAL    2         _uart0_send_byte (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
+     00h     00c5h     00c6h    0002h      LOCAL    3         _uart0_send_string (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
+     00h     00d7h     00d7h    0000h      LOCAL    0         _main_handle_servie (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00cbh     00cch    0002h      LOCAL    4         _buzzer_start_ms (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00c9h     00c9h    0001h      LOCAL    0         _tm1640_clear_led (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00d1h     00d5h    0005h      LOCAL    3         _blink_err (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00c3h     00d0h    000eh      LOCAL    5.6429    _builtin_holtek_divmodsi4_isr00 (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _builtin_holtek_uitof (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00ddh     00e4h    0008h      LOCAL    2.875     _USER_PROGRAM_C (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _GET_KEY_BITMAP (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ)
+     00h     00c3h     00ceh    000ch      LOCAL    4.5       _key_update (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\KEYIO.OBJ)
+     00h     00d5h     00dch    0008h      LOCAL    3.125     _key_handle_service (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00c9h     00cah    0002h      LOCAL    10.5      _caculate_time_setup (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00c3h     00c8h    0006h      LOCAL    6.6667    __limit_data (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00c3h     00d2h    0010h      LOCAL    1.75      _check_mode_process (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
+     00h     00cbh     00d4h    000ah      LOCAL    3.1       _uart0_send_number (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\UART.OBJ)
+     00h     00c3h     00c3h    0001h      LOCAL    2         _adc_read_channel (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _builtin_holtek_itof (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00c9h     00c9h    0001h      LOCAL    0         _tm1640_keyring_clear (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c9h     00c9h    0001h      LOCAL    0         _tm1640_keyring_add (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _builtin_holtek_ltof (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00c3h     00c4h    0002h      LOCAL    1         _pressure_sensor_read_mbar (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
+     00h     00c3h     00c3h    0000h      LOCAL    0         _builtin_holtek_ftdiv (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00d3h     00e1h    000fh      LOCAL    5.8667    _temperature_sensor_read (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
+     00h     00c3h     00c5h    0003h      LOCAL    6         ___pgm_read_float_isra_0 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
+     00h     00c6h     00d2h    000dh      LOCAL    3.0769    _comp (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\ADC.OBJ)
+     00h     00c5h     00cbh    0007h      LOCAL    2.5714    _touch_calibrate_idle (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
+     00h     00c3h     00c4h    0002h      LOCAL    2         _touch_read_key (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
+     00h     00cbh     00d0h    0006h      LOCAL    2.6667    _touch_scan_update (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
+     00h     00c3h     00c3h    0001h      LOCAL    0         _key_is_pressed (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
+     00h     00c6h     00cah    0005h      LOCAL    1.8       _tm1640_write_auto (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c9h     00cdh    0005h      LOCAL    3         _tm1640_walk_grids_a (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c9h     00c9h    0000h      LOCAL    0         _tm1640_keyring_clear_all (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
+     00h     00c9h     00c9h    0001h      LOCAL    0         _tm1640_keyring_only (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\TM1640.OBJ)
 
      Indepentent Local Sections
 
      Bank    Start     End      Length     Class    AvgIns    Name
-     00h     00c2h     00c2h    0000h      ILOCAL   0         _GET_LIB_VER (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ)
-     00h     00c2h     00c2h    0000h      ILOCAL   0         _GET_RCC_VALUE (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ)
-     00h     00c2h     00c2h    0000h      ILOCAL   0         _GET_ENV_VALUE (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ)
-     00h     00c2h     00c2h    0000h      ILOCAL   0         _GET_REF_VALUE (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ)
-     00h     00c2h     00c2h    0000h      ILOCAL   0         GET_KEY_THR_MP1 (C:\Users\datva\AppData\Local\Temp\BS86D12C_CTOUCH_V512.OBJ)
-     00h     00c2h     00c2h    0000h      ILOCAL   0         _SET_KEY_THR (C:\Users\datva\AppData\Local\Temp\BS86D12C_CTOUCH_V512.OBJ)
-     00h     00c2h     00c2h    0000h      ILOCAL   0         _GET_KEY_AMOUNT (C:\Users\datva\AppData\Local\Temp\BS86D12C_CTOUCH_V512.OBJ)
+     00h     00c3h     00c3h    0000h      ILOCAL   0         _GET_LIB_VER (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ)
+     00h     00c3h     00c3h    0000h      ILOCAL   0         _GET_RCC_VALUE (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ)
+     00h     00c3h     00c3h    0000h      ILOCAL   0         _GET_ENV_VALUE (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ)
+     00h     00c3h     00c3h    0000h      ILOCAL   0         _GET_REF_VALUE (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ)
+     00h     00c3h     00c3h    0000h      ILOCAL   0         GET_KEY_THR_MP1 (C:\Users\datva\AppData\Local\Temp\BS86D12C_CTOUCH_V512.OBJ)
+     00h     00c3h     00c3h    0000h      ILOCAL   0         _SET_KEY_THR (C:\Users\datva\AppData\Local\Temp\BS86D12C_CTOUCH_V512.OBJ)
+     00h     00c3h     00c3h    0000h      ILOCAL   0         _GET_KEY_AMOUNT (C:\Users\datva\AppData\Local\Temp\BS86D12C_CTOUCH_V512.OBJ)
      03h     00e0h     00e1h    0002h      ILOCAL   2         _delay_ms (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
      03h     00e0h     00e0h    0000h      ILOCAL   0         _USER_PROGRAM_C_HALT_PREPARE (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
      03h     00e0h     00e0h    0000h      ILOCAL   0         _USER_PROGRAM_C_HALT_WAKEUP (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
      03h     00e0h     00e0h    0000h      ILOCAL   0         _USER_PROGRAM_C_RETURN_MAIN (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\USER_PROGRAM_C.OBJ)
      03h     00e0h     00e0h    0000h      ILOCAL   0         _touch_init (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
      03h     00e0h     00e0h    0001h      ILOCAL   1         _touch_read_key_M1 (D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\IOCONFIG.OBJ)
-     00h     00c2h     00c2h    0000h      ILOCAL   0         _builtin_holtek_ftnorm (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
-     00h     00c2h     00c2h    0000h      ILOCAL   0         _builtin_holtek_ftinf (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00c3h     00c3h    0000h      ILOCAL   0         _builtin_holtek_ftnorm (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00c3h     00c3h    0000h      ILOCAL   0         _builtin_holtek_ultof (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
+     00h     00c3h     00c3h    0000h      ILOCAL   0         _builtin_holtek_ftinf (C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x\LIB\LIBHOLTEKGCC.LIB)
 
      Public Symbols Information
      Address            Public by Name
      0096h              BALANCE_BUF
      0095h              CHANNEL_INDEX
-     04cch              GET_KEY_REF_MPX
-     04d4h              GET_KEY_THR_MP1
-     04c2h              GET_M11_LIMIT_MPX
-     04bah              GET_M3_LIMIT_MPX
+     04d1h              GET_KEY_REF_MPX
+     04d9h              GET_KEY_THR_MP1
+     04c7h              GET_M11_LIMIT_MPX
+     04bfh              GET_M3_LIMIT_MPX
      009eh              HALT_CAL_TIME
-     008dh              HALT_SAMPLING
-     008dh              HALT_SAVE_DATA
+     0092h              HALT_SAMPLING
+     0092h              HALT_SAVE_DATA
      0093h              KEY_DBCE
      0094h              KEY_STATE_BUF
      0099h              SAMPLE_TIMES
@@ -189,29 +248,29 @@ Input Library File: C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x
      0086h              TKS_STACK
      009ah              TKS_TIMER
      009fh[3]           _ANY_KEY_PRESSF
-     005bh              _AUTOCHECKTOUCHIO
+     0060h              _AUTOCHECKTOUCHIO
      0280h              _BALANCE_CAP
-     00c9h              _BS86D12C_CTOUCH
-     008dh              _BS86D12C_CTOUCH_HALT_PREPARE
-     008bh              _BS86D12C_CTOUCH_HALT_WAKEUP
-     00f5h              _BS86D12C_CTOUCH_INITIAL
-     008dh              _BS86D12C_CTOUCH_RETURN_MAIN
-     008ch              _CHECK_KEY_ENTER_HALT
-     1163h              _Crom2Prom
-     1162h              _Crom2PromNext
+     00ceh              _BS86D12C_CTOUCH
+     0092h              _BS86D12C_CTOUCH_HALT_PREPARE
+     0090h              _BS86D12C_CTOUCH_HALT_WAKEUP
+     00fah              _BS86D12C_CTOUCH_INITIAL
+     0092h              _BS86D12C_CTOUCH_RETURN_MAIN
+     0091h              _CHECK_KEY_ENTER_HALT
+     17f8h              _Crom2Prom
+     17f7h              _Crom2PromNext
      00a1h              _DATA_BUF
      009fh[0]           _FORCE_CALIBRATEF
-     002eh              _GETHYSTERESIS
-     001dh              _GETPONRESETTIMES
-     0015h              _GETSAMPLEWINDOWLIMIT
-     012ah              _GETSAMPLEWINDOWLIMIT_RET
-     0010h              _GETTKTMRSENS
-     006bh              _GET_ENV_VALUE
-     04e4h              _GET_KEY_AMOUNT
-     0061h              _GET_KEY_BITMAP
-     005ch              _GET_LIB_VER
-     0066h              _GET_RCC_VALUE
-     006eh              _GET_REF_VALUE
+     0033h              _GETHYSTERESIS
+     0022h              _GETPONRESETTIMES
+     001ah              _GETSAMPLEWINDOWLIMIT
+     012fh              _GETSAMPLEWINDOWLIMIT_RET
+     0015h              _GETTKTMRSENS
+     0070h              _GET_ENV_VALUE
+     04e9h              _GET_KEY_AMOUNT
+     0066h              _GET_KEY_BITMAP
+     0061h              _GET_LIB_VER
+     006bh              _GET_RCC_VALUE
+     0073h              _GET_REF_VALUE
      0080h              _GLOBE_VARIES
      00a9h              _HALT_STATE
      008ch              _KEY_DATA
@@ -219,123 +278,150 @@ Input Library File: C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x
      0180h              _KEY_REF
      01a4h              _KEY_STATUS
      0198h              _KEY_THR
-     00f6h              _LIBRARY_RESET
-     0163h              _LOAD_BALCAP
-     0031h              _LOAD_TKS_GLOBE_VARIES
-     0022h              _PONDIVRESET
-     0265h              _PON_CALIBRATE_ENTER
+     00fbh              _LIBRARY_RESET
+     0168h              _LOAD_BALCAP
+     0036h              _LOAD_TKS_GLOBE_VARIES
+     0027h              _PONDIVRESET
+     026ah              _PON_CALIBRATE_ENTER
      009fh[2]           _SCAN_CYCLEF
-     04ddh              _SET_KEY_THR
+     04e2h              _SET_KEY_THR
      0083h              _STANDBY_TIME
      0084h              _STANDBY_TIME_CTRL
-     08aeh              _SystemInit
-     01ech              _TKM_RESET
+     08fah              _SystemInit
+     01f1h              _TKM_RESET
      009fh[5]           _TKS_250MSF
      009fh[6]           _TKS_500MSF
      009fh[4]           _TKS_63MSF
      009fh[1]           _TKS_ACTIVEF
      009fh              _TKS_FLAGA
      0085h              _TKS_TIME_BASE
-     00eeh              _TM1640_grid_order
-     005bh              _TOUCHKEYRAMRESET
+     01c3h              _TM1640_grid_order
+     0060h              _TOUCHKEYRAMRESET
      00a0h[0]           _TOUCH_POWER_SAVEF
-     08eah              _USER_PROGRAM_C
+     0cd0h              _USER_PROGRAM_C
      0007h              _USER_PROGRAM_C_HALT_PREPARE
      000ah              _USER_PROGRAM_C_HALT_WAKEUP
-     08b4h              _USER_PROGRAM_C_INITIAL
-     09cah              _USER_PROGRAM_C_RETURN_MAIN
-     0167h              __LOAD_BALCAP
-     00ebh              __voltageRef
-     0a64h              _adc_init_vdd_ref
-     0a6ch              _adc_read_channel
-     112bh              _builtin_holtek_divmodhi4_isr00
-     00b5h              _builtin_holtek_exp1
-     00bbh              _builtin_holtek_exp2
-     00b7h              _builtin_holtek_floatflag
-     0502h              _builtin_holtek_ftadd
-     05d0h              _builtin_holtek_ftdecode1
-     05c6h              _builtin_holtek_ftdecode2
-     0569h              _builtin_holtek_ftdiv
+     0917h              _USER_PROGRAM_C_INITIAL
+     04fdh              _USER_PROGRAM_C_RETURN_MAIN
+     016ch              __LOAD_BALCAP
+     0938h              __limit_data
+     00c3h              __limit_data_2
+     0e93h              _adc_init_vdd_ref
+     0e9bh              _adc_read_channel
+     095ah              _blink_err
+     00d1h              _blink_err_2
+     00b6h              _builtin_holtek_exp1
+     00bfh              _builtin_holtek_exp2
+     00b8h              _builtin_holtek_floatflag
+     055bh              _builtin_holtek_ftadd
+     0654h              _builtin_holtek_ftdecode1
+     064fh              _builtin_holtek_ftdecode2
+     05c3h              _builtin_holtek_ftdiv
      0001h              _builtin_holtek_ftinf
-     0534h              _builtin_holtek_ftmul
-     05dch              _builtin_holtek_ftnorm
-     059bh              _builtin_holtek_ftol
-     0500h              _builtin_holtek_ftsub
-     05d8h              _builtin_holtek_ftzero
-     05dah              _builtin_holtek_ftzero1
-     04f3h              _builtin_holtek_itof
-     00b2h              _builtin_holtek_mant1
-     00bfh              _builtin_holtek_mant12p
-     00b8h              _builtin_holtek_mant2
-     00bch              _builtin_holtek_prod
-     00b6h              _builtin_holtek_signs
-     1134h              _builtin_holtek_udivmodhi4_isr00
-     04fch              _builtin_holtek_uitof
-     0897h              _delay_ms
+     058eh              _builtin_holtek_ftmul
+     0620h              _builtin_holtek_ftnorm
+     05f5h              _builtin_holtek_ftol
+     055ah              _builtin_holtek_ftsub
+     0658h              _builtin_holtek_ftzero
+     0659h              _builtin_holtek_ftzero1
+     04eah              _builtin_holtek_itof
+     053fh              _builtin_holtek_ltof
+     00b3h              _builtin_holtek_mant1
+     00b9h              _builtin_holtek_mant12p
+     00bch              _builtin_holtek_mant2
+     00c0h              _builtin_holtek_prod
+     00b7h              _builtin_holtek_signs
+     178fh              _builtin_holtek_udivmodhi4_isr00
+     17b4h              _builtin_holtek_udivmodsi4_isr00
+     04f3h              _builtin_holtek_uitof
+     0546h              _builtin_holtek_ultof
+     0986h              _caculate_time_setup
+     00c9h              _caculate_time_setup_2
+     0a40h              _check_mode_process
+     00cdh              _check_mode_process_2
+     00fdh              _danger_temp
+     08e3h              _delay_ms
      03e0h              _delay_ms_2
-     0c9fh              _io_init_outputs
-     0e29h              _key_is_pressed
-     0a88h              _pressure_sensor_read_mbar
-     0b1fh              _temperature_sensor_read
-     00d2h              _temperature_sensor_read_2
-     0e74h              _tm1640_clear_all
-     0e83h              _tm1640_init
-     0ffch              _tm1640_show_1_to_9_on_grid1_to_9
-     1071h              _tm1640_walk_grids_a
-     1028h              _tm1640_walk_segments
-     0ea5h              _tm1640_write_auto
-     0ec1h              _tm1640_write_digit
-     0e96h              _tm1640_write_fixed
-     0edah              _tm1640_write_led
-     0d2bh              _touch_calibrate_idle
-     0caeh              _touch_init
-     0cc7h              _touch_read_key
-     0d0dh              _touch_read_key_M1
-     0da0h              _touch_scan_update
-     109dh              _uart0_init
-     10a9h              _uart0_send_byte
-     10c4h              _uart0_send_number
-     10b5h              _uart0_send_string
-     00aah              ra
-     00abh              rb
-     00ach              rc
-     00adh              rd
-     00aeh              re
-     00afh              rf
-     00b0h              rg
-     00b1h              rh
+     00e9h              _g_time_tik_10ms
+     10d0h              _io_init_outputs
+     0a85h              _key_handle_service
+     00d6h              _key_handle_service_2
+     125ah              _key_is_pressed
+     16a3h              _key_update
+     0c3eh              _main_handle_servie
+     0eb7h              _pressure_sensor_read_mbar
+     00aah[1]           _quick_mode
+     00efh              _sterilization_mode
+     01b0h              _system_config
+     0f4eh              _temperature_sensor_read
+     0014h              _timer_ISR
+     12a2h              _tm1640_clear_all
+     158bh              _tm1640_clear_led
+     12b1h              _tm1640_init
+     151ch              _tm1640_keyring_add
+     14e6h              _tm1640_keyring_clear
+     14ddh              _tm1640_keyring_clear_all
+     1552h              _tm1640_keyring_only
+     143ch              _tm1640_show_1_to_9_on_grid1_to_9
+     14b1h              _tm1640_walk_grids_a
+     1468h              _tm1640_walk_segments
+     12e2h              _tm1640_write_auto
+     12feh              _tm1640_write_digit
+     15e4h              _tm1640_write_end
+     15b3h              _tm1640_write_err
+     12c4h              _tm1640_write_fixed
+     1317h              _tm1640_write_led
+     115ch              _touch_calibrate_idle
+     10dfh              _touch_init
+     10f8h              _touch_read_key
+     113eh              _touch_read_key_M1
+     11d1h              _touch_scan_update
+     1615h              _uart0_init
+     1621h              _uart0_send_byte
+     163ch              _uart0_send_number
+     162dh              _uart0_send_string
+     00f3h              _ui_led1
+     00abh              ra
+     00ach              rb
+     00adh              rc
+     00aeh              rd
+     00afh              re
+     00b0h              rf
+     00b1h              rg
+     00b2h              rh
 
      Address            Public by Value
      0001h              _builtin_holtek_ftinf
      0007h              _USER_PROGRAM_C_HALT_PREPARE
      000ah              _USER_PROGRAM_C_HALT_WAKEUP
-     0010h              _GETTKTMRSENS
-     0015h              _GETSAMPLEWINDOWLIMIT
-     001dh              _GETPONRESETTIMES
-     0022h              _PONDIVRESET
-     002eh              _GETHYSTERESIS
-     0031h              _LOAD_TKS_GLOBE_VARIES
-     005bh              _TOUCHKEYRAMRESET
-     005bh              _AUTOCHECKTOUCHIO
-     005ch              _GET_LIB_VER
-     0061h              _GET_KEY_BITMAP
-     0066h              _GET_RCC_VALUE
-     006bh              _GET_ENV_VALUE
-     006eh              _GET_REF_VALUE
+     0014h              _timer_ISR
+     0015h              _GETTKTMRSENS
+     001ah              _GETSAMPLEWINDOWLIMIT
+     0022h              _GETPONRESETTIMES
+     0027h              _PONDIVRESET
+     0033h              _GETHYSTERESIS
+     0036h              _LOAD_TKS_GLOBE_VARIES
+     0060h              _AUTOCHECKTOUCHIO
+     0060h              _TOUCHKEYRAMRESET
+     0061h              _GET_LIB_VER
+     0066h              _GET_KEY_BITMAP
+     006bh              _GET_RCC_VALUE
+     0070h              _GET_ENV_VALUE
+     0073h              _GET_REF_VALUE
      0080h              _GLOBE_VARIES
      0083h              _STANDBY_TIME
      0084h              _STANDBY_TIME_CTRL
      0085h              _TKS_TIME_BASE
      0086h              TKS_STACK
      008ah              _KEY_IO_SEL
-     008bh              _BS86D12C_CTOUCH_HALT_WAKEUP
-     008ch              _CHECK_KEY_ENTER_HALT
      008ch              _KEY_DATA
-     008dh              HALT_SAMPLING
-     008dh              _BS86D12C_CTOUCH_RETURN_MAIN
-     008dh              HALT_SAVE_DATA
-     008dh              _BS86D12C_CTOUCH_HALT_PREPARE
      008eh              TKM_BUF
+     0090h              _BS86D12C_CTOUCH_HALT_WAKEUP
+     0091h              _CHECK_KEY_ENTER_HALT
+     0092h              _BS86D12C_CTOUCH_RETURN_MAIN
+     0092h              HALT_SAMPLING
+     0092h              _BS86D12C_CTOUCH_HALT_PREPARE
+     0092h              HALT_SAVE_DATA
      0093h              KEY_DBCE
      0094h              KEY_STATE_BUF
      0095h              CHANNEL_INDEX
@@ -347,118 +433,149 @@ Input Library File: C:\Program Files\Holtek MCU Development Tools\HT-IDE3000V8.x
      009fh              _TKS_FLAGA
      00a1h              _DATA_BUF
      00a9h              _HALT_STATE
-     00aah              ra
-     00abh              rb
-     00ach              rc
-     00adh              rd
-     00aeh              re
-     00afh              rf
-     00b0h              rg
-     00b1h              rh
-     00b2h              _builtin_holtek_mant1
-     00b5h              _builtin_holtek_exp1
-     00b6h              _builtin_holtek_signs
-     00b7h              _builtin_holtek_floatflag
-     00b8h              _builtin_holtek_mant2
-     00bbh              _builtin_holtek_exp2
-     00bch              _builtin_holtek_prod
-     00bfh              _builtin_holtek_mant12p
-     00c9h              _BS86D12C_CTOUCH
-     00d2h              _temperature_sensor_read_2
-     00ebh              __voltageRef
-     00eeh              _TM1640_grid_order
-     00f5h              _BS86D12C_CTOUCH_INITIAL
-     00f6h              _LIBRARY_RESET
-     012ah              _GETSAMPLEWINDOWLIMIT_RET
-     0163h              _LOAD_BALCAP
-     0167h              __LOAD_BALCAP
+     00abh              ra
+     00ach              rb
+     00adh              rc
+     00aeh              rd
+     00afh              re
+     00b0h              rf
+     00b1h              rg
+     00b2h              rh
+     00b3h              _builtin_holtek_mant1
+     00b6h              _builtin_holtek_exp1
+     00b7h              _builtin_holtek_signs
+     00b8h              _builtin_holtek_floatflag
+     00b9h              _builtin_holtek_mant12p
+     00bch              _builtin_holtek_mant2
+     00bfh              _builtin_holtek_exp2
+     00c0h              _builtin_holtek_prod
+     00c3h              __limit_data_2
+     00c9h              _caculate_time_setup_2
+     00cdh              _check_mode_process_2
+     00ceh              _BS86D12C_CTOUCH
+     00d1h              _blink_err_2
+     00d6h              _key_handle_service_2
+     00e9h              _g_time_tik_10ms
+     00efh              _sterilization_mode
+     00f3h              _ui_led1
+     00fah              _BS86D12C_CTOUCH_INITIAL
+     00fbh              _LIBRARY_RESET
+     00fdh              _danger_temp
+     012fh              _GETSAMPLEWINDOWLIMIT_RET
+     0168h              _LOAD_BALCAP
+     016ch              __LOAD_BALCAP
      0180h              _KEY_REF
      0198h              _KEY_THR
      01a4h              _KEY_STATUS
-     01ech              _TKM_RESET
-     0265h              _PON_CALIBRATE_ENTER
+     01b0h              _system_config
+     01c3h              _TM1640_grid_order
+     01f1h              _TKM_RESET
+     026ah              _PON_CALIBRATE_ENTER
      0280h              _BALANCE_CAP
      03e0h              _delay_ms_2
-     04bah              GET_M3_LIMIT_MPX
-     04c2h              GET_M11_LIMIT_MPX
-     04cch              GET_KEY_REF_MPX
-     04d4h              GET_KEY_THR_MP1
-     04ddh              _SET_KEY_THR
-     04e4h              _GET_KEY_AMOUNT
-     04f3h              _builtin_holtek_itof
+     04bfh              GET_M3_LIMIT_MPX
+     04c7h              GET_M11_LIMIT_MPX
+     04d1h              GET_KEY_REF_MPX
+     04d9h              GET_KEY_THR_MP1
+     04e2h              _SET_KEY_THR
+     04e9h              _GET_KEY_AMOUNT
+     04eah              _builtin_holtek_itof
+     04f3h              _builtin_holtek_uitof
      009fh[0]           _FORCE_CALIBRATEF
      009fh[1]           _TKS_ACTIVEF
      009fh[2]           _SCAN_CYCLEF
      009fh[3]           _ANY_KEY_PRESSF
      009fh[4]           _TKS_63MSF
-     04fch              _builtin_holtek_uitof
      009fh[5]           _TKS_250MSF
+     04fdh              _USER_PROGRAM_C_RETURN_MAIN
      009fh[6]           _TKS_500MSF
-     0500h              _builtin_holtek_ftsub
      00a0h[0]           _TOUCH_POWER_SAVEF
-     0502h              _builtin_holtek_ftadd
-     0534h              _builtin_holtek_ftmul
-     0569h              _builtin_holtek_ftdiv
-     059bh              _builtin_holtek_ftol
-     05c6h              _builtin_holtek_ftdecode2
-     05d0h              _builtin_holtek_ftdecode1
-     05d8h              _builtin_holtek_ftzero
-     05dah              _builtin_holtek_ftzero1
-     05dch              _builtin_holtek_ftnorm
-     0897h              _delay_ms
-     08aeh              _SystemInit
-     08b4h              _USER_PROGRAM_C_INITIAL
-     08eah              _USER_PROGRAM_C
-     09cah              _USER_PROGRAM_C_RETURN_MAIN
-     0a64h              _adc_init_vdd_ref
-     0a6ch              _adc_read_channel
-     0a88h              _pressure_sensor_read_mbar
-     0b1fh              _temperature_sensor_read
-     0c9fh              _io_init_outputs
-     0caeh              _touch_init
-     0cc7h              _touch_read_key
-     0d0dh              _touch_read_key_M1
-     0d2bh              _touch_calibrate_idle
-     0da0h              _touch_scan_update
-     0e29h              _key_is_pressed
-     0e74h              _tm1640_clear_all
-     0e83h              _tm1640_init
-     0e96h              _tm1640_write_fixed
-     0ea5h              _tm1640_write_auto
-     0ec1h              _tm1640_write_digit
-     0edah              _tm1640_write_led
-     0ffch              _tm1640_show_1_to_9_on_grid1_to_9
-     1028h              _tm1640_walk_segments
-     1071h              _tm1640_walk_grids_a
-     109dh              _uart0_init
-     10a9h              _uart0_send_byte
-     10b5h              _uart0_send_string
-     10c4h              _uart0_send_number
-     112bh              _builtin_holtek_divmodhi4_isr00
-     1134h              _builtin_holtek_udivmodhi4_isr00
-     1162h              _Crom2PromNext
-     1163h              _Crom2Prom
+     053fh              _builtin_holtek_ltof
+     0546h              _builtin_holtek_ultof
+     00aah[1]           _quick_mode
+     055ah              _builtin_holtek_ftsub
+     055bh              _builtin_holtek_ftadd
+     058eh              _builtin_holtek_ftmul
+     05c3h              _builtin_holtek_ftdiv
+     05f5h              _builtin_holtek_ftol
+     0620h              _builtin_holtek_ftnorm
+     064fh              _builtin_holtek_ftdecode2
+     0654h              _builtin_holtek_ftdecode1
+     0658h              _builtin_holtek_ftzero
+     0659h              _builtin_holtek_ftzero1
+     08e3h              _delay_ms
+     08fah              _SystemInit
+     0917h              _USER_PROGRAM_C_INITIAL
+     0938h              __limit_data
+     095ah              _blink_err
+     0986h              _caculate_time_setup
+     0a40h              _check_mode_process
+     0a85h              _key_handle_service
+     0c3eh              _main_handle_servie
+     0cd0h              _USER_PROGRAM_C
+     0e93h              _adc_init_vdd_ref
+     0e9bh              _adc_read_channel
+     0eb7h              _pressure_sensor_read_mbar
+     0f4eh              _temperature_sensor_read
+     10d0h              _io_init_outputs
+     10dfh              _touch_init
+     10f8h              _touch_read_key
+     113eh              _touch_read_key_M1
+     115ch              _touch_calibrate_idle
+     11d1h              _touch_scan_update
+     125ah              _key_is_pressed
+     12a2h              _tm1640_clear_all
+     12b1h              _tm1640_init
+     12c4h              _tm1640_write_fixed
+     12e2h              _tm1640_write_auto
+     12feh              _tm1640_write_digit
+     1317h              _tm1640_write_led
+     143ch              _tm1640_show_1_to_9_on_grid1_to_9
+     1468h              _tm1640_walk_segments
+     14b1h              _tm1640_walk_grids_a
+     14ddh              _tm1640_keyring_clear_all
+     14e6h              _tm1640_keyring_clear
+     151ch              _tm1640_keyring_add
+     1552h              _tm1640_keyring_only
+     158bh              _tm1640_clear_led
+     15b3h              _tm1640_write_err
+     15e4h              _tm1640_write_end
+     1615h              _uart0_init
+     1621h              _uart0_send_byte
+     162dh              _uart0_send_string
+     163ch              _uart0_send_number
+     16a3h              _key_update
+     178fh              _builtin_holtek_udivmodhi4_isr00
+     17b4h              _builtin_holtek_udivmodsi4_isr00
+     17f7h              _Crom2PromNext
+     17f8h              _Crom2Prom
 
 
 ROM Usage Statistics
      Size      Used     Percentage
-     2000h     1172h    54%
+     2000h     1804h    75%
 
 RAM Usage Statistics
     Bank      Size      Used     Percentage
-     00h       0080h     007eh    98%
-     01h       0080h     0050h    62%
-     02h       0080h     0030h    37%
+     00h       0080h     0080h    100%
+     01h       0080h     007dh    97%
+     02h       0080h     0058h    68%
      03h       0080h     0062h    76%
-     Total     0200h     0160h    68%
+     Total     0200h     01b7h    85%
 
 Use Stack Count
 _USER_PROGRAM_C_INITIAL: 7
+_main_handle_servie: 7
 _USER_PROGRAM_C: 7
+_pressure_sensor_read_mbar: 2
+_temperature_sensor_read: 3
 _touch_calibrate_idle: 1
 _touch_scan_update: 1
 _key_is_pressed: 1
 _tm1640_write_auto: 4
+_tm1640_walk_grids_a: 5
+_tm1640_keyring_clear_all: 5
+_tm1640_keyring_only: 5
 
 Call Tree
     _USER_PROGRAM_C_INITIAL
@@ -525,88 +642,6 @@ Call Tree
                             _tm_delay_short (5)
                         _tm_din_high (4)
                             _tm_delay_short (5)
-        _tm1640_walk_grids_a (0)
-            _tm1640_clear_all (1)
-                _tm_start (2)
-                    _tm_clk_high (3)
-                        _tm_delay_short (4)
-                    _tm_din_high (3)
-                        _tm_delay_short (4)
-                    _tm_din_low (3)
-                        _tm_delay_short (4)
-                    _tm_delay_short (3)
-                _tm_write_byte (2)
-                    _tm_clk_low (3)
-                        _tm_delay_short (4)
-                    _tm_din_high (3)
-                        _tm_delay_short (4)
-                    _tm_din_low (3)
-                        _tm_delay_short (4)
-                    _tm_clk_high (3)
-                        _tm_delay_short (4)
-                _tm_stop (2)
-                    _tm_clk_low (3)
-                        _tm_delay_short (4)
-                    _tm_din_low (3)
-                        _tm_delay_short (4)
-                    _tm_clk_high (3)
-                        _tm_delay_short (4)
-                    _tm_din_high (3)
-                        _tm_delay_short (4)
-            _tm1640_write_fixed (1)
-                _tm_cmd (2)
-                    _tm_start (3)
-                        _tm_clk_high (4)
-                            _tm_delay_short (5)
-                        _tm_din_high (4)
-                            _tm_delay_short (5)
-                        _tm_din_low (4)
-                            _tm_delay_short (5)
-                        _tm_delay_short (4)
-                    _tm_write_byte (3)
-                        _tm_clk_low (4)
-                            _tm_delay_short (5)
-                        _tm_din_high (4)
-                            _tm_delay_short (5)
-                        _tm_din_low (4)
-                            _tm_delay_short (5)
-                        _tm_clk_high (4)
-                            _tm_delay_short (5)
-                    _tm_stop (3)
-                        _tm_clk_low (4)
-                            _tm_delay_short (5)
-                        _tm_din_low (4)
-                            _tm_delay_short (5)
-                        _tm_clk_high (4)
-                            _tm_delay_short (5)
-                        _tm_din_high (4)
-                            _tm_delay_short (5)
-                _tm_start (2)
-                    _tm_clk_high (3)
-                        _tm_delay_short (4)
-                    _tm_din_high (3)
-                        _tm_delay_short (4)
-                    _tm_din_low (3)
-                        _tm_delay_short (4)
-                    _tm_delay_short (3)
-                _tm_write_byte (2)
-                    _tm_clk_low (3)
-                        _tm_delay_short (4)
-                    _tm_din_high (3)
-                        _tm_delay_short (4)
-                    _tm_din_low (3)
-                        _tm_delay_short (4)
-                    _tm_clk_high (3)
-                        _tm_delay_short (4)
-                _tm_stop (2)
-                    _tm_clk_low (3)
-                        _tm_delay_short (4)
-                    _tm_din_low (3)
-                        _tm_delay_short (4)
-                    _tm_clk_high (3)
-                        _tm_delay_short (4)
-                    _tm_din_high (3)
-                        _tm_delay_short (4)
         _tm1640_walk_segments (0)
             _tm1640_clear_all (1)
                 _tm_start (2)
@@ -636,6 +671,7 @@ Call Tree
                     _tm_din_high (3)
                         _tm_delay_short (4)
             _tm1640_write_fixed (1)
+                _Crom2Prom (2)
                 _tm_cmd (2)
                     _tm_start (3)
                         _tm_clk_high (4)
@@ -692,6 +728,7 @@ Call Tree
         _tm1640_show_1_to_9_on_grid1_to_9 (0)
             _Crom2Prom (1)
             _tm1640_write_fixed (1)
+                _Crom2Prom (2)
                 _tm_cmd (2)
                     _tm_start (3)
                         _tm_clk_high (4)
@@ -745,9 +782,9 @@ Call Tree
                         _tm_delay_short (4)
                     _tm_din_high (3)
                         _tm_delay_short (4)
-        _tm1640_write_digit (0)
-            _Crom2Prom (1)
+        _tm1640_write_end (0)
             _tm1640_write_fixed (1)
+                _Crom2Prom (2)
                 _tm_cmd (2)
                     _tm_start (3)
                         _tm_clk_high (4)
@@ -812,6 +849,7 @@ Call Tree
             _tm1640_write_digit (1)
                 _Crom2Prom (2)
                 _tm1640_write_fixed (2)
+                    _Crom2Prom (3)
                     _tm_cmd (3)
                         _tm_start (4)
                             _tm_clk_high (5)
@@ -865,19 +903,377 @@ Call Tree
                             _tm_delay_short (5)
                         _tm_din_high (4)
                             _tm_delay_short (5)
+        _tm1640_write_err (0)
+            _tm1640_write_fixed (1)
+                _Crom2Prom (2)
+                _tm_cmd (2)
+                    _tm_start (3)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_delay_short (4)
+                    _tm_write_byte (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                    _tm_stop (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                _tm_start (2)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_delay_short (3)
+                _tm_write_byte (2)
+                    _tm_clk_low (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                _tm_stop (2)
+                    _tm_clk_low (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
         _uart0_send_byte (0)
         _uart0_send_string (0)
             _uart0_send_byte (1)
             _Crom2Prom (1)
+    _main_handle_servie
+        _buzzer_start_ms (0)
+            _builtin_holtek_divmodhi4_isr00 (1)
+        _tm1640_clear_led (0)
+            _tm1640_write_fixed (1)
+                _Crom2Prom (2)
+                _tm_cmd (2)
+                    _tm_start (3)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_delay_short (4)
+                    _tm_write_byte (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                    _tm_stop (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                _tm_start (2)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_delay_short (3)
+                _tm_write_byte (2)
+                    _tm_clk_low (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                _tm_stop (2)
+                    _tm_clk_low (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+        _blink_err (0)
+            _builtin_holtek_divmodsi4_isr00 (1)
+            _tm1640_clear_led (1)
+                _tm1640_write_fixed (2)
+                    _Crom2Prom (3)
+                    _tm_cmd (3)
+                        _tm_start (4)
+                            _tm_clk_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_low (5)
+                                _tm_delay_short (6)
+                            _tm_delay_short (5)
+                        _tm_write_byte (4)
+                            _tm_clk_low (5)
+                                _tm_delay_short (6)
+                            _tm_din_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_low (5)
+                                _tm_delay_short (6)
+                            _tm_clk_high (5)
+                                _tm_delay_short (6)
+                        _tm_stop (4)
+                            _tm_clk_low (5)
+                                _tm_delay_short (6)
+                            _tm_din_low (5)
+                                _tm_delay_short (6)
+                            _tm_clk_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_high (5)
+                                _tm_delay_short (6)
+                    _tm_start (3)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_delay_short (4)
+                    _tm_write_byte (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                    _tm_stop (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+            _tm1640_write_err (1)
+                _tm1640_write_fixed (2)
+                    _Crom2Prom (3)
+                    _tm_cmd (3)
+                        _tm_start (4)
+                            _tm_clk_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_low (5)
+                                _tm_delay_short (6)
+                            _tm_delay_short (5)
+                        _tm_write_byte (4)
+                            _tm_clk_low (5)
+                                _tm_delay_short (6)
+                            _tm_din_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_low (5)
+                                _tm_delay_short (6)
+                            _tm_clk_high (5)
+                                _tm_delay_short (6)
+                        _tm_stop (4)
+                            _tm_clk_low (5)
+                                _tm_delay_short (6)
+                            _tm_din_low (5)
+                                _tm_delay_short (6)
+                            _tm_clk_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_high (5)
+                                _tm_delay_short (6)
+                    _tm_start (3)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_delay_short (4)
+                    _tm_write_byte (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                    _tm_stop (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+        _builtin_holtek_uitof (0)
+        _tm1640_write_led (0)
+            _builtin_holtek_ftsubadd (1)
+                _builtin_holtek_ftdecode (2)
+            _builtin_holtek_ftmul (1)
+                _builtin_holtek_ftdecode (2)
+            _builtin_holtek_ftol (1)
+                _builtin_holtek_ftdecode (2)
+            _builtin_holtek_divmodhi4_isr00 (1)
+            _tm1640_write_digit (1)
+                _Crom2Prom (2)
+                _tm1640_write_fixed (2)
+                    _Crom2Prom (3)
+                    _tm_cmd (3)
+                        _tm_start (4)
+                            _tm_clk_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_low (5)
+                                _tm_delay_short (6)
+                            _tm_delay_short (5)
+                        _tm_write_byte (4)
+                            _tm_clk_low (5)
+                                _tm_delay_short (6)
+                            _tm_din_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_low (5)
+                                _tm_delay_short (6)
+                            _tm_clk_high (5)
+                                _tm_delay_short (6)
+                        _tm_stop (4)
+                            _tm_clk_low (5)
+                                _tm_delay_short (6)
+                            _tm_din_low (5)
+                                _tm_delay_short (6)
+                            _tm_clk_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_high (5)
+                                _tm_delay_short (6)
+                    _tm_start (3)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_delay_short (4)
+                    _tm_write_byte (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                    _tm_stop (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
     _USER_PROGRAM_C
         _GET_KEY_BITMAP (0)
-        _uart0_send_string (0)
-            _uart0_send_byte (1)
+        _key_update (0)
             _Crom2Prom (1)
-        _uart0_send_number (0)
-            _uart0_send_byte (1)
-            _builtin_holtek_divmodhi4_isr00 (1)
             _Crom2Prom (1)
+        _key_handle_service (0)
+            _buzzer_start_ms (1)
+                _builtin_holtek_divmodhi4_isr00 (2)
+            _caculate_time_setup (1)
+                __limit_data (2)
+            _check_mode_process (1)
+            _uart0_send_number (1)
+                _uart0_send_byte (2)
+                _builtin_holtek_divmodhi4_isr00 (2)
+                _Crom2Prom (2)
+            _uart0_send_byte (1)
+            _tm1640_write_err (1)
+                _tm1640_write_fixed (2)
+                    _Crom2Prom (3)
+                    _tm_cmd (3)
+                        _tm_start (4)
+                            _tm_clk_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_low (5)
+                                _tm_delay_short (6)
+                            _tm_delay_short (5)
+                        _tm_write_byte (4)
+                            _tm_clk_low (5)
+                                _tm_delay_short (6)
+                            _tm_din_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_low (5)
+                                _tm_delay_short (6)
+                            _tm_clk_high (5)
+                                _tm_delay_short (6)
+                        _tm_stop (4)
+                            _tm_clk_low (5)
+                                _tm_delay_short (6)
+                            _tm_din_low (5)
+                                _tm_delay_short (6)
+                            _tm_clk_high (5)
+                                _tm_delay_short (6)
+                            _tm_din_high (5)
+                                _tm_delay_short (6)
+                    _tm_start (3)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_delay_short (4)
+                    _tm_write_byte (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                    _tm_stop (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
         _adc_read_channel (0)
         _builtin_holtek_divmodhi4_isr00 (0)
         _builtin_holtek_itof (0)
@@ -892,6 +1288,7 @@ Call Tree
             _tm1640_write_digit (1)
                 _Crom2Prom (2)
                 _tm1640_write_fixed (2)
+                    _Crom2Prom (3)
                     _tm_cmd (3)
                         _tm_start (4)
                             _tm_clk_high (5)
@@ -945,37 +1342,152 @@ Call Tree
                             _tm_delay_short (5)
                         _tm_din_high (4)
                             _tm_delay_short (5)
-        _pressure_sensor_read_mbar (0)
-            _builtin_holtek_uitof (1)
-            _builtin_holtek_ftmul (1)
-                _builtin_holtek_ftdecode (2)
-            _builtin_holtek_ftdiv (1)
-                _builtin_holtek_ftdecode (2)
-            _builtin_holtek_ftsubadd (1)
-                _builtin_holtek_ftdecode (2)
-            _builtin_holtek_ftol (1)
-                _builtin_holtek_ftdecode (2)
-        _temperature_sensor_read (0)
-            _builtin_holtek_uitof (1)
-            _builtin_holtek_ftmul (1)
-                _builtin_holtek_ftdecode (2)
-            _builtin_holtek_ftdiv (1)
-                _builtin_holtek_ftdecode (2)
-            _builtin_holtek_ftsubadd (1)
-                _builtin_holtek_ftdecode (2)
-            _builtin_holtek_ftsubadd (1)
-                _builtin_holtek_ftdecode (2)
+        _tm1640_keyring_clear (0)
+            _tm1640_write_fixed (1)
+                _Crom2Prom (2)
+                _tm_cmd (2)
+                    _tm_start (3)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_delay_short (4)
+                    _tm_write_byte (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                    _tm_stop (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                _tm_start (2)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_delay_short (3)
+                _tm_write_byte (2)
+                    _tm_clk_low (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                _tm_stop (2)
+                    _tm_clk_low (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+        _tm1640_keyring_add (0)
+            _tm1640_write_fixed (1)
+                _Crom2Prom (2)
+                _tm_cmd (2)
+                    _tm_start (3)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_delay_short (4)
+                    _tm_write_byte (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                    _tm_stop (3)
+                        _tm_clk_low (4)
+                            _tm_delay_short (5)
+                        _tm_din_low (4)
+                            _tm_delay_short (5)
+                        _tm_clk_high (4)
+                            _tm_delay_short (5)
+                        _tm_din_high (4)
+                            _tm_delay_short (5)
+                _tm_start (2)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_delay_short (3)
+                _tm_write_byte (2)
+                    _tm_clk_low (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                _tm_stop (2)
+                    _tm_clk_low (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+        _builtin_holtek_uitof (0)
+        _builtin_holtek_divmodsi4_isr00 (0)
+        _builtin_holtek_ltof (0)
+    _pressure_sensor_read_mbar
+        _builtin_holtek_uitof (0)
+        _builtin_holtek_ftmul (0)
+            _builtin_holtek_ftdecode (1)
+        _builtin_holtek_ftdiv (0)
+            _builtin_holtek_ftdecode (1)
+        _builtin_holtek_ftsubadd (0)
+            _builtin_holtek_ftdecode (1)
+        _builtin_holtek_ftol (0)
+            _builtin_holtek_ftdecode (1)
+    _temperature_sensor_read
+        _builtin_holtek_uitof (0)
+        _builtin_holtek_ftmul (0)
+            _builtin_holtek_ftdecode (1)
+        _builtin_holtek_ftdiv (0)
+            _builtin_holtek_ftdecode (1)
+        _builtin_holtek_ftsubadd (0)
+            _builtin_holtek_ftdecode (1)
+        _builtin_holtek_ftsubadd (0)
+            _builtin_holtek_ftdecode (1)
+        _Crom2Prom (0)
+        _Crom2Prom (0)
+        ___pgm_read_float_isra_0 (0)
+        _comp (0)
             _Crom2Prom (1)
             _Crom2Prom (1)
             ___pgm_read_float_isra_0 (1)
-            _comp (1)
-                _Crom2Prom (2)
-                _Crom2Prom (2)
-                ___pgm_read_float_isra_0 (2)
-                _builtin_holtek_ftsubadd (2)
-                    _builtin_holtek_ftdecode (3)
-                _builtin_holtek_ftmul (2)
-                    _builtin_holtek_ftdecode (3)
+            _builtin_holtek_ftsubadd (1)
+                _builtin_holtek_ftdecode (2)
+            _builtin_holtek_ftmul (1)
+                _builtin_holtek_ftdecode (2)
     _touch_calibrate_idle
         _Crom2Prom (0)
         _Crom2Prom (0)
@@ -1042,6 +1554,201 @@ Call Tree
                 _tm_delay_short (2)
             _tm_din_high (1)
                 _tm_delay_short (2)
+    _tm1640_walk_grids_a
+        _tm1640_clear_all (0)
+            _tm_start (1)
+                _tm_clk_high (2)
+                    _tm_delay_short (3)
+                _tm_din_high (2)
+                    _tm_delay_short (3)
+                _tm_din_low (2)
+                    _tm_delay_short (3)
+                _tm_delay_short (2)
+            _tm_write_byte (1)
+                _tm_clk_low (2)
+                    _tm_delay_short (3)
+                _tm_din_high (2)
+                    _tm_delay_short (3)
+                _tm_din_low (2)
+                    _tm_delay_short (3)
+                _tm_clk_high (2)
+                    _tm_delay_short (3)
+            _tm_stop (1)
+                _tm_clk_low (2)
+                    _tm_delay_short (3)
+                _tm_din_low (2)
+                    _tm_delay_short (3)
+                _tm_clk_high (2)
+                    _tm_delay_short (3)
+                _tm_din_high (2)
+                    _tm_delay_short (3)
+        _tm1640_write_fixed (0)
+            _Crom2Prom (1)
+            _tm_cmd (1)
+                _tm_start (2)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_delay_short (3)
+                _tm_write_byte (2)
+                    _tm_clk_low (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                _tm_stop (2)
+                    _tm_clk_low (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+            _tm_start (1)
+                _tm_clk_high (2)
+                    _tm_delay_short (3)
+                _tm_din_high (2)
+                    _tm_delay_short (3)
+                _tm_din_low (2)
+                    _tm_delay_short (3)
+                _tm_delay_short (2)
+            _tm_write_byte (1)
+                _tm_clk_low (2)
+                    _tm_delay_short (3)
+                _tm_din_high (2)
+                    _tm_delay_short (3)
+                _tm_din_low (2)
+                    _tm_delay_short (3)
+                _tm_clk_high (2)
+                    _tm_delay_short (3)
+            _tm_stop (1)
+                _tm_clk_low (2)
+                    _tm_delay_short (3)
+                _tm_din_low (2)
+                    _tm_delay_short (3)
+                _tm_clk_high (2)
+                    _tm_delay_short (3)
+                _tm_din_high (2)
+                    _tm_delay_short (3)
+    _tm1640_keyring_clear_all
+        _tm1640_write_fixed (0)
+            _Crom2Prom (1)
+            _tm_cmd (1)
+                _tm_start (2)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_delay_short (3)
+                _tm_write_byte (2)
+                    _tm_clk_low (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                _tm_stop (2)
+                    _tm_clk_low (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+            _tm_start (1)
+                _tm_clk_high (2)
+                    _tm_delay_short (3)
+                _tm_din_high (2)
+                    _tm_delay_short (3)
+                _tm_din_low (2)
+                    _tm_delay_short (3)
+                _tm_delay_short (2)
+            _tm_write_byte (1)
+                _tm_clk_low (2)
+                    _tm_delay_short (3)
+                _tm_din_high (2)
+                    _tm_delay_short (3)
+                _tm_din_low (2)
+                    _tm_delay_short (3)
+                _tm_clk_high (2)
+                    _tm_delay_short (3)
+            _tm_stop (1)
+                _tm_clk_low (2)
+                    _tm_delay_short (3)
+                _tm_din_low (2)
+                    _tm_delay_short (3)
+                _tm_clk_high (2)
+                    _tm_delay_short (3)
+                _tm_din_high (2)
+                    _tm_delay_short (3)
+    _tm1640_keyring_only
+        _tm1640_write_fixed (0)
+            _Crom2Prom (1)
+            _tm_cmd (1)
+                _tm_start (2)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_delay_short (3)
+                _tm_write_byte (2)
+                    _tm_clk_low (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                _tm_stop (2)
+                    _tm_clk_low (3)
+                        _tm_delay_short (4)
+                    _tm_din_low (3)
+                        _tm_delay_short (4)
+                    _tm_clk_high (3)
+                        _tm_delay_short (4)
+                    _tm_din_high (3)
+                        _tm_delay_short (4)
+            _tm_start (1)
+                _tm_clk_high (2)
+                    _tm_delay_short (3)
+                _tm_din_high (2)
+                    _tm_delay_short (3)
+                _tm_din_low (2)
+                    _tm_delay_short (3)
+                _tm_delay_short (2)
+            _tm_write_byte (1)
+                _tm_clk_low (2)
+                    _tm_delay_short (3)
+                _tm_din_high (2)
+                    _tm_delay_short (3)
+                _tm_din_low (2)
+                    _tm_delay_short (3)
+                _tm_clk_high (2)
+                    _tm_delay_short (3)
+            _tm_stop (1)
+                _tm_clk_low (2)
+                    _tm_delay_short (3)
+                _tm_din_low (2)
+                    _tm_delay_short (3)
+                _tm_clk_high (2)
+                    _tm_delay_short (3)
+                _tm_din_high (2)
+                    _tm_delay_short (3)
 
 HLINK: Program entry point at section 'PROGRAM_ENTRY' (address 0) of file 'D:\Data_User\Holtek\BS86D12C_Tusay\OutPut\MAIN_PROGRAM_V300.OBJ'
 
