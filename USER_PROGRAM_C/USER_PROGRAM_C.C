@@ -49,7 +49,8 @@ void delay_ms(unsigned int ms)
         __asm__("clr wdt");
     }
 }
-
+static inline void buzzer_start_ms(uint16_t ms);
+static inline void buzzer_start_blink_ms(uint16_t ms, uint8_t blink_cnt);
 void SystemInit(void)
 {
     // //watchdog timer setup
@@ -85,7 +86,8 @@ void USER_PROGRAM_C_INITIAL()
 {
     // Executes the USER_PROGRAM_C initialization function once
     SystemInit();
-    // tm1640_walk_grids_a(2);
+    // buzzer_start_ms(STARTUP_BUZZ_MS);
+    //  tm1640_walk_grids_a(2);
     int i = 0;
     for (i = 0; i < 11; i++)
     {
@@ -98,6 +100,7 @@ void USER_PROGRAM_C_INITIAL()
     tm1640_write_err(3);
     uart0_send_byte('\n');
     uart0_send_string("HELLO From BS86D12C\n");
+    buzzer_start_blink_ms(1000, 3);
 }
 
 //==============================================
@@ -115,15 +118,49 @@ static inline void buzzer_start_ms(uint16_t ms)
     buzzer_ticks = t;
     BUZZ_ON();
 }
+// g_time_tik_10ms
+static uint16_t t_blink = 0;
+static uint16_t buzzer_blink = 0;
+static inline void buzzer_start_blink_ms(uint16_t ms, uint8_t blink_cnt)
+{
+    t_blink = (int)(ms / 2);
+    if (t_blink < 10)
+        t_blink = 10; // min 10ms
+    buzzer_blink = blink_cnt * 2;
+}
+uint8_t buzze_blink = 0;
 static inline void buzzer_service(void)
 {
-    if (buzzer_ticks)
+    static uint32_t tik_blink = 0;
+    if (buzzer_ticks && !buzzer_blink)
     {
         if (--buzzer_ticks == 0)
             BUZZ_OFF();
+        return;
     }
-    else
+    else if (!buzzer_blink)
         BUZZ_OFF();
+
+    if (buzzer_blink)
+    {
+
+        if (g_time_tik_10ms - tik_blink > (int)(t_blink / 10))
+        {
+            buzzer_blink--;
+            uart0_send_number(buzzer_blink);
+            tik_blink = g_time_tik_10ms;
+            buzze_blink++;
+            buzze_blink = (buzze_blink > 254) ? 0 : buzze_blink;
+            if (buzze_blink % 2)
+            {
+                BUZZ_ON();
+            }
+            else
+            {
+                BUZZ_OFF();
+            }
+        }
+    }
 }
 
 //==============================================
@@ -227,8 +264,9 @@ sterilization_mode_t check_mode_process(system_init_t system)
     // other
     return STERILIZATION_NULL;
 }
-uint8_t danger_temp = 0; // 0 OKE, any Danger
+bit danger_temp = 0; // 0 OKE, any Danger
 bit quick_mode = 0;
+#define STEP_PRESS_TIME 10 // ms
 void key_handle_service(KeyEvents ev)
 {
     /*
@@ -291,7 +329,7 @@ void key_handle_service(KeyEvents ev)
         {
             key23_state |= (1 << 0);
             key23_state &= ~(1 << 1);
-            if (g_time_tik_10ms % 8 == 0) // 50ms + 1
+            if (g_time_tik_10ms % STEP_PRESS_TIME == 0) // 50ms + 1
             {
                 system_config.temp_setting--;
                 system_config.temp_setting = system_config.temp_setting < 121 ? 121 : system_config.temp_setting;
@@ -301,7 +339,7 @@ void key_handle_service(KeyEvents ev)
         {
             key23_state |= (1 << 1);
             key23_state &= ~(1 << 0);
-            if (g_time_tik_10ms % 8 == 0) // 50ms + 1
+            if (g_time_tik_10ms % STEP_PRESS_TIME == 0) // 50ms + 1
             {
                 system_config.temp_setting++;
                 system_config.temp_setting = system_config.temp_setting > 134 ? 134 : system_config.temp_setting;
@@ -317,21 +355,26 @@ void key_handle_service(KeyEvents ev)
         {
         case UI_SET_T1:
             ui_led2 = UI_SET_T21;
+            buzzer_start_blink_ms(150, 2);
             break;
         case UI_SET_T21:
             ui_led2 = UI_SET_T22;
+            buzzer_start_blink_ms(150, 3);
             break;
         case UI_SET_T22:
             ui_led2 = UI_SET_T3;
+            buzzer_start_blink_ms(150, 4);
             break;
         case UI_SET_T3:
             ui_led2 = UI_SET_T4;
+            buzzer_start_blink_ms(150, 5);
             break;
         case UI_SET_T4:
             ui_led2 = UI_IDLE;
             break;
         default:
             ui_led2 = UI_SET_T1;
+            buzzer_start_blink_ms(150, 1);
             break; // từ Idle/khác => T1
         }
     }
@@ -354,27 +397,19 @@ void key_handle_service(KeyEvents ev)
         {
             key56_state |= (1 << 1);
             key56_state &= ~(1 << 0);
-            if (g_time_tik_10ms % 8 == 0) // 50ms + 1
+            if (g_time_tik_10ms % STEP_PRESS_TIME == 0) // 50ms + 1
             {
                 caculate_time_setup(+1);
             }
         }
         else if (ev.hold & KEYBIT(TIME_DOWN_KEY) && ev.hold | KEYBIT(TIME_UP_KEY))
         {
-            if (g_time_tik_10ms % 8 == 0)
+            if (g_time_tik_10ms % STEP_PRESS_TIME == 0)
             {
                 caculate_time_setup(-1);
                 key56_state |= (1 << 0);
                 key56_state &= ~(1 << 1);
             }
-        }
-    }
-
-    if (danger_temp)
-    {
-        if (ev.pressed & KEYBIT(QUICK_KEY))
-        {
-            danger_temp = 0; // accept exit danger
         }
     }
 
@@ -394,6 +429,12 @@ void key_handle_service(KeyEvents ev)
     //==================Handle KEY 8: START_KEY============================
     if (ev.pressed & KEYBIT(START_KEY))
     {
+        if (danger_temp)
+        {
+            danger_temp = 0; // clear danger_temp;
+            return;
+        }
+
         if (sterilization_mode == QUICK_MODE)
         {
             // start quick mode
@@ -421,7 +462,8 @@ void key_handle_service(KeyEvents ev)
 
 void main_handle_servie()
 {
-    uint8_t Ta, Tb;
+    uint8_t Ta = (int)((adc_read_channel(1) * 150) / 4098);
+
     static uint8_t boot_started = 0;
     static uint32_t tik_sup = 0;
 
@@ -461,7 +503,7 @@ void main_handle_servie()
         /* code */
         if (g_time_tik_10ms - tik_sup > VENT_ON_STARTUP_MS / 10)
         {
-            if (Ta < TEMP_STARTUP_LOCK && Tb < TEMP_STARTUP_LOCK)
+            if (Ta < TEMP_STARTUP_LOCK)
             {
                 tm1640_clear_led(1);
                 BUZZ_OFF();
@@ -498,7 +540,129 @@ void main_handle_servie()
     default:
         break;
     }
+
+    if (prg_state = SUP_IDLE)
+    {
+        switch (sterilization_mode)
+        {
+        case STERILIZATION_1:
+            /* code */
+            break;
+        case STERILIZATION_2:
+            /* code */
+            break;
+        case STERILIZATION_3:
+            /* code */
+            break;
+        case STERILIZATION_4:
+            /* code */
+            break;
+        case STERILIZATION_4:
+            /* code */
+            break;
+        case STERILIZATION_NULL:
+            /* code */
+            break;
+        case QUICK_MODE:
+            /* code */
+            break;
+        default:
+            break;
+        }
+    }
 }
+
+void led_handle()
+{
+}
+/*
+"🔹Tiệt trùng 1: ( A =1, B = C = D =E = 0 )  không xả áp, không xả nước, không sấy
+Thiết bị sử dụng: Relay A (điện trở):
+- Quy trình:
+Cài đặt nhiệt độ tiệt trùng Ta (121°C hoặc 134°C) và thời gian tiệt trùng T1 .
+Nhấn nút START để bắt đầu.
+Relay A bật → gia nhiệt đến nhiệt độ cài đặt.
+Khi đạt nhiệt độ →  bắt đầu đếm thời lùi gian tiệt trùng ( Thời gian này được cài đặt ).
+Kết thúc thời gian tiệt trùng T1 = 0 ( vì đếm ngược ) → relay A tắt ( A = 0 ) - Bật chuông báo ( E = 1 trong 60s rồi E về 0, Khi nhiệt độ dưới 70 độ C )  → Khi kết thúc chương trình hiển thị End."
+
+*/
+typedef enum
+{
+    START_STERI = 0,
+    HEATING_1, // chờ gia nhiệt
+    STERING_1, // sau khi gia nhiệt xong, chờ tiệt trùng xong
+    END_STERI_1,
+    STOP_STERI_1,
+} steri_status_t;
+bit steri_1_running = 0;
+void sterilization_1_handle(void)
+{
+    static steri_status_t steri_stt = END_STERI_1;
+    static uint32_t start_steri_1 = 0;
+    uint16_t steri_time = system_config.time_steri;
+
+    switch (steri_stt)
+    {
+    case START_STERI:
+        RELAYA_ON();
+        steri_stt = HEATING_1;
+        /* code */
+        break;
+    case HEATING_1:
+        /* code */
+        uint8_t temp = temperature_sensor_read();
+        if (temp >= system_config.temp_setting)
+        {
+            steri_stt = STERING_1;
+        }
+        start_steri_1 = g_time_tik_10ms;
+
+        break;
+    case STERING_1:
+        /* COUNTDOWN 1 phut */
+        if (g_time_tik_10ms - start_steri_1 >= 6000)
+        {
+            start_steri_1 = g_time_tik_10ms;
+            steri_time--;
+            /* show time steri led 2 task*/
+        }
+        if (!steri_time)
+        {
+            steri_stt = END_STERI_1;
+        }
+        break;
+    case END_STERI_1:
+        /* code */
+        uint8_t temp = temperature_sensor_read();
+        if (temp <= 70)
+        {
+            RELAYA_OFF();
+            buzzer_start_ms(60 * 1000);
+            // show end
+            steri_stt = STOP_STERI_1;
+        }
+        break;
+
+    case STOP_STERI_1:
+        RELAYA_OFF();
+        break;
+    default:
+        break;
+    }
+}
+
+void sterilization_2_handle(void)
+{
+}
+
+void sterilization_3_handle(void)
+{
+}
+
+void sterilization_4_handle(void)
+{
+}
+
 void USER_PROGRAM_C(void)
 {
     static unsigned char t63_cnt = 0;
