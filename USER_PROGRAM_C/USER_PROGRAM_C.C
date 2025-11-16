@@ -31,12 +31,14 @@
 #include "keyIO.h"
 #include "user_config.h"
 
+
 static SupState prg_state = SUP_BOOT;
 system_init_t system_config = {0};
 sterilization_mode_t sterilization_mode = STERILIZATION_NULL;
 static UiField ui_led2 = UI_IDLE;
 
 uint32_t g_time_tik_10ms = 0;
+
 void delay_ms(unsigned int ms)
 {
     unsigned long i;
@@ -49,8 +51,8 @@ void delay_ms(unsigned int ms)
         __asm__("clr wdt");
     }
 }
-static inline void buzzer_start_ms(uint16_t ms);
-static inline void buzzer_start_blink_ms(uint16_t ms, uint8_t blink_cnt);
+
+
 void SystemInit(void)
 {
     // //watchdog timer setup
@@ -64,6 +66,7 @@ void SystemInit(void)
     // init TM1640
     tm1640_init(7); // brightness 0..7
 
+    //default config
     system_config.temp_setting = 121;
     system_config.time_steri = 0;
     system_config.time_pressure_release_1 = 0;
@@ -110,17 +113,21 @@ void USER_PROGRAM_C_INITIAL()
 
 //==============================================
 static volatile uint8_t buzzer_ticks = 0;
-static inline void buzzer_start_ms(uint16_t ms)
+static inline void buzzer_start_ms(unsigned int ms)
 {
-    uint8_t t = (ms + 9) / 10;
-    if (t == 0)
-        t = 1;
+    if(!ms) return;
+    uint16_t t = (ms+9)/ 10;
+    if(!t) t = 1;
     buzzer_ticks = t;
     BUZZ_ON();
 }
 // g_time_tik_10ms
 static uint16_t t_blink = 0;
 static uint16_t buzzer_blink = 0;
+
+/// @brief beep with ms = time beep, blink_cnt: number blink
+/// @param ms millisecond
+/// @param blink_cnt number of beep
 static inline void buzzer_start_blink_ms(uint16_t ms, uint8_t blink_cnt)
 {
     t_blink = (int)(ms / 2);
@@ -128,7 +135,7 @@ static inline void buzzer_start_blink_ms(uint16_t ms, uint8_t blink_cnt)
         t_blink = 10; // min 10ms
     buzzer_blink = blink_cnt * 2;
 }
-uint8_t buzze_blink = 0;
+bit buzze_state_blink = 0;
 static inline void buzzer_service(void)
 {
     static uint32_t tik_blink = 0;
@@ -143,15 +150,14 @@ static inline void buzzer_service(void)
 
     if (buzzer_blink)
     {
-
         if (g_time_tik_10ms - tik_blink > (int)(t_blink / 10))
         {
             buzzer_blink--;
             uart0_send_number(buzzer_blink);
             tik_blink = g_time_tik_10ms;
-            buzze_blink++;
-            buzze_blink = (buzze_blink > 254) ? 0 : buzze_blink;
-            if (buzze_blink % 2)
+
+            buzze_state_blink = buzze_state_blink ? 0 : 1;
+            if (buzze_state_blink)
             {
                 BUZZ_ON();
             }
@@ -167,8 +173,8 @@ static inline void buzzer_service(void)
 
 //==============================================
 led1_mode_t ui_led1 = UI_TEMP_NOW;
-static uint8_t key23_state = 0;
-static uint8_t key56_state = 0;
+uint8_t key23_state = 0;
+uint8_t key56_state = 0;
 static uint16_t key_led_timer = 0; // *63ms
 
 static inline void key_off_time()
@@ -192,6 +198,7 @@ uint16_t _limit_data(uint16_t v, uint16_t lo, uint16_t hi)
         return hi;
     return v;
 }
+
 void blink_err(uint32_t g_millis, uint8_t led_num)
 {
     static bit err_blink = 0;
@@ -265,8 +272,8 @@ sterilization_mode_t check_mode_process(system_init_t system)
     return STERILIZATION_NULL;
 }
 bit danger_temp = 0; // 0 OKE, any Danger
-bit quick_mode = 0;
-#define STEP_PRESS_TIME 10 // ms
+
+
 void key_handle_service(KeyEvents ev)
 {
     /*
@@ -443,22 +450,588 @@ void key_handle_service(KeyEvents ev)
         else
         {
             sterilization_mode = check_mode_process(system_config);
-            uart0_send_number(system_config.time_steri);
-            uart0_send_number(system_config.time_pressure_release_1);
-            uart0_send_number(system_config.time_pressure_release_2);
-            uart0_send_number(system_config.time_water_release);
-            uart0_send_number(system_config.time_drying);
+            // uart0_send_number(system_config.time_steri);
+            // uart0_send_number(system_config.time_pressure_release_1);
+            // uart0_send_number(system_config.time_pressure_release_2);
+            // uart0_send_number(system_config.time_water_release);
+            // uart0_send_number(system_config.time_drying);
 
             uart0_send_number(sterilization_mode);
             uart0_send_byte('\n');
-            if (!sterilization_mode)
+            if (sterilization_mode)
             {
-                // uart0_send_number(sterilization_mode);
-                tm1640_write_err(2);
+                sterilization_start(sterilization_mode);
+            }
+            else
+            {
+                blink_err(3000, 2);
             }
         }
     }
 }
+
+void led_handle()
+{
+}
+/*
+"🔹Tiệt trùng 1: ( A =1, B = C = D =E = 0 )  không xả áp, không xả nước, không sấy
+Thiết bị sử dụng: Relay A (điện trở):
+- Quy trình:
+Cài đặt nhiệt độ tiệt trùng Ta (121°C hoặc 134°C) và thời gian tiệt trùng T1 .
+Nhấn nút START để bắt đầu.
+Relay A bật → gia nhiệt đến nhiệt độ cài đặt.
+Khi đạt nhiệt độ →  bắt đầu đếm thời lùi gian tiệt trùng ( Thời gian này được cài đặt ).
+Kết thúc thời gian tiệt trùng T1 = 0 ( vì đếm ngược ) → relay A tắt ( A = 0 ) - Bật chuông báo ( E = 1 trong 60s rồi E về 0, Khi nhiệt độ dưới 70 độ C )  → Khi kết thúc chương trình hiển thị End."
+
+*/
+
+void sterilization_start(sterilization_mode_t mode)
+{
+    steri_T1_left_s = system_config.time_steri;               // T1
+    steri_T21_left_s = system_config.time_pressure_release_1; // T21
+    steri_T22_left_s = system_config.time_pressure_release_2; // T22
+    steri_T3_left_s = system_config.time_water_release;       // T3
+    steri_T4_left_s = system_config.time_drying;              // T4
+    steri_tick_1s = g_time_tik_10ms;
+
+    switch (mode)
+    {
+    case STERILIZATION_1:
+        steri1_running = 1;
+        steri1_stt = START_STERI_1;
+        /* code */
+        break;
+    case STERILIZATION_2:
+        steri2_running = 1;
+        steri2_stt = START_STERI_2;
+        /* code */
+        break;
+    case STERILIZATION_3:
+        steri3_running = 1;
+        steri3_stt = START_STERI_3;
+        /* code */
+        break;
+    case STERILIZATION_4:
+        steri4_running = 1;
+        steri4_stt = START_STERI_4;
+        /* code */
+        break;
+    case QUICK_MODE:
+        quick_mode_running = 1;
+        quick_mode = START_QUICK;
+        /* code */
+        break;
+
+    default:
+        break;
+    }
+}
+
+void sterilization_stop()
+{
+    if (steri1_running)
+    {
+        RELAYA_OFF();
+        steri1_running = 0;
+        steri1_stt = STOP_STERI_1;
+    }
+    if (steri2_running)
+    {
+        RELAYA_OFF();
+        steri2_running = 0;
+        steri2_stt = STOP_STERI_2;
+    }
+    if (steri3_running)
+    {
+        steri3_running = 0;
+        steri3_stt = STOP_STERI_3;
+        RELAYA_OFF();
+        TRIACB_OFF();
+        TRIACC_OFF();
+    }
+    if (steri4_running)
+    {
+        steri4_running = 0; 
+        steri4_stt = STOP_STERI_4;
+        RELAYA_OFF();
+        TRIACB_OFF();
+        TRIACC_OFF();
+        RELAYD_OFF();
+    }
+}
+
+
+void sterilization_1_handle(void)
+{
+    uint8_t temp = 0;
+    switch (steri1_stt)
+    {
+    case START_STERI_1:
+        RELAYA_ON();
+        steri1_stt = HEATING_1;
+        /* code */
+        break;
+    case HEATING_1:
+        /* code */
+
+        temp = TEMP_NOW();
+        if (temp >= system_config.temp_setting)
+        {
+            steri1_stt = STERING_1;
+            steri_tick_1s = g_time_tik_10ms;
+        }
+
+        break;
+    case STERING_1:
+        /* COUNTDOWN 1 phut */
+        if (g_time_tik_10ms - steri_tick_1s >= 6000)
+        {
+            steri_tick_1s = g_time_tik_10ms;
+            steri_T1_left_s--;
+            /* show time steri led 2 task*/
+        }
+        if (!steri_T1_left_s)
+        {
+            steri1_stt = END_STERI_1;
+        }
+        break;
+    case END_STERI_1:
+        /* code */
+        temp = TEMP_NOW();
+        if (temp <= 70)
+        {
+            RELAYA_OFF();
+            buzzer_start_ms(60U * 1000U);
+            // show end led 2 task
+            steri1_stt = STOP_STERI_1;
+        }
+        break;
+
+    case STOP_STERI_1:
+        steri1_running = 0;
+        RELAYA_OFF();
+        break;
+    default:
+        break;
+    }
+}
+
+/*
+"🔹Tiệt trùng 2 ( A =  1, B = C = D = E = 0) có xả áp, không xả nước, không sấy
+Thiết bị sử dụng: Relay A (điện trở), Relay B (van xả khí)
+
+Quy trình:
+Cài đặt nhiệt độ tiệt trùng Ta (121°C hoặc 134°C),  thời gian tiệt trùng T1, thời gian xả áp lần T21.T22
+Nhấn nút START để bắt đầu.
+Relay A bật → gia nhiệt đến nhiệt độ cài đặt .
+Khi đạt nhiệt độ → relay B mở van xả khí ( B = 1)  trong thời gian cài đặt.
+Sau khi xả khí ( Hết thời gian cài đặt xả )→ đóng relay B ( B = 0)
+ → tiếp tục gia nhiệt đến nhiệt độ đã cài đặt và bắt đầu đếm thời gian tiệt trùng.
+Kết thúc thời gian tiệt trùng (T1 đếm về 0) → relay A tắt ( A = 0)
+  → relay B mở lần 2 ( B = 1)  để xả áp đến khi nhiệt độ xuống dưới 70°C, T22  đếm ngược, T22 không đếm khi Temp = 40 độ C.
+  Bật chuông báo trong 60 giây (E = 1) hết thời gian 60s tắt chuông báo ( E = 0) → Khi kết thúc chương trình hiển thị End."
+
+*/
+
+void sterilization_2_handle(void)
+{
+    if (!steri2_running)
+    {
+        steri2_stt = STOP_STERI_2;
+    }
+
+    switch (steri2_stt)
+    {
+    case START_STERI_2:
+        RELAYA_ON();  // A = 1
+        TRIACB_OFF(); // B = 0
+        steri2_stt = HEATING_21;
+        break;
+
+    case HEATING_21:
+    {
+        uint8_t temp = TEMP_NOW();
+        if (temp >= system_config.temp_setting)
+        {
+            // Đạt nhiệt độ cài đặt -> mở B xả lần 1 trong T21
+            steri_tick_1s = g_time_tik_10ms;
+            TRIACB_ON(); // B = 1
+            steri2_stt = RELEASE_21;
+        }
+    }
+    break;
+
+    case RELEASE_21:
+        if (g_time_tik_10ms - steri_tick_1s >= 100)
+        {
+            steri_tick_1s = g_time_tik_10ms;
+            if (steri_T21_left_s > 0)
+            {
+                steri_T21_left_s--;
+
+                /* Show time count down*/
+            }
+        }
+        if (steri_T21_left_s == 0)
+        {
+            TRIACB_OFF(); // B = 0
+            steri2_stt = HEATING_22;
+        }
+        break;
+
+    case HEATING_22:
+    {
+        // Sau khi đóng B, tiếp tục gia nhiệt lại tới nhiệt độ cài đặt rồi bắt đầu T1
+        uint8_t temp = TEMP_NOW();
+        if (temp >= system_config.temp_setting)
+        {
+            steri_tick_1s = g_time_tik_10ms;
+            steri2_stt = STERING_2;
+        }
+    }
+    break;
+
+    case STERING_2:
+        // Đếm T1
+        if (g_time_tik_10ms - steri_tick_1s >= 100)
+        {
+            steri_tick_1s = g_time_tik_10ms;
+            if (steri_T1_left_s > 0)
+            {
+                steri_T1_left_s--;
+                /* Show time count down*/
+            }
+        }
+        if (steri_T1_left_s == 0)
+        {
+            // Hết T1: A = 0, B = 1; bật còi 60s
+            RELAYA_OFF(); // A = 0
+            TRIACB_ON();  // B = 1 (xả lần 2)
+
+            steri_tick_1s = g_time_tik_10ms;
+            steri2_stt = RELEASE_22;
+        }
+        break;
+
+    case RELEASE_22:
+    {
+        uint8_t temp = TEMP_NOW();
+
+        if (temp > 70)
+        {
+            break;
+        }
+        // T22 đếm ngược (chỉ để hiển thị/giới hạn), KHÔNG đếm khi Temp <= 40°C
+        if (g_time_tik_10ms - steri_tick_1s >= 100)
+        {
+            steri_tick_1s = g_time_tik_10ms;
+
+            if ((temp < 40 || steri_T22_left_s == 0))
+            {
+                steri2_stt = END_STERI_2;
+                TRIACB_OFF();
+            }
+            else
+            {
+                steri_T22_left_s--;
+            }
+            /* Show time count down*/
+        }
+    }
+    break;
+
+    case END_STERI_2:
+        steri2_running = 0;
+        buzzer_start_ms(60U * 1000U);
+        steri2_stt = STOP_STERI_2;
+        break;
+
+    case STOP_STERI_2:
+        steri2_running = 0;
+        RELAYA_OFF();
+        TRIACB_OFF();
+        break;
+    default:
+        RELAYA_OFF();
+        TRIACB_OFF();
+        break;
+    }
+}
+
+void sterilization_3_handle(void)
+{
+    if (!steri3_running)
+    {
+        steri3_stt = STOP_STERI_3;
+    }
+
+    switch (steri3_stt)
+    {
+    case START_STERI_3:
+        RELAYA_ON();  // A=1
+        TRIACB_OFF(); // B=0
+        TRIACC_OFF(); // C=0
+        steri3_stt = HEATING_3;
+        break;
+
+    case HEATING_3:
+    {
+        uint8_t temp = TEMP_NOW();
+        if (temp >= system_config.temp_setting)
+        {
+            // Bắt đầu đếm T1; mở B và bắt đầu đếm T21 song song
+            TRIACB_ON(); // B=1 (xả áp)
+            steri_tick_1s = g_time_tik_10ms;
+            steri3_stt = VENT_AND_STER3;
+        }
+    }
+    break;
+
+    case VENT_AND_STER3:
+    {
+        uint8_t temp = TEMP_NOW();
+
+        if (g_time_tik_10ms - steri_tick_1s >= 100)
+        {
+            steri_tick_1s = g_time_tik_10ms;
+
+            // Đếm T1
+            if (steri_T1_left_s > 0)
+            {
+                steri_T1_left_s--;
+            }
+
+            // Đếm T21 cho B
+            if (steri_T21_left_s > 0)
+            {
+                steri_T21_left_s--;
+                if (steri_T21_left_s == 0)
+                {
+                    TRIACB_OFF(); // hết xả áp lần 1
+                }
+            }
+        }
+
+        if (steri_T1_left_s == 0)
+        {
+            // Kết thúc tiệt trùng
+            RELAYA_OFF(); // A=0
+            TRIACC_ON();  // C=1 (xả nước không giới hạn)
+            buzzer_start_ms(60U * 1000U);
+            steri3_stt = FINISH_3;
+        }
+    }
+    break;
+
+    case FINISH_3:
+    {
+        uint8_t temp = TEMP_NOW();
+
+        // C đóng khi ≤ 40°C
+        if (temp <= 40)
+        {
+            TRIACC_OFF();
+        }
+        // Kết thúc chu trình khi < 70°C
+        if (temp < 70)
+        {
+
+            steri3_running = 0;
+            steri3_stt = STOP_STERI_3;
+        }
+    }
+    break;
+
+    case STOP_STERI_3:
+    default:
+        RELAYA_OFF();
+        TRIACB_OFF();
+        // C có thể vẫn ON nếu người dùng chưa về 40°C và chưa tắt nguồn; nhưng ở STOP ta đảm bảo OFF:
+        // Nếu bạn muốn giữ nguyên hành vi "C không tắt đến khi tắt nguồn", hãy bỏ dòng sau.
+        TRIACC_OFF();
+        break;
+    }
+}
+
+void sterilization_4_handle(void)
+{
+    if (!steri4_running)
+    {
+        steri4_stt = STOP_STERI_4;
+    }
+
+    switch (steri4_stt)
+    {
+    case START_STERI_4:
+        RELAYA_ON(); // A=1
+        TRIACB_OFF();
+        TRIACC_OFF();
+        RELAYD_OFF();
+        steri4_stt = HEATING_41;
+        break;
+
+    case HEATING_41:
+    {
+        uint8_t temp = TEMP_NOW();
+
+        if (temp >= system_config.temp_setting)
+        {
+            // Đạt Ta: mở B; bắt đầu T1 & T21 song song
+            TRIACB_ON(); // B=1
+            steri_tick_1s = g_time_tik_10ms;
+            steri4_stt = VENT_AND_STER4;
+        }
+    }
+    break;
+
+    case VENT_AND_STER4:
+    {
+        uint8_t temp = TEMP_NOW();
+
+        if (g_time_tik_10ms - steri_tick_1s >= 100)
+        {
+            steri_tick_1s = g_time_tik_10ms;
+
+            // Đếm T1
+            if (steri_T1_left_s > 0)
+            {
+                steri_T1_left_s--;
+            }
+
+            // Đếm T21 cho B
+            if (steri_T21_left_s > 0)
+            {
+                steri_T21_left_s--;
+                if (steri_T21_left_s == 0)
+                {
+                    TRIACB_OFF(); // hết xả áp lần 1
+                }
+            }
+        }
+
+        if (steri_T1_left_s == 0)
+        {
+            // Chuyển sang xả nước: C=1; A có thể tắt ở đây (chu trình tiệt trùng đã xong)
+            RELAYA_OFF(); // A=0, chuyển công đoạn xả nước
+            TRIACC_ON();  // C=1
+            // Theo mô tả: "T22 = 0 thì C = 0 và D = 1"
+            // -> giữ C mở trong T22
+            steri_tick_1s = g_time_tik_10ms;
+            steri4_stt = DRAIN_4;
+        }
+    }
+    break;
+
+    case DRAIN_4:
+    {
+        uint8_t temp = TEMP_NOW();
+
+        if (g_time_tik_10ms - steri_tick_1s >= 100)
+        {
+            steri_tick_1s = g_time_tik_10ms;
+
+            // === Chọn một trong hai logic cho C ===
+            // 1) Theo mô tả: dùng T22 điều khiển C
+            if (steri_T22_left_s > 0)
+            {
+                steri_T22_left_s--;
+            }
+            // 2) Nếu muốn dùng T3 cho xả nước, thay block trên bằng:
+            // if (steri4_T3_left_s > 0) { steri4_T3_left_s--; ui_show_mode4_T22(steri4_T3_left_s); }
+
+            // Khi bộ đếm đã hết -> C=0, bắt đầu sấy (D=1)
+            if (steri_T22_left_s == 0 /*|| steri4_T3_left_s == 0*/)
+            {
+                TRIACC_OFF(); // đóng xả nước
+                RELAYD_ON();  // D=1 (sấy)
+                steri4_stt = DRY_HEAT_4;
+            }
+        }
+    }
+    break;
+
+    case DRY_HEAT_4:
+    {
+        // Gia nhiệt tới Tb
+        uint8_t temp = TEMP_NOW();
+        if (temp >= system_config.temp_setting /*Tb*/)
+        {
+            // Duy trì Tb trong T4
+            steri_tick_1s = g_time_tik_10ms;
+            steri4_stt = DRY_HOLD_4;
+        }
+    }
+    break;
+
+    case DRY_HOLD_4:
+    {
+        uint8_t temp = TEMP_NOW();
+        // Giữ D bật, bạn có thể PID/bật-tắt để duy trì Tb, ở đây giữ D=1 (tùy phần cứng)
+        if (g_time_tik_10ms - steri_tick_1s >= 100)
+        {
+            steri_tick_1s = g_time_tik_10ms;
+            if (steri_T4_left_s > 0)
+            {
+                steri_T4_left_s--;
+            }
+        }
+
+        if (steri_T4_left_s == 0 && temp < 70)
+        {
+            RELAYD_OFF();               // kết thúc sấy
+            buzzer_start_ms(60U * 1000U); // E=1 trong 60s
+            steri4_stt = END_STERI_4;
+        }
+    }
+    break;
+
+    case END_STERI_4:
+        steri4_running = 0;
+        steri4_stt = STOP_STERI_4;
+        break;
+
+    case STOP_STERI_4:
+    default:
+        RELAYA_OFF();
+        TRIACB_OFF();
+        TRIACC_OFF();
+        RELAYD_OFF();
+        break;
+    }
+}
+
+void handle_quick_mode(void)
+{
+    switch (quick_mode)
+    {
+    case START_QUICK:
+        quick_mode_running = 1;
+        quick_mode = HEATING;
+        RELAYA_ON();
+        /* code */
+        break;
+    case HEATING:
+    {
+        uint8_t temp_now = TEMP_NOW();
+        if (temp_now >= system_config.temp_setting)
+        {
+            RELAYA_OFF();
+            quick_mode = END_QUICK;
+        }
+    }
+    break;
+    case END_QUICK:
+        /* code */
+        quick_mode_running = 0;
+        break;
+    case STOP_QUICK:
+        RELAYA_OFF();
+        break;
+    default:
+        break;
+    }
+}
+
 
 void main_handle_servie()
 {
@@ -471,7 +1044,6 @@ void main_handle_servie()
     {
     case SUP_BOOT:
         /* code */
-
         if (!boot_started)
         {
             boot_started = 1;
@@ -547,579 +1119,32 @@ void main_handle_servie()
         {
         case STERILIZATION_1:
             /* code */
+            sterilization_1_handle();
             break;
         case STERILIZATION_2:
             /* code */
+            sterilization_2_handle();
             break;
         case STERILIZATION_3:
             /* code */
+            sterilization_3_handle();
             break;
         case STERILIZATION_4:
             /* code */
-            break;
-        case STERILIZATION_4:
-            /* code */
+            sterilization_4_handle();
             break;
         case STERILIZATION_NULL:
             /* code */
             break;
         case QUICK_MODE:
             /* code */
+            handle_quick_mode();
             break;
         default:
             break;
         }
     }
 }
-
-void led_handle()
-{
-}
-/*
-"🔹Tiệt trùng 1: ( A =1, B = C = D =E = 0 )  không xả áp, không xả nước, không sấy
-Thiết bị sử dụng: Relay A (điện trở):
-- Quy trình:
-Cài đặt nhiệt độ tiệt trùng Ta (121°C hoặc 134°C) và thời gian tiệt trùng T1 .
-Nhấn nút START để bắt đầu.
-Relay A bật → gia nhiệt đến nhiệt độ cài đặt.
-Khi đạt nhiệt độ →  bắt đầu đếm thời lùi gian tiệt trùng ( Thời gian này được cài đặt ).
-Kết thúc thời gian tiệt trùng T1 = 0 ( vì đếm ngược ) → relay A tắt ( A = 0 ) - Bật chuông báo ( E = 1 trong 60s rồi E về 0, Khi nhiệt độ dưới 70 độ C )  → Khi kết thúc chương trình hiển thị End."
-
-*/
-typedef enum
-{
-    START_STERI = 0,
-    HEATING_1, // chờ gia nhiệt
-    STERING_1, // sau khi gia nhiệt xong, chờ tiệt trùng xong
-    END_STERI_1,
-    STOP_STERI_1,
-} steri_1_status_t;
-
-static steri_1_status_t steri1_stt = STOP_STERI_1;
-static uint16_t steri1_T1_left_s = 0;
-static uint32_t steri1_tick_1s = 0;
-static uint8_t steri1_running = 0;
-
-void sterilization_1_handle(void)
-{
-
-    switch (steri1_stt)
-    {
-    case START_STERI:      
-        RELAYA_ON();
-        steri1_stt = HEATING_1;
-        steri1_T1_left_s = system_config.time_steri;
-        steri1_tick_1s = g_time_tik_10ms;
-        steri1_running = 1;
-        /* code */
-        break;
-    case HEATING_1:
-        /* code */
-        uint8_t temp = temperature_sensor_read();
-        if (temp >= system_config.temp_setting)
-        {
-            steri1_stt = STERING_1;
-        }
-        start_steri_1 = g_time_tik_10ms;
-
-        break;
-    case STERING_1:
-        /* COUNTDOWN 1 phut */
-        if (g_time_tik_10ms - start_steri_1 >= 6000)
-        {
-            start_steri_1 = g_time_tik_10ms;
-            steri_time--;
-            /* show time steri led 2 task*/
-        }
-        if (!steri_time)
-        {
-            steri1_stt = END_STERI_1;
-        }
-        break;
-    case END_STERI_1:
-        /* code */
-        uint8_t temp = temperature_sensor_read();
-        if (temp <= 70)
-        {
-            RELAYA_OFF();
-            buzzer_start_ms(60 * 1000);
-            // show end led 2 task
-            steri1_stt = STOP_STERI_1;
-        }
-        break;
-
-    case STOP_STERI_1:
-        steri1_running = 0;
-        RELAYA_OFF();
-        break;
-    default:
-        break;
-    }
-}
-
-/*
-"🔹Tiệt trùng 2 ( A =  1, B = C = D = E = 0) có xả áp, không xả nước, không sấy
-Thiết bị sử dụng: Relay A (điện trở), Relay B (van xả khí)
-
-Quy trình:
-Cài đặt nhiệt độ tiệt trùng Ta (121°C hoặc 134°C),  thời gian tiệt trùng T1, thời gian xả áp lần T21.T22
-Nhấn nút START để bắt đầu.
-Relay A bật → gia nhiệt đến nhiệt độ cài đặt .
-Khi đạt nhiệt độ → relay B mở van xả khí ( B = 1)  trong thời gian cài đặt.
-Sau khi xả khí ( Hết thời gian cài đặt xả )→ đóng relay B ( B = 0)
- → tiếp tục gia nhiệt đến nhiệt độ đã cài đặt và bắt đầu đếm thời gian tiệt trùng.
-Kết thúc thời gian tiệt trùng (T1 đếm về 0) → relay A tắt ( A = 0)
-  → relay B mở lần 2 ( B = 1)  để xả áp đến khi nhiệt độ xuống dưới 70°C, T22  đếm ngược, T22 không đếm khi Temp = 40 độ C.
-  Bật chuông báo trong 60 giây (E = 1) hết thời gian 60s tắt chuông báo ( E = 0) → Khi kết thúc chương trình hiển thị End."
-
-*/
-typedef enum
-{
-    START_STERI_2 = 0,
-    HEATING_21, // chờ gia nhiệt
-    RELEASE_21, // sau khi gia nhiệt xong, chờ tiệt trùng xong
-    HEATING_22,
-    STERING_2,
-    RELEASE_22,
-    END_STERI_2,
-    STOP_STERI_2,
-} steri_2_status_t;
-
-static steri_2_status_t steri2_stt = STOP_STERI_2;
-static uint16_t steri2_T1_left_s = 0;
-static uint16_t steri2_T21_left_s = 0;
-static uint16_t steri2_T22_left_s = 0;
-static uint32_t steri2_tick_1s = 0;
-static uint8_t steri2_running = 0;
-
-void sterilization_2_handle(void)
-{
-    if (!steri2_running)
-    {
-        steri2_stt = STOP_STERI_2;
-    }
-
-    switch (steri2_stt)
-    {
-    case START_STERI_2:
-        RELAYA_ON();  // A = 1
-        TRIACB_OFF(); // B = 0
-        steri2_stt = HEATING_21;
-
-        steri2_T1_left_s = system_config.time_steri;
-        steri2_T21_left_s = system_config.time_pressure_release_1;
-        steri2_T22_left_s = system_config.time_pressure_release_2; // có thể =0 nếu chỉ dùng để hiển thị
-        steri2_tick_1s = g_time_tik_10ms;
-        steri2_running = 1;
-        steri2_stt = START_STERI_2;
-        break;
-
-    case HEATING_21:
-    {
-        uint8_t temp = temperature_sensor_read();
-        if (temp >= system_config.temp_setting)
-        {
-            // Đạt nhiệt độ cài đặt -> mở B xả lần 1 trong T21
-            steri2_tick_1s = g_time_tik_10ms;
-            TRIACB_ON(); // B = 1
-            steri2_stt = RELEASE_21;
-        }
-    }
-    break;
-
-    case RELEASE_21:
-        if (g_time_tik_10ms - steri2_tick_1s >= 100)
-        {
-            steri2_tick_1s = g_time_tik_10ms;
-            if (steri2_T21_left_s > 0)
-            {
-                steri2_T21_left_s--;
-
-                /* Show time count down*/
-            }
-        }
-        if (steri2_T21_left_s == 0)
-        {
-            TRIACB_OFF(); // B = 0
-            steri2_stt = HEATING_22;
-        }
-        break;
-
-    case HEATING_22:
-    {
-        // Sau khi đóng B, tiếp tục gia nhiệt lại tới nhiệt độ cài đặt rồi bắt đầu T1
-        uint8_t temp = temperature_sensor_read();
-        if (temp >= system_config.temp_setting)
-        {
-            steri2_tick_1s = g_time_tik_10ms;
-            steri2_stt = STERING_2;
-        }
-    }
-    break;
-
-    case STERING_2:
-        // Đếm T1
-        if (g_time_tik_10ms - steri2_tick_1s >= 100)
-        {
-            steri2_tick_1s = g_time_tik_10ms;
-            if (steri2_T1_left_s > 0)
-            {
-                steri2_T1_left_s--;
-                /* Show time count down*/
-            }
-        }
-        if (steri2_T1_left_s == 0)
-        {
-            // Hết T1: A = 0, B = 1; bật còi 60s
-            RELAYA_OFF(); // A = 0
-            TRIACB_ON();  // B = 1 (xả lần 2)
-
-            steri2_tick_1s = g_time_tik_10ms;
-            steri2_stt = RELEASE_22;
-        }
-        break;
-
-    case RELEASE_22:
-    {
-        uint8_t temp = temperature_sensor_read();
-
-        if (temp > 70)
-        {
-            break;
-        }
-        // T22 đếm ngược (chỉ để hiển thị/giới hạn), KHÔNG đếm khi Temp <= 40°C
-        if (g_time_tik_10ms - steri2_tick_1s >= 100)
-        {
-            steri2_tick_1s = g_time_tik_10ms;
-
-            if ((temp < 40 || steri2_T22_left_s == 0))
-            {
-                steri2_stt = END_STERI_2;
-                TRIACB_OFF();
-            }
-            else
-            {
-                steri2_T22_left_s--;
-            }
-            /* Show time count down*/
-        }
-    }
-    break;
-
-    case END_STERI_2:
-        steri2_running = 0;
-        buzzer_start_ms(60 * 1000);
-        steri2_stt = STOP_STERI_2;
-        break;
-
-    case STOP_STERI_2:
-        steri2_running = 0;
-        RELAYA_OFF();
-        TRIACB_OFF();
-        break;
-    default:
-        RELAYA_OFF();
-        TRIACB_OFF();
-        break;
-    }
-}
-
-typedef enum {
-    START_STERI_3 = 0,
-    HEATING_3,      // A=1, chờ đạt Ta
-    VENT_AND_STER3, // B=1 trong T21 & đếm T1 song song; khi T21=0 -> B=0, tiếp tục T1
-    FINISH_3,       // T1=0 -> A=0, C=1, kêu 60s; quản lý ngưỡng 40/70°C
-    STOP_STERI_3,
-} steri_3_status_t;
-
-static steri_3_status_t steri3_stt = STOP_STERI_3;
-static uint16_t steri3_T1_left_s  = 0;
-static uint16_t steri3_T21_left_s = 0;
-static uint32_t steri3_tick_1s    = 0;
-static uint8_t  steri3_running    = 0;
-
-void sterilization_3_start(void)
-{
-    if (steri3_stt == STOP_STERI_3) {
-        steri3_T1_left_s  = system_config.time_steri;     // T1
-        steri3_T21_left_s = system_config.time_pressure_release_1;  // T21
-        steri3_tick_1s    = g_time_tik_10ms;
-        steri3_running    = 1;
-        steri3_stt        = START_STERI_3;
-        ui_show_running();
-    }
-}
-
-void sterilization_3_stop(void)
-{
-    steri3_running = 0;
-    steri3_stt     = STOP_STERI_3;
-    RELAYA_OFF();
-    TRIACB_OFF();
-    TRIACC_OFF();
-}
-
-void sterilization_3_handle(void)
-{
-    if (!steri3_running) { steri3_stt = STOP_STERI_3; }
-
-    switch (steri3_stt)
-    {
-    case START_STERI_3:
-        RELAYA_ON();       // A=1
-        TRIACB_OFF();      // B=0
-        TRIACC_OFF();      // C=0
-        steri3_stt = HEATING_3;
-        break;
-
-    case HEATING_3: {
-        uint8_t temp = temperature_sensor_read();
-        ui_show_mode3_Temp(temp);
-        if (temp >= system_config.temp_setting) {
-            // Bắt đầu đếm T1; mở B và bắt đầu đếm T21 song song
-            TRIACB_ON();                       // B=1 (xả áp)
-            steri3_tick_1s = g_time_tik_10ms;
-            steri3_stt     = VENT_AND_STER3;
-        }
-        } break;
-
-    case VENT_AND_STER3: {
-        uint8_t temp = temperature_sensor_read();
-        ui_show_mode3_Temp(temp);
-
-        if (g_time_tik_10ms - steri3_tick_1s >= 100) {
-            steri3_tick_1s = g_time_tik_10ms;
-
-            // Đếm T1
-            if (steri3_T1_left_s > 0) {
-                steri3_T1_left_s--;
-                ui_show_mode3_T1(steri3_T1_left_s);
-            }
-
-            // Đếm T21 cho B
-            if (steri3_T21_left_s > 0) {
-                steri3_T21_left_s--;
-                ui_show_mode3_T21(steri3_T21_left_s);
-                if (steri3_T21_left_s == 0) {
-                    TRIACB_OFF(); // hết xả áp lần 1
-                }
-            }
-        }
-
-        if (steri3_T1_left_s == 0) {
-            // Kết thúc tiệt trùng
-            RELAYA_OFF();           // A=0
-            TRIACC_ON();            // C=1 (xả nước không giới hạn)
-            buzzer_start_ms(60*1000);
-            steri3_stt = FINISH_3;
-        }
-        } break;
-
-    case FINISH_3: {
-        uint8_t temp = temperature_sensor_read();
-        ui_show_mode3_Temp(temp);
-
-        // C đóng khi ≤ 40°C
-        if (temp <= 40) {
-            TRIACC_OFF();
-        }
-        // Kết thúc chu trình khi < 70°C
-        if (temp < 70) {
-            ui_show_end();
-            steri3_running = 0;
-            steri3_stt     = STOP_STERI_3;
-        }
-        } break;
-
-    case STOP_STERI_3:
-    default:
-        RELAYA_OFF();
-        TRIACB_OFF();
-        // C có thể vẫn ON nếu người dùng chưa về 40°C và chưa tắt nguồn; nhưng ở STOP ta đảm bảo OFF:
-        // Nếu bạn muốn giữ nguyên hành vi "C không tắt đến khi tắt nguồn", hãy bỏ dòng sau.
-        TRIACC_OFF();
-        break;
-    }
-}
-
-
-typedef enum {
-    START_STERI_4 = 0,
-    HEATING_41,     // A=1, chờ đạt Ta
-    VENT_AND_STER4, // B=1 trong T21 & đếm T1 song song
-    DRAIN_4,        // Sau T1=0: C=1, đếm T22; hết T22 -> C=0, D=1
-    DRY_HEAT_4,     // D=1, gia nhiệt tới Tb
-    DRY_HOLD_4,     // Duy trì Tb trong T4
-    END_STERI_4,
-    STOP_STERI_4,
-} steri_4_status_t;
-
-static steri_4_status_t steri4_stt = STOP_STERI_4;
-static uint16_t steri4_T1_left_s  = 0;
-static uint16_t steri4_T21_left_s = 0;
-static uint16_t steri4_T22_left_s = 0;  // dùng để giữ C=1
-static uint16_t steri4_T3_left_s  = 0;  // nếu muốn dùng T3 cho xả nước, thay thế cho T22
-static uint16_t steri4_T4_left_s  = 0;
-static uint32_t steri4_tick_1s    = 0;
-static uint8_t  steri4_running    = 0;
-
-void sterilization_4_start(void)
-{
-    if (steri4_stt == STOP_STERI_4) {
-        steri4_T1_left_s  = system_config.time_steri;     // T1
-        steri4_T21_left_s = system_config.time_pressure_release_1;  // T21
-        steri4_T22_left_s = system_config.time_pressure_release_2;  // T22 (điều kiện đóng C & bắt đầu sấy)
-        steri4_T3_left_s  = system_config.time_water_release;     // T3 (tùy chọn, nếu muốn)
-        steri4_T4_left_s  = system_config.time_drying;       // T4
-        steri4_tick_1s    = g_time_tik_10ms;
-        steri4_running    = 1;
-        steri4_stt        = START_STERI_4;
-        ui_show_running();
-    }
-}
-
-void sterilization_4_stop(void)
-{
-    steri4_running = 0;
-    steri4_stt     = STOP_STERI_4;
-    RELAYA_OFF();
-    TRIACB_OFF();
-    TRIACC_OFF();
-    RELAYD_OFF();
-}
-
-void sterilization_4_handle(void)
-{
-    if (!steri4_running) { steri4_stt = STOP_STERI_4; }
-
-    switch (steri4_stt)
-    {
-    case START_STERI_4:
-        RELAYA_ON();  // A=1
-        TRIACB_OFF();
-        TRIACC_OFF();
-        RELAYD_OFF();
-        steri4_stt = HEATING_41;
-        break;
-
-    case HEATING_41: {
-        uint8_t temp = temperature_sensor_read();
-        ui_show_mode4_Temp(temp);
-        if (temp >= system_config.temp_setting) {
-            // Đạt Ta: mở B; bắt đầu T1 & T21 song song
-            TRIACB_ON(); // B=1
-            steri4_tick_1s = g_time_tik_10ms;
-            steri4_stt     = VENT_AND_STER4;
-        }
-        } break;
-
-    case VENT_AND_STER4: {
-        uint8_t temp = temperature_sensor_read();
-        ui_show_mode4_Temp(temp);
-
-        if (g_time_tik_10ms - steri4_tick_1s >= 100) {
-            steri4_tick_1s = g_time_tik_10ms;
-
-            // Đếm T1
-            if (steri4_T1_left_s > 0) {
-                steri4_T1_left_s--;
-                ui_show_mode4_T1(steri4_T1_left_s);
-            }
-
-            // Đếm T21 cho B
-            if (steri4_T21_left_s > 0) {
-                steri4_T21_left_s--;
-                ui_show_mode4_T21(steri4_T21_left_s);
-                if (steri4_T21_left_s == 0) {
-                    TRIACB_OFF(); // hết xả áp lần 1
-                }
-            }
-        }
-
-        if (steri4_T1_left_s == 0) {
-            // Chuyển sang xả nước: C=1; A có thể tắt ở đây (chu trình tiệt trùng đã xong)
-            RELAYA_OFF();  // A=0, chuyển công đoạn xả nước
-            TRIACC_ON();   // C=1
-            // Theo mô tả: "T22 = 0 thì C = 0 và D = 1"
-            // -> giữ C mở trong T22
-            steri4_tick_1s = g_time_tik_10ms;
-            steri4_stt     = DRAIN_4;
-        }
-        } break;
-
-    case DRAIN_4: {
-        uint8_t temp = temperature_sensor_read();
-        ui_show_mode4_Temp(temp);
-
-        if (g_time_tik_10ms - steri4_tick_1s >= 100) {
-            steri4_tick_1s = g_time_tik_10ms;
-
-            // === Chọn một trong hai logic cho C ===
-            // 1) Theo mô tả: dùng T22 điều khiển C
-            if (steri4_T22_left_s > 0) {
-                steri4_T22_left_s--;
-                ui_show_mode4_T22(steri4_T22_left_s);
-            }
-            // 2) Nếu muốn dùng T3 cho xả nước, thay block trên bằng:
-            // if (steri4_T3_left_s > 0) { steri4_T3_left_s--; ui_show_mode4_T22(steri4_T3_left_s); }
-
-            // Khi bộ đếm đã hết -> C=0, bắt đầu sấy (D=1)
-            if (steri4_T22_left_s == 0 /*|| steri4_T3_left_s == 0*/) {
-                TRIACC_OFF(); // đóng xả nước
-                RELAYD_ON();  // D=1 (sấy)
-                steri4_stt   = DRY_HEAT_4;
-            }
-        }
-        } break;
-
-    case DRY_HEAT_4: {
-        // Gia nhiệt tới Tb
-        uint8_t temp = temperature_sensor_read();
-        ui_show_mode4_Temp(temp);
-        if (temp >= system_config.temp_dry_setting /*Tb*/) {
-            // Duy trì Tb trong T4
-            steri4_tick_1s = g_time_tik_10ms;
-            ui_show_mode4_T4(steri4_T4_left_s);
-            steri4_stt = DRY_HOLD_4;
-        }
-        } break;
-
-    case DRY_HOLD_4: {
-        uint8_t temp = temperature_sensor_read();
-        ui_show_mode4_Temp(temp);
-
-        // Giữ D bật, bạn có thể PID/bật-tắt để duy trì Tb, ở đây giữ D=1 (tùy phần cứng)
-        if (g_time_tik_10ms - steri4_tick_1s >= 100) {
-            steri4_tick_1s = g_time_tik_10ms;
-            if (steri4_T4_left_s > 0) {
-                steri4_T4_left_s--;
-                ui_show_mode4_T4(steri4_T4_left_s);
-            }
-        }
-
-        if (steri4_T4_left_s == 0 && temp < 70) {
-            RELAYD_OFF();                 // kết thúc sấy
-            buzzer_start_ms(60*1000);     // E=1 trong 60s
-            steri4_stt = END_STERI_4;
-        }
-        } break;
-
-    case END_STERI_4:
-        ui_show_end();
-        steri4_running = 0;
-        steri4_stt     = STOP_STERI_4;
-        break;
-
-    case STOP_STERI_4:
-    default:
-        RELAYA_OFF();
-        TRIACB_OFF();
-        TRIACC_OFF();
-        RELAYD_OFF();
-        break;
-    }
-}
-
 
 void USER_PROGRAM_C(void)
 {
@@ -1226,6 +1251,8 @@ void USER_PROGRAM_C(void)
         tm1640_write_led(2, value_led_2);
         tm1640_write_led(3, g_time_tik_10ms / 100);
     }
+
+    main_handle_servie();
 }
 
 void USER_PROGRAM_C_HALT_PREPARE()

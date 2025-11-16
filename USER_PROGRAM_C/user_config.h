@@ -2,13 +2,17 @@
 #define USERCONFIG_H
 #include <stdint.h>
 
+//step press in key : +1 unit with STEP_PRESS_TIME (ms)
+#define STEP_PRESS_TIME 10 
 
 #define TEMP_STARTUP_LOCK 90    // ≥90°C khóa chạy
 #define TEMP_STARTUP_OK_C 60      // <60°C cho phép
 #define TEMP_DANGER_C 140         // >140°C nguy hiểm
 #define TEMP_SAFE_EXIT_C 70       // <70°C cho phép thoát Danger
-#define STARTUP_BUZZ_MS 3000      // còi 3s khi khởi động
+#define STARTUP_BUZZ_MS 3000U      // còi 3s khi khởi động
 #define VENT_ON_STARTUP_MS 300000 // B=1 xả áp 5 phút nếu lock
+
+#define TEMP_NOW() temperature_sensor_read(123)
 
 //4 chế độ tiệt trùng được định nghĩa
 typedef enum 
@@ -60,4 +64,79 @@ typedef enum{
     UI_TEMP_SETTING
 }led1_mode_t;
 
+
+bit steri1_running = 0;
+bit steri2_running = 0;
+bit steri3_running = 0;
+bit steri4_running = 0;
+bit quick_mode_running = 0;
+
+/*Biến dùng chung cho các mode*/
+static uint16_t steri_T1_left_s = 0;
+static uint16_t steri_T21_left_s = 0;
+static uint16_t steri_T22_left_s = 0;
+static uint16_t steri_T3_left_s = 0;
+static uint16_t steri_T4_left_s = 0;
+static uint32_t steri_tick_1s = 0;
+
+typedef enum
+{
+    START_STERI_1 = 0,
+    HEATING_1, // chờ gia nhiệt
+    STERING_1, // sau khi gia nhiệt xong, chờ tiệt trùng xong
+    END_STERI_1,
+    STOP_STERI_1,
+} steri_1_status_t;
+static steri_1_status_t steri1_stt = STOP_STERI_1;
+
+typedef enum
+{
+    START_STERI_2 = 0,
+    HEATING_21, // chờ gia nhiệt
+    RELEASE_21, // sau khi gia nhiệt xong, chờ tiệt trùng xong
+    HEATING_22,
+    STERING_2,
+    RELEASE_22,
+    END_STERI_2,
+    STOP_STERI_2,
+} steri_2_status_t;
+static steri_2_status_t steri2_stt = STOP_STERI_2;
+
+typedef enum
+{
+    START_STERI_3 = 0,
+    HEATING_3,      // A=1, chờ đạt Ta
+    VENT_AND_STER3, // B=1 trong T21 & đếm T1 song song; khi T21=0 -> B=0, tiếp tục T1
+    FINISH_3,       // T1=0 -> A=0, C=1, kêu 60s; quản lý ngưỡng 40/70°C
+    STOP_STERI_3,
+} steri_3_status_t;
+static steri_3_status_t steri3_stt = STOP_STERI_3;
+
+typedef enum
+{
+    START_STERI_4 = 0,
+    HEATING_41,     // A=1, chờ đạt Ta
+    VENT_AND_STER4, // B=1 trong T21 & đếm T1 song song
+    DRAIN_4,        // Sau T1=0: C=1, đếm T22; hết T22 -> C=0, D=1
+    DRY_HEAT_4,     // D=1, gia nhiệt tới Tb
+    DRY_HOLD_4,     // Duy trì Tb trong T4
+    END_STERI_4,
+    STOP_STERI_4,
+} steri_4_status_t;
+static steri_4_status_t steri4_stt = STOP_STERI_4;
+
+
+typedef enum
+{
+    START_QUICK = 0,
+    HEATING,
+    END_QUICK,
+    STOP_QUICK,
+} quick_mode_t;
+quick_mode_t quick_mode = STOP_QUICK;
+
+void sterilization_start(sterilization_mode_t mode);
+
+static inline void buzzer_start_ms(unsigned int ms);
+static inline void buzzer_start_blink_ms(uint16_t ms, uint8_t blink_cnt);
 #endif //USERCONFIG_H

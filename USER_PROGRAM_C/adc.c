@@ -53,6 +53,7 @@ void adc_init_vdd_ref(void) {
     _sadc0 |= 0x20;     // ADCEN=1 (bật ADC)
 }
 
+// 1 to read temp, 0 to read adc pressure
 unsigned int adc_read_channel(unsigned char channel)
 {
 	channel &= 0x0F;                    // chỉ giữ 4 bit thấp

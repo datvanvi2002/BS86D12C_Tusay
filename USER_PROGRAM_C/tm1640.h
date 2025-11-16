@@ -25,6 +25,8 @@ void tm1640_keyring_clear_all(void);
 void tm1640_keyring_clear(uint8_t key_number);
 void tm1640_keyring_add(uint8_t key_number);
 
+/// @brief Show ERR in led_number 
+/// @param led_number 1 or 2 or 3
 void tm1640_write_err(uint8_t led_number);
 void tm1640_write_end(uint8_t led_number);
 void tm1640_clear_led(uint8_t led_number);
