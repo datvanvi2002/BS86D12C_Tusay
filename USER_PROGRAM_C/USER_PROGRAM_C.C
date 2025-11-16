@@ -728,7 +728,6 @@ void sterilization_1_handle(void)
   switch (steri1_stt)
   {
   case START_STERI_1:
-    tm1640_keyring_add(11); // on led RUN
     RELAYA_ON();
     steri1_stt = HEATING_1;
     /* code */
@@ -777,7 +776,6 @@ void sterilization_1_handle(void)
     break;
 
   case STOP_STERI_1:
-    tm1640_keyring_clear(11); // off led RUN
     steri1_running = 0;
     RELAYA_OFF();
     steri1_stt = STERI_WAITTING_1;
@@ -816,6 +814,7 @@ void sterilization_2_handle(void)
   switch (steri2_stt)
   {
   case START_STERI_2:
+
     RELAYA_ON();  // A = 1
     TRIACB_OFF(); // B = 0
     TRIACC_OFF(); // C = 0
@@ -1246,6 +1245,14 @@ void main_handle_servie()
   if (prg_state == SUP_IDLE)
   {
     steri_running = steri1_running | steri2_running | steri3_running | steri4_running | quick_mode_running;
+    if (steri_running)
+    {
+      tm1640_keyring_add(11); // on led RUN
+    }
+    else
+    {
+      tm1640_keyring_clear(11); // off led RUN
+    }
     switch (sterilization_mode)
     {
     case STERILIZATION_1:
