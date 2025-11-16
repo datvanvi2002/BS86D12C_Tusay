@@ -42,6 +42,8 @@ static const uint8_t digit_r = {SEG_E | SEG_G};
 static const uint8_t digit_n = {SEG_C | SEG_E | SEG_G};
 static const uint8_t digit_d = {SEG_B | SEG_C | SEG_D | SEG_E | SEG_G};
 
+static uint8_t tm1640_buf[16] = {0};
+
 static inline void tm_delay_short(void)
 {
     __asm__("nop");
@@ -115,6 +117,20 @@ static inline void tm_cmd(uint8_t cmd)
 // ======= API  =======
 
 // Xóa toàn bộ 16 địa chỉ (GRID1..GRID16)
+// void tm1640_clear_all(void)
+// {
+//     tm_start();
+//     tm_write_byte(0x40); // Data command: auto-increment
+//     tm_stop();
+
+//     tm_start();
+//     tm_write_byte(0xC0 | 0x00); // Address = 0
+//     uint8_t i = 0;
+//     for (i = 0; i < 16; i++)
+//         tm_write_byte(0x00);
+//     tm_stop();
+// }
+
 void tm1640_clear_all(void)
 {
     tm_start();
@@ -125,7 +141,11 @@ void tm1640_clear_all(void)
     tm_write_byte(0xC0 | 0x00); // Address = 0
     uint8_t i = 0;
     for (i = 0; i < 16; i++)
+    {
         tm_write_byte(0x00);
+        tm1640_buf[i] = 0;
+    }
+
     tm_stop();
 }
 
@@ -147,21 +167,24 @@ void tm1640_init(uint8_t brightness_0_to_7)
 }
 
 // Ghi 1 byte theo địa chỉ cố định (địa chỉ 0..0x0F)
-static uint8_t tm1640_last_data[16] = {0xFF};
+// static uint8_t tm1640_last_data[16] = {0xFF};
 void tm1640_write_fixed(uint8_t addr, uint8_t seg_bits)
 {
-    if (tm1640_last_data[addr] == seg_bits)
-        return;
-    // cache
-    tm1640_last_data[addr] = seg_bits;
+    // if (tm1640_last_data[addr] == seg_bits)
+    //     return;
+    // // cache
+    // tm1640_last_data[addr] = seg_bits;
+
+    // addr &= 0x0F;
+
+    // tm_cmd(0x44); // Data command: fixed address
+    // tm_start();
+    // tm_write_byte(0xC0 | addr); // Address command
+    // tm_write_byte(seg_bits);    // B0..B7 -> SEG1..SEG8
+    // tm_stop();
 
     addr &= 0x0F;
-
-    tm_cmd(0x44); // Data command: fixed address
-    tm_start();
-    tm_write_byte(0xC0 | addr); // Address command
-    tm_write_byte(seg_bits);    // B0..B7 -> SEG1..SEG8
-    tm_stop();
+    tm1640_buf[addr] = seg_bits;
 }
 
 // Ghi nhiều byte ở chế độ auto-increment từ start_addr
@@ -176,6 +199,12 @@ void tm1640_write_auto(uint8_t start_addr, const uint8_t *data, uint8_t len)
     for (i = 0; i < len; i++)
         tm_write_byte(data[i]);
     tm_stop();
+}
+
+// Ghi toàn bộ 16 byte trong tm1640_buf ra TM1640
+void tm1640_update_all(void)
+{
+    tm1640_write_auto(0x00, tm1640_buf, 16);
 }
 
 void tm1640_write_digit(uint8_t addr, uint8_t digit, _Bool with_dp)
@@ -265,71 +294,76 @@ void tm1640_write_led(uint8_t led_number, float number)
     }
 }
 
-// Nếu grid thứ tự vật lý bị đảo, chỉnh mảng này (0..15 là địa chỉ TM1640)
-uint8_t TM1640_grid_order[16] = {
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+// // Nếu grid thứ tự vật lý bị đảo, chỉnh mảng này (0..15 là địa chỉ TM1640)
+// uint8_t TM1640_grid_order[16] = {
+//     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
-// DEMO: hiển thị 1..9 ở GRID1..GRID9
-void tm1640_show_1_to_9_on_grid1_to_9(void)
-{
-    uint8_t buf[9];
-    uint8_t i = 0;
-    for (i = 0; i < 9; i++)
-    {
-        buf[i] = seven_seg_digits[i + 1]; // số 1..9
-    }
-    for (i = 0; i < 9; i++)
-        tm1640_write_fixed(TM1640_grid_order[i], buf[i]);
-    // tm1640_write_auto(0x00, buf, 9);    // địa chỉ 0..8 -> GRID1..9
-}
+// // DEMO: hiển thị 1..9 ở GRID1..GRID9
+// void tm1640_show_1_to_9_on_grid1_to_9(void)
+// {
+//     uint8_t buf[9];
+//     uint8_t i = 0;
+//     for (i = 0; i < 9; i++)
+//     {
+//         buf[i] = seven_seg_digits[i + 1]; // số 1..9
+//     }
+//     for (i = 0; i < 9; i++)
+//     {
+//         tm1640_write_fixed(TM1640_grid_order[i], buf[i]);
+//         tm1640_update_all();
+//     }
 
-void tm1640_walk_segments(uint8_t grid, uint16_t on_ms)
-{
-    uint8_t b = 0;
-    volatile uint16_t i, d;
-    grid &= 0x0F;
+//     // tm1640_write_auto(0x00, buf, 9);    // địa chỉ 0..8 -> GRID1..9
+// }
 
-    tm1640_clear_all();             // đảm bảo mọi thứ tắt sạch
-    tm1640_write_fixed(grid, 0x00); // blank tại grid này
-    // nhỏ: chèn 1 nhịp trễ để thấy rõ "tắt hẳn" rồi mới bật A
-    for (d = 0; d < 8000; d++)
-        __asm__("nop");
+// void tm1640_walk_segments(uint8_t grid, uint16_t on_ms)
+// {
+//     uint8_t b = 0;
+//     volatile uint16_t i, d;
+//     grid &= 0x0F;
 
-    for (b = 0; b < 8; b++)
-    {
-        tm1640_write_fixed(grid, (1u << b)); // bật đúng 1 SEG (bit0..7 = SEG1..8)
-        // giữ on_ms (thô @8MHz)
-        uint16_t ms = on_ms;
-        while (ms--)
-        {
-            __asm__("clr wdt");
-            for (i = 0; i < 500; i++)
-                __asm__("nop");
-        }
-        tm1640_write_fixed(grid, 0x00); // tắt SEG trước khi sang SEG kế tiếp
-    }
-}
+//     tm1640_clear_all();             // đảm bảo mọi thứ tắt sạch
+//     tm1640_write_fixed(grid, 0x00); // blank tại grid này
+//     // nhỏ: chèn 1 nhịp trễ để thấy rõ "tắt hẳn" rồi mới bật A
+//     for (d = 0; d < 8000; d++)
+//         __asm__("nop");
+
+//     for (b = 0; b < 8; b++)
+//     {
+//         tm1640_write_fixed(grid, (1u << b)); // bật đúng 1 SEG (bit0..7 = SEG1..8)
+//         // giữ on_ms (thô @8MHz)
+//         uint16_t ms = on_ms;
+//         while (ms--)
+//         {
+//             __asm__("clr wdt");
+//             for (i = 0; i < 500; i++)
+//                 __asm__("nop");
+//         }
+//         tm1640_write_fixed(grid, 0x00); // tắt SEG trước khi sang SEG kế tiếp
+//         tm1640_update_all();
+//     }
+// }
 
 // Bật duy nhất SEG A và lần lượt chạy qua addr 0..15
-void tm1640_walk_grids_a(uint16_t hold_ms)
-{
-    tm1640_clear_all();
-    uint8_t addr = 0;
-    volatile uint16_t i = 0;
-    for (addr = 0; addr < 16; addr++)
-    {
-        tm1640_write_fixed(addr, (1u << TM_SEG_BIT_FOR_A)); // chỉ SEG A
-        // giữ hold_ms rồi tắt để chuyển sang grid tiếp theo
-        uint16_t ms = hold_ms;
-        while (ms--)
-        {
-            __asm__("clr wdt");
-            for (i = 0; i < 500; i++)
-                __asm__("nop");
-        }
-        tm1640_write_fixed(addr, 0x00);
-    }
-}
+// void tm1640_walk_grids_a(uint16_t hold_ms)
+// {
+//     tm1640_clear_all();
+//     uint8_t addr = 0;
+//     volatile uint16_t i = 0;
+//     for (addr = 0; addr < 16; addr++)
+//     {
+//         tm1640_write_fixed(addr, (1u << TM_SEG_BIT_FOR_A)); // chỉ SEG A
+//         // giữ hold_ms rồi tắt để chuyển sang grid tiếp theo
+//         uint16_t ms = hold_ms;
+//         while (ms--)
+//         {
+//             __asm__("clr wdt");
+//             for (i = 0; i < 500; i++)
+//                 __asm__("nop");
+//         }
+//         tm1640_write_fixed(addr, 0x00);
+//     }
+// }
 
 /*
 - Mỗi một lần ấn phím cảm ứng thì còi chíp kêu 1 tiếng Bíp,
@@ -393,6 +427,16 @@ void tm1640_keyring_clear(uint8_t key_number)
     case 8:
         grid11_state &= ~SEG_B;
         break;
+    case 9:
+        grid10_state &= ~SEG_D;
+        break;
+    case 10:
+        grid10_state &= ~SEG_E;
+        break;
+    case 11:
+        grid11_state &= ~SEG_C;
+        break;
+
     default:
         return;
     }
@@ -429,6 +473,15 @@ void tm1640_keyring_add(uint8_t key_number)
     case 8:
         grid11_state |= SEG_B;
         break;
+    case 9:
+        grid10_state |= SEG_D;
+        break;
+    case 10:
+        grid10_state |= SEG_E;
+        break;
+    case 11:
+        grid11_state |= SEG_C;
+        break;
     default:
         return;
     }
@@ -436,40 +489,52 @@ void tm1640_keyring_add(uint8_t key_number)
     tm1640_write_fixed(GRID10_ADDR, grid10_state);
     tm1640_write_fixed(GRID11_ADDR, grid11_state);
 }
-void tm1640_keyring_only(uint8_t key_number)
-{
-    // Clear previous key-ring LED states
-    switch (key_number)
-    {
-    case 1:
-        tm1640_write_fixed(GRID10_ADDR, SEG_A); // SEG1
-        break;
-    case 2:
-        tm1640_write_fixed(GRID10_ADDR, SEG_B); // SEG2
-        break;
-    case 3:
-        tm1640_write_fixed(GRID10_ADDR, SEG_C); // SEG3
-        break;
-    case 4:
-        tm1640_write_fixed(GRID10_ADDR, SEG_F); // SEG6
-        break;
-    case 5:
-        tm1640_write_fixed(GRID10_ADDR, SEG_G); // SEG7
-        break;
-    case 6:
-        tm1640_write_fixed(GRID10_ADDR, SEG_DP); // SEG8
-        break;
-    case 7:
-        tm1640_write_fixed(GRID11_ADDR, SEG_A); // SEG1
-        break;
-    case 8:
-        tm1640_write_fixed(GRID11_ADDR, SEG_B); // SEG2
-        break;
-    default:
-        // Invalid key_number; do nothing or handle error as needed
-        break;
-    }
-}
+
+// /// @brief On led in key
+// /// @param key_number 1 -> 8 led in key. 9 Led D4, 10 Led D5, 11 Led D11
+// void tm1640_keyring_only(uint8_t key_number)
+// {
+//     // Clear previous key-ring LED states
+//     switch (key_number)
+//     {
+//     case 1:
+//         tm1640_write_fixed(GRID10_ADDR, SEG_A); // SEG1-G10
+//         break;
+//     case 2:
+//         tm1640_write_fixed(GRID10_ADDR, SEG_B); // SEG2-G10
+//         break;
+//     case 3:
+//         tm1640_write_fixed(GRID10_ADDR, SEG_C); // SEG3-G10
+//         break;
+//     case 4:
+//         tm1640_write_fixed(GRID10_ADDR, SEG_F); // SEG6-G10
+//         break;
+//     case 5:
+//         tm1640_write_fixed(GRID10_ADDR, SEG_G); // SEG7-G10
+//         break;
+//     case 6:
+//         tm1640_write_fixed(GRID10_ADDR, SEG_DP); // SEG8-G10
+//         break;
+//     case 7:
+//         tm1640_write_fixed(GRID11_ADDR, SEG_A); // SEG1-G11
+//         break;
+//     case 8:
+//         tm1640_write_fixed(GRID11_ADDR, SEG_B); // SEG2-G11
+//         break;
+//     case 9:                                     // d4 led
+//         tm1640_write_fixed(GRID10_ADDR, SEG_D); // SEG4-G10
+//         break;
+//     case 10:                                    // d5 led
+//         tm1640_write_fixed(GRID10_ADDR, SEG_E); // SEG5-G10
+//         break;
+//     case 11:                                    // d11 led
+//         tm1640_write_fixed(GRID11_ADDR, SEG_B); // SEG3-G11
+//         break;
+//     default:
+//         // Invalid key_number; do nothing or handle error as needed
+//         break;
+//     }
+// }
 void tm1640_clear_led(uint8_t led_number)
 {
     switch (led_number)
