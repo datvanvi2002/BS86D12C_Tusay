@@ -17,5 +17,5 @@ void uart0_send_string(const char *s);
 
 /// @brief Transmit an unsigned integer number (0..65535) via UART0 PD7 pin
 /// @param x Number to transmit
-void uart0_send_number(uint16_t x);
+void uart0_send_number(uint32_t x);
 #endif // UART_H

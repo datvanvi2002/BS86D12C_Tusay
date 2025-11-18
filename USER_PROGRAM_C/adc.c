@@ -1,5 +1,6 @@
 #include "adc.h"
 #include <stdint.h>
+#include <math.h>
 // static const float PT100Tab[] =
 // {
 //     100, 100.39, 100.78, 101.17, 101.56, 101.95, 102.34, 102.73, 103.12, 103.51
@@ -73,17 +74,17 @@ unsigned int adc_read_channel(unsigned char channel)
     return ((unsigned int)_sadoh << 8) | _sadol; // ADRFS=1: right-aligned
 }
 
-static inline float pgm_read_float(const float *p) { return *p; } // thay cho AVR
+// static inline float pgm_read_float(const float *p) { return *p; } // thay cho AVR
 
-static inline float f_abs(float x) { return (x >= 0.0f) ? x : -x; }
+// static inline float f_abs(float x) { return (x >= 0.0f) ? x : -x; }
 
-static int comp(float pt, int i)
-{
-    if ((pt - pgm_read_float(&PT100Tab[i])) > (pgm_read_float(&PT100Tab[i + 1]) - pgm_read_float(&PT100Tab[i])) / 2)
-        return i + 1;
-    else
-        return i;
-}
+// static int comp(float pt, int i)
+// {
+//     if ((pt - pgm_read_float(&PT100Tab[i])) > (pgm_read_float(&PT100Tab[i + 1]) - pgm_read_float(&PT100Tab[i])) / 2)
+//         return i + 1;
+//     else
+//         return i;
+// }
 
 int temperature_sensor_read(uint16_t adc_value)
 {
@@ -97,34 +98,34 @@ int temperature_sensor_read(uint16_t adc_value)
     end = 399;
     mid = (front + end) / 2;
 
-    while (front < end && pgm_read_float(&PT100Tab[mid]) != res)
-    {
-        if (pgm_read_float(&PT100Tab[mid]) < res)
-        {
-            if (pgm_read_float(&PT100Tab[mid + 1]) < res)
-                front = mid + 1;
-            else
-            {
-                mid = comp(res, mid);
-                return mid;
-            }
-        }
+    // while (front < end && pgm_read_float(&PT100Tab[mid]) != res)
+    // {
+    //     if (pgm_read_float(&PT100Tab[mid]) < res)
+    //     {
+    //         if (pgm_read_float(&PT100Tab[mid + 1]) < res)
+    //             front = mid + 1;
+    //         else
+    //         {
+    //             mid = comp(res, mid);
+    //             return mid;
+    //         }
+    //     }
 
-        if (pgm_read_float(&PT100Tab[mid]) > res)
-        {
-            if (pgm_read_float(&PT100Tab[mid - 1]) > res)
-            {
-                end = mid - 1;
-            }
+    //     if (pgm_read_float(&PT100Tab[mid]) > res)
+    //     {
+    //         if (pgm_read_float(&PT100Tab[mid - 1]) > res)
+    //         {
+    //             end = mid - 1;
+    //         }
 
-            else
-            {
-                mid = comp(res, mid - 1);
-                return mid;
-            }
-            mid = front + (end - front) / 2;
-        }
-    }
+    //         else
+    //         {
+    //             mid = comp(res, mid - 1);
+    //             return mid;
+    //         }
+    //         mid = front + (end - front) / 2;
+    //     }
+    // }
     return mid;
 }
 

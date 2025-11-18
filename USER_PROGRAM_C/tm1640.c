@@ -131,23 +131,23 @@ static inline void tm_cmd(uint8_t cmd)
 //     tm_stop();
 // }
 
-void tm1640_clear_all(void)
-{
-    tm_start();
-    tm_write_byte(0x40); // Data command: auto-increment
-    tm_stop();
+// void tm1640_clear_all(void)
+// {
+//     tm_start();
+//     tm_write_byte(0x40); // Data command: auto-increment
+//     tm_stop();
 
-    tm_start();
-    tm_write_byte(0xC0 | 0x00); // Address = 0
-    uint8_t i = 0;
-    for (i = 0; i < 16; i++)
-    {
-        tm_write_byte(0x00);
-        tm1640_buf[i] = 0;
-    }
+//     tm_start();
+//     tm_write_byte(0xC0 | 0x00); // Address = 0
+//     uint8_t i = 0;
+//     for (i = 0; i < 16; i++)
+//     {
+//         tm_write_byte(0x00);
+//         tm1640_buf[i] = 0;
+//     }
 
-    tm_stop();
-}
+//     tm_stop();
+// }
 
 // Khởi tạo: cấu hình chân, bật hiển thị, đặt độ sáng (0..7)
 void tm1640_init(uint8_t brightness_0_to_7)
@@ -162,7 +162,7 @@ void tm1640_init(uint8_t brightness_0_to_7)
     tm_din_high();
 
     // Xóa và bật hiển thị với độ sáng
-    tm1640_clear_all();
+    // tm1640_clear_all();
     tm_cmd(0x88 | brightness_0_to_7); // Display ON + brightness
 }
 
@@ -227,66 +227,66 @@ void tm1640_write_digit(uint8_t addr, uint8_t digit, _Bool with_dp)
 /// Pressure show LED 3: Grid 7 Grid 8 and Grid 9 ///
 /// @param  led_number  1 show Temperature; 2 show Times; 3 show Pressure
 /// @param  number 0,00 .. 999 (float: 2 digits after the decimal point)
-void tm1640_write_led(uint8_t led_number, float number)
+void tm1640_write_led(uint8_t led_number, uint16_t number)
 {
-    static uint8_t led_number_buf = 255;
-    if (led_number_buf == led_number)
-        if (number < 0.0f)
-            number = 0.0f;
-    if (number > 999.0f)
-        number = 999.0f;
+    // static uint8_t led_number_buf = 255;
+    // if (led_number_buf == led_number)
+    //     if (number < 0.0f)
+    //         number = 0.0f;
+    // if (number > 999.0f)
+    //     number = 999.0f;
 
-    _Bool with_dp_1 = 0; // dp for hundreds digit
-    _Bool with_dp_2 = 0; // dp for tens digit
+    // _Bool with_dp_1 = 0; // dp for hundreds digit
+    // _Bool with_dp_2 = 0; // dp for tens digit
 
-    if (number < 10.0f)
-    {
-        with_dp_1 = 1;
-        with_dp_2 = 0;
-    }
-    else if (number < 100.0f)
-    {
-        with_dp_1 = 0;
-        with_dp_2 = 1;
-    }
-    else
-    {
-        with_dp_1 = 0;
-        with_dp_2 = 0;
-    }
+    // if (number < 10.0f)
+    // {
+    //     with_dp_1 = 1;
+    //     with_dp_2 = 0;
+    // }
+    // else if (number < 100.0f)
+    // {
+    //     with_dp_1 = 0;
+    //     with_dp_2 = 1;
+    // }
+    // else
+    // {
+    //     with_dp_1 = 0;
+    //     with_dp_2 = 0;
+    // }
 
-    if (number < 10.0f)
-    {
-        number = number * 100.0f;
-    }
-    else if (number < 100)
-    {
-        number = number * 10.0f;
-    }
-    else
-    {
-        number = number * 1.0f;
-    }
+    // if (number < 10.0f)
+    // {
+    //     number = number * 100.0f;
+    // }
+    // else if (number < 100)
+    // {
+    //     number = number * 10.0f;
+    // }
+    // else
+    // {
+    //     number = number * 1.0f;
+    // }
     uint8_t digit_1 = ((uint16_t)number / 100) % 10; // hundreds
     uint8_t digit_2 = ((uint16_t)number / 10) % 10;  // tens
     uint8_t digit_3 = ((uint16_t)number / 1) % 10;   // units
 
     switch (led_number)
     {
-    case 1:                                        // Temperature show LED
-        tm1640_write_digit(0, digit_1, with_dp_1); // Grid 1
-        tm1640_write_digit(1, digit_2, with_dp_2); // Grid 2
-        tm1640_write_digit(2, digit_3, 0);         // Grid 3
+    case 1:                                // Temperature show LED
+        tm1640_write_digit(0, digit_1, 0); // Grid 1
+        tm1640_write_digit(1, digit_2, 0); // Grid 2
+        tm1640_write_digit(2, digit_3, 0); // Grid 3
         break;
-    case 2:                                        // Times show LED
-        tm1640_write_digit(3, digit_1, with_dp_1); // Grid 4
-        tm1640_write_digit(4, digit_2, with_dp_2); // Grid 5
-        tm1640_write_digit(5, digit_3, 0);         // Grid 6
+    case 2:                                // Times show LED
+        tm1640_write_digit(3, digit_1, 0); // Grid 4
+        tm1640_write_digit(4, digit_2, 0); // Grid 5
+        tm1640_write_digit(5, digit_3, 0); // Grid 6
         break;
-    case 3:                                        // Pressure show LED
-        tm1640_write_digit(6, digit_1, with_dp_1); // Grid 7
-        tm1640_write_digit(7, digit_2, with_dp_2); // Grid 8
-        tm1640_write_digit(8, digit_3, 0);         // Grid 9
+    case 3:                                // Pressure show LED
+        tm1640_write_digit(6, digit_1, 0); // Grid 7
+        tm1640_write_digit(7, digit_2, 0); // Grid 8
+        tm1640_write_digit(8, digit_3, 0); // Grid 9
         break;
     default:
         // Invalid led_number; do nothing or handle error as needed
@@ -391,13 +391,13 @@ KEY 8: SEG1 - GRID11
 static uint8_t grid10_state = 0;
 static uint8_t grid11_state = 0;
 
-void tm1640_keyring_clear_all(void)
-{
-    grid10_state = 0;
-    grid11_state = 0;
-    tm1640_write_fixed(GRID10_ADDR, 0);
-    tm1640_write_fixed(GRID11_ADDR, 0);
-}
+// void tm1640_keyring_clear_all(void)
+// {
+//     grid10_state = 0;
+//     grid11_state = 0;
+//     tm1640_write_fixed(GRID10_ADDR, 0);
+//     tm1640_write_fixed(GRID11_ADDR, 0);
+// }
 
 void tm1640_keyring_clear(uint8_t key_number)
 {

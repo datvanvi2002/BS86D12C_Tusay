@@ -12,8 +12,6 @@
 #define STARTUP_BUZZ_MS 3000U     // còi 3s khi khởi động
 #define VENT_ON_STARTUP_MS 300000 // B=1 xả áp 5 phút nếu lock
 
-#define TEMP_NOW() 133
-
 // 4 chế độ tiệt trùng được định nghĩa
 typedef enum
 {
@@ -44,7 +42,7 @@ typedef struct
     uint16_t time_drying;             // T4: drying time (m)
     uint16_t crc;                     // checksum
 } system_init_t;                      // time in minutes
-float g_temperature = 0;
+float g_temperature = 125;            /*test*/
 float g_pressure = 0;
 #define UI_REPEAT_MS_SLOW 100
 #define UI_REPEAT_MS_FAST 50
@@ -74,7 +72,7 @@ bit quick_mode_running = 0;
 bit steri_running = 0;
 /*Biến dùng chung cho các mode*/
 static uint32_t steri_tick = 0;
-float remain_count = 0;
+uint16_t remain_count = 0;
 
 typedef enum
 {
@@ -105,7 +103,9 @@ typedef enum
 {
     STERI_WAITTING_3 = 0,
     START_STERI_3,
-    HEATING_3,      // A=1, chờ đạt Ta
+    HEATING_31, // A=1, chờ đạt Ta
+    RELEASE_3,
+    HEATING_32,
     VENT_AND_STER3, // B=1 trong T21 & đếm T1 song song; khi T21=0 -> B=0, tiếp tục T1
     REALSE_WATER_3,
     FINISH_3, // T1=0 -> A=0, C=1, kêu 60s; quản lý ngưỡng 40/70°C
@@ -117,11 +117,12 @@ typedef enum
 {
     STERI_WAITTING_4 = 0,
     START_STERI_4,
-    HEATING_41,     // A=1, chờ đạt Ta
-    VENT_AND_STER4, // B=1 trong T21 & đếm T1 song song
-    DRAIN_4,        // Sau T1=0: C=1, đếm T22; hết T22 -> C=0, D=1
-    DRY_HEAT_4,     // D=1, gia nhiệt tới Tb
-    DRY_HOLD_4,     // Duy trì Tb trong T4
+    HEATING_41, // A=1, chờ đạt Ta
+    VENT_4,     // B=1 trong T21
+    STERI_42,
+    DRAIN_4,    // Sau T1=0: C=1, đếm T22; hết T22 -> C=0, D=1
+    DRY_HEAT_4, // D=1, gia nhiệt tới Tb
+    DRY_HOLD_4, // Duy trì Tb trong T4
     END_STERI_4,
     STOP_STERI_4,
 } steri_4_status_t;

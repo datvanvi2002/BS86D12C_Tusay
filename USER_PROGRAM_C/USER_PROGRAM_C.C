@@ -1,41 +1,4 @@
-/////******************************************Disclaimer****************************************************//**
-/////*The material offered by Holtek Semiconductor Inc. (including its
-/// subsidiaries, hereinafter
-/////*collectively referred to as “HOLTEK”), including but not limited to
-/// technical documentation and
-/////*code, is provided “as is”, only for your reference, and may be superseded
-/// by updates. HOLTEK
-/////*reserves the right to revise the offered material at any time without
-/// prior notice. You shall use the
-/////*offered material at your own risk. HOLTEK disclaims any expressed,
-/// implied, or statutory warranties,
-/////*including but not limited to accuracy, suitability for commercialization,
-/// satisfactory quality,
-/////*specifications, characteristics, functions, fitness for a particular
-/// purpose, and non-infringement of
-/////*any third-party’s rights. HOLTEK disclaims all liability arising from the
-/// offered material and its
-/////*application. In addition, HOLTEK does not recommend the use of HOLTEK’s
-/// products where there is
-/////*a risk of personal hazard due to malfunction or other reasons. HOLTEK
-/// hereby declares that it does
-/////*not authorize the use of these products in life-saving, life-sustaining,
-/// or safety-critical components.
-/////*Any use of HOLTEK’s products in life-saving, sustaining, or safety
-/// applications is entirely at your risk,
-/////*and you agree to defend, indemnify, and hold HOLTEK harmless from any
-/// damages, claims, suits, or
-/////*expenses resulting from such use.
-/////************************************************************************************************************/
 
-//////***********************************Intellectual
-/// Property*************************************************//**
-/////*The offered material, including but not limited to the content, data,
-/// examples, materials, graphs,
-/////*and trademarks, is the intellectual property of HOLTEK (and its licensors,
-/// where applicable) and is
-/////*protected by copyright law and other intellectual property laws.
-/////************************************************************************************************************/
 
 #include "BS86D12C.h"
 #include "USER_PROGRAM_C.INC"
@@ -46,9 +9,9 @@
 #include "uart.h"
 #include "user_config.h"
 #include <string.h>
-#include <math.h>
+
 static SupState prg_state = SUP_BOOT;
-system_init_t system_config = {0};
+system_init_t sys_cf = {0};
 sterilization_mode_t sterilization_mode = STERILIZATION_NULL;
 static UiField ui_led2 = UI_IDLE;
 
@@ -59,26 +22,12 @@ void uart_debug()
 {
   uart0_send_number(g_time_tik_10ms);
   uart0_send_string(":STERI: ");
-  uart0_send_number(steri1_stt);
+  uart0_send_number(sterilization_mode);
   uart0_send_string("-remain: ");
   uart0_send_number(remain_count);
   uart0_send_string(" : ");
   uart0_send_number(steri_tick);
-  uart0_send_string(" : ");
-  uart0_send_number(fabs(g_pressure));
   uart0_send_byte('\n');
-}
-void delay_ms(unsigned int ms)
-{
-  unsigned long i;
-  while (ms--)
-  {
-    for (i = 250; i > 0; i--)
-    {
-      GCC_NOP();
-    }
-    __asm__("clr wdt");
-  }
 }
 
 void SystemInit(void)
@@ -95,12 +44,12 @@ void SystemInit(void)
   tm1640_init(7); // brightness 0..7
 
   // default config
-  system_config.temp_setting = 121;
-  system_config.time_steri = 0;
-  system_config.time_pressure_release_1 = 0;
-  system_config.time_pressure_release_2 = 0;
-  system_config.time_water_release = 0;
-  system_config.time_drying = 0;
+  sys_cf.temp_setting = 121;
+  sys_cf.time_steri = 0;
+  sys_cf.time_pressure_release_1 = 0;
+  sys_cf.time_pressure_release_2 = 0;
+  sys_cf.time_water_release = 0;
+  sys_cf.time_drying = 0;
 }
 ////==============================================
 ////**********************************************
@@ -117,8 +66,6 @@ void USER_PROGRAM_C_INITIAL()
 {
   // Executes the USER_PROGRAM_C initialization function once
   SystemInit();
-  uart0_send_string("HELLO From BS86D12C\n");
-  uart0_send_byte('\n');
   // buzzer_start_ms(STARTUP_BUZZ_MS);
   //  tm1640_walk_grids_a(2);
   // int i = 0;
@@ -128,9 +75,9 @@ void USER_PROGRAM_C_INITIAL()
   // }
 
   // tm1640_show_1_to_9_on_grid1_to_9();
-  tm1640_write_end(2);
-  tm1640_write_err(1);
-  tm1640_update_all();
+  // tm1640_write_end(2);
+  // tm1640_write_err(1);
+  // tm1640_update_all();
 }
 
 //==============================================
@@ -202,7 +149,7 @@ static inline void buzzer_service(void)
 led1_mode_t ui_led1 = UI_TEMP_NOW;
 uint8_t key23_state = 0;
 uint8_t key56_state = 0;
-static uint16_t key_led_timer = 0; // *63ms
+static uint8_t key_led_timer = 0; // *63ms
 
 /// @brief Tắt led của key sau khi hết thời gian timer
 static inline void key_off_time()
@@ -259,34 +206,34 @@ void caculate_time_setup(int delta)
   switch (ui_led2)
   {
   case UI_SET_T1:
-    if (system_config.time_steri == 0 && delta < 0)
+    if (sys_cf.time_steri == 0 && delta < 0)
       break;
-    system_config.time_steri =
-        _limit_data(system_config.time_steri + delta, 0, 999);
+    sys_cf.time_steri =
+        _limit_data(sys_cf.time_steri + delta, 0, 999);
     break;
   case UI_SET_T21:
-    if (system_config.time_pressure_release_1 == 0 && delta < 0)
+    if (sys_cf.time_pressure_release_1 == 0 && delta < 0)
       break;
-    system_config.time_pressure_release_1 =
-        _limit_data(system_config.time_pressure_release_1 + delta, 0, 999);
+    sys_cf.time_pressure_release_1 =
+        _limit_data(sys_cf.time_pressure_release_1 + delta, 0, 999);
     break;
   case UI_SET_T22:
-    if (system_config.time_pressure_release_2 == 0 && delta < 0)
+    if (sys_cf.time_pressure_release_2 == 0 && delta < 0)
       break;
-    system_config.time_pressure_release_2 =
-        _limit_data(system_config.time_pressure_release_2 + delta, 0, 999);
+    sys_cf.time_pressure_release_2 =
+        _limit_data(sys_cf.time_pressure_release_2 + delta, 0, 999);
     break;
   case UI_SET_T3:
-    if (system_config.time_water_release == 0 && delta < 0)
+    if (sys_cf.time_water_release == 0 && delta < 0)
       break;
-    system_config.time_water_release =
-        _limit_data(system_config.time_water_release + delta, 0, 999);
+    sys_cf.time_water_release =
+        _limit_data(sys_cf.time_water_release + delta, 0, 999);
     break;
   case UI_SET_T4:
-    if (system_config.time_drying == 0 && delta < 0)
+    if (sys_cf.time_drying == 0 && delta < 0)
       break;
-    system_config.time_drying =
-        _limit_data(system_config.time_drying + delta, 0, 999);
+    sys_cf.time_drying =
+        _limit_data(sys_cf.time_drying + delta, 0, 999);
     break;
   default:
     break;
@@ -367,17 +314,17 @@ void key_handle_service(KeyEvents ev)
     */
     if (ev.pressed & KEYBIT(TEMP_UP_KEY))
     {
-      system_config.temp_setting++;
-      system_config.temp_setting =
-          system_config.temp_setting > 134 ? 134 : system_config.temp_setting;
+      sys_cf.temp_setting++;
+      sys_cf.temp_setting =
+          sys_cf.temp_setting > 134 ? 134 : sys_cf.temp_setting;
       key23_state |= (1 << 1);
       key23_state &= ~(1 << 0);
     }
     else if (ev.pressed & KEYBIT(TEMP_DOWN_KEY))
     {
-      system_config.temp_setting--;
-      system_config.temp_setting =
-          system_config.temp_setting < 121 ? 121 : system_config.temp_setting;
+      sys_cf.temp_setting--;
+      sys_cf.temp_setting =
+          sys_cf.temp_setting < 121 ? 121 : sys_cf.temp_setting;
       key23_state |= (1 << 0);
       key23_state &= ~(1 << 1);
     }
@@ -388,9 +335,9 @@ void key_handle_service(KeyEvents ev)
       key23_state &= ~(1 << 1);
       if (g_time_tik_10ms % STEP_PRESS_TIME == 0) // 50ms + 1
       {
-        system_config.temp_setting--;
-        system_config.temp_setting =
-            system_config.temp_setting < 121 ? 121 : system_config.temp_setting;
+        sys_cf.temp_setting--;
+        sys_cf.temp_setting =
+            sys_cf.temp_setting < 121 ? 121 : sys_cf.temp_setting;
       }
     }
     else if (ev.hold & KEYBIT(TEMP_UP_KEY) &&
@@ -400,9 +347,9 @@ void key_handle_service(KeyEvents ev)
       key23_state &= ~(1 << 0);
       if (g_time_tik_10ms % STEP_PRESS_TIME == 0) // 50ms + 1
       {
-        system_config.temp_setting++;
-        system_config.temp_setting =
-            system_config.temp_setting > 134 ? 134 : system_config.temp_setting;
+        sys_cf.temp_setting++;
+        sys_cf.temp_setting =
+            sys_cf.temp_setting > 134 ? 134 : sys_cf.temp_setting;
       }
     }
   }
@@ -489,8 +436,8 @@ void key_handle_service(KeyEvents ev)
       sterilization_mode = STERILIZATION_NULL;
     }
     sterilization_mode = QUICK_MODE;
-    system_config.temp_setting =
-        (system_config.temp_setting == 121) ? 134 : 121;
+    sys_cf.temp_setting =
+        (sys_cf.temp_setting == 121) ? 134 : 121;
   }
 
   //==================Handle KEY 8: START_KEY============================
@@ -510,12 +457,12 @@ void key_handle_service(KeyEvents ev)
     }
     else
     {
-      sterilization_mode = check_mode_process(system_config);
-      // uart0_send_number(system_config.time_steri);
-      // uart0_send_number(system_config.time_pressure_release_1);
-      // uart0_send_number(system_config.time_pressure_release_2);
-      // uart0_send_number(system_config.time_water_release);
-      // uart0_send_number(system_config.time_drying);
+      sterilization_mode = check_mode_process(sys_cf);
+      // uart0_send_number(sys_cf.time_steri);
+      // uart0_send_number(sys_cf.time_pressure_release_1);
+      // uart0_send_number(sys_cf.time_pressure_release_2);
+      // uart0_send_number(sys_cf.time_water_release);
+      // uart0_send_number(sys_cf.time_drying);
 
       // uart0_send_number(sterilization_mode);
       // uart0_send_byte('\n');
@@ -540,6 +487,7 @@ void key_handle_service(KeyEvents ev)
   else if (ev.hold & KEYBIT(START_KEY) && steri_running)
   {
     sterilization_stop();
+    tm1640_keyring_clear(9);
   }
 }
 
@@ -557,7 +505,7 @@ void UI_handle()
   }
   else if (ui_led1 == UI_TEMP_SETTING)
   {
-    tm1640_write_led(1, (int)system_config.temp_setting);
+    tm1640_write_led(1, (int)sys_cf.temp_setting);
 
     tm1640_keyring_add(SETTING_TEMP_KEY);
 
@@ -572,7 +520,7 @@ void UI_handle()
       tm1640_keyring_clear(TEMP_UP_KEY);
   }
   // led 2
-  uint16_t value_led_2 = system_config.time_steri;
+  uint16_t value_led_2 = sys_cf.time_steri;
   if (prg_state != SUP_DANGER && !danger_temp)
   {
     if (ui_led2 != UI_IDLE)
@@ -594,19 +542,19 @@ void UI_handle()
       switch (ui_led2)
       {
       case UI_SET_T1:
-        value_led_2 = system_config.time_steri;
+        value_led_2 = sys_cf.time_steri;
         break;
       case UI_SET_T21:
-        value_led_2 = system_config.time_pressure_release_1;
+        value_led_2 = sys_cf.time_pressure_release_1;
         break;
       case UI_SET_T22:
-        value_led_2 = system_config.time_pressure_release_2;
+        value_led_2 = sys_cf.time_pressure_release_2;
         break;
       case UI_SET_T3:
-        value_led_2 = system_config.time_water_release;
+        value_led_2 = sys_cf.time_water_release;
         break;
       case UI_SET_T4:
-        value_led_2 = system_config.time_drying;
+        value_led_2 = sys_cf.time_drying;
         break;
       default:
         break;
@@ -625,7 +573,7 @@ void UI_handle()
       else
       {
         // total time
-        value_led_2 = system_config.time_steri + system_config.time_pressure_release_1 + system_config.time_pressure_release_2 + system_config.time_water_release + system_config.time_drying;
+        value_led_2 = sys_cf.time_steri + sys_cf.time_pressure_release_1 + sys_cf.time_pressure_release_2 + sys_cf.time_water_release + sys_cf.time_drying;
         tm1640_write_led(2, value_led_2);
       }
     }
@@ -633,7 +581,9 @@ void UI_handle()
 
   // tm1640_write_led(3, g_time_tik_10ms / 100);
 
-  tm1640_write_led(3, fabs(g_pressure));
+  if (g_pressure < 0)
+    g_pressure = 0;
+  tm1640_write_led(3, g_pressure);
 
   tm1640_update_all();
 }
@@ -722,9 +672,27 @@ void sterilization_stop()
   }
 }
 
+static uint16_t tick_to_min(uint32_t start_tick, uint16_t total_min)
+{
+  uint32_t elapsed = g_time_tik_10ms - start_tick;
+
+  // blink led 1s
+  if ((elapsed % 100) < 50) // 0..49  -> ON
+    tm1640_keyring_add(9);  // Bật LED vị trí 9
+  else
+    tm1640_keyring_clear(9); // Tắt LED vị trí 9
+
+  if (elapsed >= total_min * 6000U)
+  {
+    tm1640_keyring_clear(9);
+    return 0;
+  }
+  return total_min - (elapsed / 6000U);
+}
+
 void sterilization_1_handle(void)
 {
-  uint8_t temp = 0;
+
   switch (steri1_stt)
   {
   case START_STERI_1:
@@ -734,10 +702,11 @@ void sterilization_1_handle(void)
     break;
   case HEATING_1:
     /* code */
-    temp = TEMP_NOW();
     RELAYA_ON();
-    tm1640_write_led(2, system_config.time_steri);
-    if (temp >= system_config.temp_setting)
+    tm1640_write_led(2, sys_cf.time_steri);
+
+    g_temperature = sys_cf.temp_setting + 1; /*test*/
+    if (g_temperature >= sys_cf.temp_setting)
     {
       steri1_stt = STERING_1;
       steri_tick = g_time_tik_10ms;
@@ -747,10 +716,10 @@ void sterilization_1_handle(void)
   case STERING_1:
     /* COUNTDOWN phut */
     {
-      remain_count = (float)(system_config.time_steri - (float)(g_time_tik_10ms - steri_tick) / 6000);
+      remain_count = tick_to_min(steri_tick, sys_cf.time_steri);
       tm1640_write_led(2, remain_count);
 
-      if (remain_count < 0)
+      if (remain_count <= 0)
       {
         steri1_stt = END_STERI_1;
         steri_tick = g_time_tik_10ms;
@@ -761,7 +730,7 @@ void sterilization_1_handle(void)
 
   case END_STERI_1:
     /* code */
-    g_temperature = 60;
+    g_temperature = 60; /*test*/
     RELAYA_OFF();
     if (g_temperature <= 70)
     {
@@ -822,14 +791,14 @@ void sterilization_2_handle(void)
 
     steri2_stt = HEATING_21;
 
-    tm1640_write_led(2, system_config.time_pressure_release_1);
+    tm1640_write_led(2, sys_cf.time_pressure_release_1);
     break;
 
   case HEATING_21:
   {
     g_temperature = 133; /*Test*/
 
-    if (g_temperature >= system_config.temp_setting)
+    if (g_temperature >= sys_cf.temp_setting)
     {
       // Đạt nhiệt độ cài đặt -> mở B xả lần 1 trong T21
       steri_tick = g_time_tik_10ms;
@@ -840,23 +809,23 @@ void sterilization_2_handle(void)
   break;
 
   case RELEASE_21:
-    remain_count = (float)(system_config.time_pressure_release_1 - (float)(g_time_tik_10ms - steri_tick) / 6000);
+    remain_count = tick_to_min(steri_tick, sys_cf.time_pressure_release_1);
     tm1640_write_led(2, remain_count);
     if (remain_count <= 0)
     {
       TRIACB_OFF(); // B = 0
       steri2_stt = HEATING_22;
+      tm1640_write_led(2, sys_cf.time_steri);
     }
     break;
 
   case HEATING_22:
   {
-    // Sau khi đóng B, tiếp tục gia nhiệt lại tới nhiệt độ cài đặt rồi bắt đầu
+    // Sau khi off B, tiếp tục gia nhiệt lại tới nhiệt độ cài đặt rồi bắt đầu
     // T1
-    if (g_temperature >= system_config.temp_setting)
+    if (g_temperature >= sys_cf.temp_setting)
     {
       steri_tick = g_time_tik_10ms;
-      tm1640_write_led(2, system_config.time_steri);
       steri2_stt = STERING_2;
     }
   }
@@ -864,7 +833,7 @@ void sterilization_2_handle(void)
 
   case STERING_2:
     // Đếm T1
-    remain_count = (float)(system_config.time_steri - (float)(g_time_tik_10ms - steri_tick) / 6000);
+    remain_count = tick_to_min(steri_tick, sys_cf.time_steri);
     tm1640_write_led(2, remain_count);
     if (remain_count <= 0)
     {
@@ -873,7 +842,7 @@ void sterilization_2_handle(void)
       TRIACB_ON();  // B = 1 (xả lần 2)
 
       steri_tick = g_time_tik_10ms;
-      tm1640_write_led(2, system_config.time_pressure_release_2);
+      tm1640_write_led(2, sys_cf.time_pressure_release_2);
       steri2_stt = RELEASE_22;
     }
     break;
@@ -887,7 +856,7 @@ void sterilization_2_handle(void)
       break;
     }
     // T22 đếm ngược (chỉ để hiển thị/giới hạn), KHÔNG đếm khi Temp <= 40°C
-    remain_count = (float)(system_config.time_pressure_release_2 - (float)(g_time_tik_10ms - steri_tick) / 6000);
+    remain_count = tick_to_min(steri_tick, sys_cf.time_pressure_release_2);
     tm1640_write_led(2, remain_count);
 
     if ((g_temperature < 40 || remain_count <= 0))
@@ -937,60 +906,105 @@ void sterilization_3_handle(void)
     TRIACB_OFF(); // B=0
     TRIACC_OFF(); // C=0
     RELAYD_OFF(); // D=0
-    steri3_stt = HEATING_3;
+    steri3_stt = HEATING_31;
     break;
 
-  case HEATING_3:
+  case HEATING_31:
   {
     /*Khi đạt nhiệt độ → relay B mở van xả khí
     → tiếp tục gia nhiệt đến nhiệt độ đã cài đặt và
     bắt đầu đếm thời gian tiệt trùng.
     */
-    uint8_t temp = TEMP_NOW();
-    if (temp >= system_config.temp_setting)
+    g_temperature = sys_cf.temp_setting + 2;
+    if (g_temperature >= sys_cf.temp_setting)
     {
       // Bắt đầu đếm T1; mở B và bắt đầu đếm T21 song song
       TRIACB_ON(); // B=1 (xả áp)
       steri_tick = g_time_tik_10ms;
-      steri3_stt = VENT_AND_STER3;
+      steri3_stt = RELEASE_3;
     }
   }
   break;
 
-  case VENT_AND_STER3:
-  {
-    // T1 đếm ngược
-    remain_count = (float)(system_config.time_steri - (float)(g_time_tik_10ms - steri_tick) / 6000);
+  case RELEASE_3:
+    // T21 đếm ngược
+    remain_count = tick_to_min(steri_tick, sys_cf.time_pressure_release_1);
     tm1640_write_led(2, remain_count);
 
     if (remain_count <= 0)
     {
-      // Kết thúc tiệt trùng
-      RELAYA_OFF(); // A=0
-      TRIACC_ON();  // C=1 (xả nước không giới hạn)
+      steri3_stt = HEATING_32;
       TRIACB_OFF();
-      steri3_stt = FINISH_3;
-      steri_tick = g_time_tik_10ms;
     }
+    break;
+  case HEATING_32:
+    // dem T1 + gia nhiệt
+    remain_count = tick_to_min(steri_tick, sys_cf.time_steri);
+    tm1640_write_led(2, remain_count);
+
+    if (remain_count <= 0)
+    {
+      steri3_stt = VENT_AND_STER3;
+    }
+    // else
+    // {
+    //   /*
+    //   // trong lúc đếm và gia nhiệt thì nếu nhiệt độ cao hơn nhiệt độ cài sẽ
+    //   bật tắt relay để điều chỉnh nhiệt
+    //   */
+    //   if (g_temperature >= sys_cf.temp_setting)
+    //   {
+    //     RELAYA_OFF();
+    //   }
+    //   else
+    //   {
+    //     RELAYA_ON();
+    //   }
+    // }
+
+    break;
+  case VENT_AND_STER3:
+  {
+
+    // Kết thúc tiệt trùng
+    RELAYA_OFF(); // A=0
+    TRIACC_ON();  // C=1 (xả nước không giới hạn)
+    TRIACB_OFF();
+    steri3_stt = FINISH_3;
+    steri_tick = g_time_tik_10ms;
   }
   break;
 
   case FINISH_3:
   {
-    buzzer_start_ms(60U * 1000U);
-    uint8_t g_temperature = TEMP_NOW();
+
+    tm1640_write_end(2);
     // C đóng khi ≤ 40°C
     if (g_temperature <= 40)
     {
+      /* khi xuống 40 độ C thì C = 0 */
       TRIACC_OFF();
     }
     // Kết thúc chu trình khi < 70°C
     if (g_temperature < 70)
     {
+      /* (ko mở relay B, relay xả áp) đến khi nhiệt độ xuống dưới 70°C. */
       steri3_running = 0;
       steri3_stt = STOP_STERI_3;
       TRIACB_ON();
     }
+
+    if (g_time_tik_10ms - steri_tick > 6000)
+    {
+      BUZZ_OFF();
+      tm1640_write_led(2, 888); //  vẫn chờ để giảm nhiệt xuống
+      g_temperature = 50;
+    }
+    else
+    {
+      buzzer_start_ms(60U * 1000U);
+    }
+    // sau 60s tắt đèn và còi
   }
   break;
 
@@ -1025,40 +1039,51 @@ void sterilization_4_handle(void)
 
   case HEATING_41:
   {
-    uint8_t temp = TEMP_NOW();
-
-    if (temp >= system_config.temp_setting)
+    g_temperature = sys_cf.temp_setting + 1;
+    if (g_temperature >= sys_cf.temp_setting)
     {
-      // Đạt Ta: mở B; bắt đầu T1 & T21 song song
+      // Đạt Ta: mở B; bắt đầu T21
       TRIACB_ON(); // B=1
       steri_tick = g_time_tik_10ms;
-      steri4_stt = VENT_AND_STER4;
+      steri4_stt = VENT_4;
     }
   }
   break;
 
-  case VENT_AND_STER4:
+  case VENT_4:
   {
-
-    if (g_time_tik_10ms - steri_tick >= 100)
+    // đếm T21
+    remain_count = tick_to_min(steri_tick, sys_cf.time_pressure_release_1);
+    tm1640_write_led(2, remain_count);
+    if (remain_count <= 0)
     {
+      TRIACB_OFF();
+      steri4_stt = STERI_42;
       steri_tick = g_time_tik_10ms;
-
-      // Đếm T1
-      remain_count = (float)(system_config.time_drying - (float)(g_time_tik_10ms - steri_tick) / 6000);
-      tm1640_write_led(2, remain_count);
-
-      // Đếm T21 cho B
     }
   }
   break;
+
+  case STERI_42:
+    /* gia nhiệt và bắt đầu đếm T1*/
+    remain_count = tick_to_min(steri_tick, sys_cf.time_steri);
+    tm1640_write_led(2, remain_count);
+
+    if (remain_count <= 0)
+    {
+      steri4_stt = STERI_42;
+      steri_tick = g_time_tik_10ms;
+    }
+
+    break;
 
   case DRAIN_4:
   {
-
-    remain_count = (float)(system_config.time_pressure_release_2 - (float)(g_time_tik_10ms - steri_tick) / 6000);
+    /*T22*/
+    remain_count = tick_to_min(steri_tick, sys_cf.time_pressure_release_2);
     tm1640_write_led(2, remain_count);
-    if (remain_count < 0)
+
+    if (remain_count <= 0)
     {
       TRIACC_OFF(); // đóng xả nước
       RELAYD_ON();  // D=1 (sấy)
@@ -1069,9 +1094,10 @@ void sterilization_4_handle(void)
 
   case DRY_HEAT_4:
   {
-    if (g_temperature >= system_config.temp_setting /*Tb*/)
+    g_temperature = sys_cf.temp_setting + 2;
+    if (g_temperature >= sys_cf.temp_setting)
     {
-      // Duy trì Tb trong T4
+
       steri_tick = g_time_tik_10ms;
       steri4_stt = DRY_HOLD_4;
     }
@@ -1080,25 +1106,31 @@ void sterilization_4_handle(void)
 
   case DRY_HOLD_4:
   {
-    uint8_t temp = TEMP_NOW();
-    // Giữ D bật, bạn có thể PID/bật-tắt để duy trì Tb, ở đây giữ D=1 (tùy phần
-    // cứng)
-    remain_count = (float)(system_config.time_drying - (float)(g_time_tik_10ms - steri_tick) / 6000);
+    // dem T4, Duy trì Tb trong T4
+    remain_count = tick_to_min(steri_tick, sys_cf.time_drying);
     tm1640_write_led(2, remain_count);
 
-    if (remain_count <= 0 && temp < 70)
+    if (remain_count <= 0)
     {
-      RELAYD_OFF();                 // kết thúc sấy
-      buzzer_start_ms(60U * 1000U); // E=1 trong 60s
+      RELAYD_OFF();
       steri4_stt = END_STERI_4;
     }
   }
   break;
 
   case END_STERI_4:
-    steri4_running = 0;
-    steri4_stt = STOP_STERI_4;
-    break;
+    g_temperature = 60; /*test*/
+    RELAYD_OFF();
+    if (g_temperature <= 70)
+    {
+      buzzer_start_ms(60U * 1000U);
+      tm1640_write_end(2);
+      if (g_time_tik_10ms - steri_tick >= 6000)
+      {
+        steri1_stt = 4;
+        BUZZ_OFF();
+      }
+    }
 
   case STOP_STERI_4:
   default:
@@ -1122,8 +1154,7 @@ void handle_quick_mode(void)
     break;
   case HEATING:
   {
-    uint8_t temp_now = TEMP_NOW();
-    if (temp_now >= system_config.temp_setting)
+    if (g_temperature >= sys_cf.temp_setting)
     {
       RELAYA_OFF();
       quick_mode = END_QUICK;

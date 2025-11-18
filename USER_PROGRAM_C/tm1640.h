@@ -3,8 +3,8 @@
 #include "bs86d12c.h"
 #include <stdint.h>
 
-void tm1640_init(uint8_t brightness_0_to_7);             // 0..7
-void tm1640_clear_all(void);                             // xóa 16 grid
+void tm1640_init(uint8_t brightness_0_to_7); // 0..7
+// void tm1640_clear_all(void);                             // xóa 16 grid
 void tm1640_write_fixed(uint8_t addr, uint8_t seg_bits); // ghi 1 byte vào addr (0..0x0F)
 void tm1640_write_auto(uint8_t start_addr, const uint8_t *data, uint8_t len);
 
@@ -12,7 +12,7 @@ void tm1640_write_auto(uint8_t start_addr, const uint8_t *data, uint8_t len);
 /// @param addr Grid address (0..15)
 /// @param digit Digit (0..9)
 void tm1640_write_digit(uint8_t addr, uint8_t digit, _Bool with_dp);
-void tm1640_write_led(uint8_t led_number, float number);
+void tm1640_write_led(uint8_t led_number, uint16_t number);
 
 // void tm1640_show_1_to_9_on_grid1_to_9(void);
 
@@ -21,7 +21,7 @@ void tm1640_write_led(uint8_t led_number, float number);
 // extern uint8_t TM1640_grid_order[16];
 
 // void tm1640_keyring_only(uint8_t key_number);
-void tm1640_keyring_clear_all(void);
+// void tm1640_keyring_clear_all(void);
 void tm1640_keyring_clear(uint8_t key_number);
 void tm1640_keyring_add(uint8_t key_number);
 
