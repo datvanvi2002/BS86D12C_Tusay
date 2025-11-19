@@ -144,4 +144,6 @@ void sterilization_stop();
 /// @param blink_cnt number of beep
 static inline void buzzer_start_ms(unsigned int ms);
 static inline void buzzer_start_blink_ms(uint16_t ms, uint8_t blink_cnt);
+void eeprom_write_system(const system_init_t *sys);
+uint8_t eeprom_read_system(system_init_t *sys);
 #endif // USERCONFIG_H

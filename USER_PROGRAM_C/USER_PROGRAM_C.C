@@ -62,10 +62,28 @@ void SystemInit(void)
 //==============================================
 //**********************************************
 //==============================================
+void load_config()
+{
+}
 void USER_PROGRAM_C_INITIAL()
 {
   // Executes the USER_PROGRAM_C initialization function once
   SystemInit();
+
+  if (!eeprom_read_system(&sys_cf))
+  {
+    // EEPROM lỗi → nạp default
+    sys_cf.temp_setting = 121;
+    sys_cf.last_mode = 0;
+    sys_cf.time_steri = 0;
+    sys_cf.time_pressure_release_1 = 0;
+    sys_cf.time_pressure_release_2 = 0;
+    sys_cf.time_water_release = 0;
+    sys_cf.time_drying = 0;
+
+    eeprom_write_system(&sys_cf);
+  }
+
   // buzzer_start_ms(STARTUP_BUZZ_MS);
   //  tm1640_walk_grids_a(2);
   // int i = 0;
@@ -264,7 +282,7 @@ sterilization_mode_t check_mode_process(system_init_t system)
   return STERILIZATION_NULL;
 }
 bit danger_temp = 0; // 0 OKE, any Danger
-
+bit quick_mode_setup = 0;
 void key_handle_service(KeyEvents ev)
 {
   /*
@@ -426,18 +444,27 @@ void key_handle_service(KeyEvents ev)
     }
   }
 
-  //==================Handle KEY 7: START_KEY============================
+  //==================Handle KEY 7: Quick_KEY============================
   if (ev.pressed & KEYBIT(QUICK_KEY) && prg_state == SUP_IDLE)
   {
+    if (quick_mode_running)
+      return;
     static uint16_t count = 0;
     count++;
     if (count % 3 == 0)
     {
-      sterilization_mode = STERILIZATION_NULL;
+      quick_mode_setup = 0;
+      ui_led1 = UI_TEMP_NOW;
+      tm1640_keyring_clear(QUICK_KEY);
     }
-    sterilization_mode = QUICK_MODE;
-    sys_cf.temp_setting =
-        (sys_cf.temp_setting == 121) ? 134 : 121;
+    else
+    {
+      quick_mode_setup = 1;
+      ui_led1 = UI_TEMP_SETTING;
+      sys_cf.temp_setting =
+          (sys_cf.temp_setting == 121) ? 134 : 121;
+      tm1640_keyring_add(QUICK_KEY);
+    }
   }
 
   //==================Handle KEY 8: START_KEY============================
@@ -450,10 +477,15 @@ void key_handle_service(KeyEvents ev)
     ui_led1 = UI_TEMP_NOW;
     ui_led2 = UI_IDLE;
 
-    if (sterilization_mode == QUICK_MODE)
+    if (quick_mode_setup)
     {
-      // start quick mode
-      sterilization_mode = STERILIZATION_NULL;
+
+      sterilization_mode = QUICK_MODE;
+      quick_mode_running = 1;
+      quick_mode = START_QUICK;
+      tm1640_keyring_clear(7);
+      tm1640_keyring_add(10);
+      quick_mode_setup = 0;
     }
     else
     {
@@ -469,6 +501,7 @@ void key_handle_service(KeyEvents ev)
       if (sterilization_mode)
       {
         sterilization_start(sterilization_mode);
+        eeprom_write_system(&sys_cf);
       }
       else
       {
@@ -486,8 +519,11 @@ void key_handle_service(KeyEvents ev)
   }
   else if (ev.hold & KEYBIT(START_KEY) && steri_running)
   {
+    sterilization_mode = STERILIZATION_NULL;
     sterilization_stop();
     tm1640_keyring_clear(9);
+    tm1640_keyring_clear(10);
+    tm1640_keyring_clear(11);
   }
 }
 
@@ -567,7 +603,7 @@ void UI_handle()
       tm1640_keyring_clear(TIME_DOWN_KEY);
       tm1640_keyring_clear(TIME_UP_KEY);
 
-      if (steri1_running || steri2_running || steri3_running || steri4_running)
+      if (steri1_running || steri2_running || steri3_running || steri4_running || quick_mode_running)
       {
       }
       else
@@ -628,11 +664,6 @@ void sterilization_start(sterilization_mode_t mode)
     steri4_stt = START_STERI_4;
     /* code */
     break;
-  case QUICK_MODE:
-    quick_mode_running = 1;
-    quick_mode = START_QUICK;
-    /* code */
-    break;
 
   default:
     break;
@@ -641,6 +672,7 @@ void sterilization_start(sterilization_mode_t mode)
 
 void sterilization_stop()
 {
+  BUZZ_OFF();
   if (steri1_running)
   {
     RELAYA_OFF();
@@ -669,6 +701,12 @@ void sterilization_stop()
     TRIACB_OFF();
     TRIACC_OFF();
     RELAYD_OFF();
+  }
+  if (quick_mode_running)
+  {
+    quick_mode_running = 0;
+    quick_mode = STOP_QUICK;
+    RELAYA_OFF();
   }
 }
 
@@ -748,6 +786,7 @@ void sterilization_1_handle(void)
     steri1_running = 0;
     RELAYA_OFF();
     steri1_stt = STERI_WAITTING_1;
+    sterilization_mode = STERILIZATION_NULL;
     break;
   default:
     steri1_stt = STERI_WAITTING_1;
@@ -881,6 +920,7 @@ void sterilization_2_handle(void)
 
   case STOP_STERI_2:
     steri2_running = 0;
+    sterilization_mode = STERILIZATION_NULL;
     RELAYA_OFF();
     TRIACB_OFF();
     break;
@@ -1016,6 +1056,7 @@ void sterilization_3_handle(void)
     // STOP ta đảm bảo OFF: Nếu bạn muốn giữ nguyên hành vi "C không tắt đến khi
     // tắt nguồn", hãy bỏ dòng sau.
     TRIACC_OFF();
+    sterilization_mode = STERILIZATION_NULL;
     break;
   }
 }
@@ -1150,23 +1191,42 @@ void handle_quick_mode(void)
     quick_mode_running = 1;
     quick_mode = HEATING;
     RELAYA_ON();
+    TRIACB_OFF();
+    TRIACC_OFF();
+    RELAYD_OFF();
     /* code */
     break;
   case HEATING:
   {
+    g_temperature = sys_cf.temp_setting + 1;
     if (g_temperature >= sys_cf.temp_setting)
     {
       RELAYA_OFF();
       quick_mode = END_QUICK;
+      steri_tick = g_time_tik_10ms;
     }
   }
   break;
   case END_QUICK:
     /* code */
-    quick_mode_running = 0;
+    tm1640_write_end(2);
+    buzzer_start_blink_ms(1000, 1);
+    if (g_time_tik_10ms - steri_tick > 6000)
+    {
+      BUZZ_OFF();
+      quick_mode_running = 0;
+      tm1640_keyring_clear(9);
+      tm1640_keyring_clear(10);
+      tm1640_keyring_clear(11);
+      quick_mode = STOP_QUICK;
+    }
+
     break;
   case STOP_QUICK:
     RELAYA_OFF();
+    buzzer_blink = 0;
+    quick_mode_running = 0;
+    sterilization_mode = STERILIZATION_NULL;
     break;
   default:
     break;
@@ -1243,7 +1303,7 @@ void main_handle_servie()
   case SUP_IDLE:
 /* code */
 #if DEMO_BOOT_DANGER
-    Ta = 150;
+    g_temperature = 150;
 #endif
     if (g_temperature > TEMP_DANGER_C)
     {
@@ -1376,4 +1436,92 @@ void __attribute((interrupt(0x14)))
 timer_ISR(void) // 0.5ms TIMER interrupt service routine
 {
   // count2ms++;
+}
+
+void eeprom_write_byte(uint8_t addr, uint8_t data)
+{
+  _emi = 0; // Disable global interrupt
+
+  _eea = addr; // Set EEPROM address
+  _eed = data; // Set EEPROM data
+
+  _mp1l = 0x40; // MP1L -> EEC register
+  _mp1h = 0x01; // MP1H must = 01h
+
+  _iar1 |= 0x08; // WREN = 1
+  _iar1 |= 0x04; // WR = 1 (must be set immediately after WREN)
+
+  _emi = 1; // Re-enable global interrupt
+
+  // Polling WR bit
+  while (_iar1 & 0x04)
+    ;
+
+  _mp1h = 0x00; // disable indirect access
+}
+uint8_t eeprom_read_byte(uint8_t addr)
+{
+  _eea = addr; // Set address
+
+  _mp1l = 0x40; // MP1L -> EEC
+  _mp1h = 0x01;
+
+  _iar1 |= 0x02; // RDEN = 1
+  _iar1 |= 0x01; // RD = 1
+
+  // Poll RD bit
+  while (_iar1 & 0x01)
+    ;
+
+  _iar1 &= ~(0x02); // RDEN = 0
+  _mp1h = 0x00;
+
+  return _eed; // Return read data
+}
+uint16_t calc_crc16(uint8_t *buf, uint8_t len)
+{
+  uint16_t crc = 0xFFFF;
+  for (uint8_t i = 0; i < len; i++)
+  {
+    crc ^= buf[i];
+    for (uint8_t b = 0; b < 8; b++)
+      crc = (crc & 1) ? (crc >> 1) ^ 0xA001 : (crc >> 1);
+  }
+  return crc;
+}
+
+#define EEPROM_BASE_ADDR 0x00
+
+void eeprom_write_system(const system_init_t *sys)
+{
+  uint8_t *p = (uint8_t *)sys;
+
+  // Tính CRC trước khi ghi
+  uint16_t crc = calc_crc16((uint8_t *)sys, sizeof(system_init_t) - 2);
+
+  // copy CRC vào cuối struct
+  eeprom_write_byte(EEPROM_BASE_ADDR + sizeof(system_init_t) - 2, (uint8_t)(crc & 0xFF));
+  eeprom_write_byte(EEPROM_BASE_ADDR + sizeof(system_init_t) - 1, (uint8_t)(crc >> 8));
+
+  // ghi phần còn lại
+  for (uint8_t i = 0; i < sizeof(system_init_t) - 2; i++)
+  {
+    eeprom_write_byte(EEPROM_BASE_ADDR + i, p[i]);
+  }
+}
+
+uint8_t eeprom_read_system(system_init_t *sys)
+{
+  uint8_t *p = (uint8_t *)sys;
+
+  for (uint8_t i = 0; i < sizeof(system_init_t); i++)
+  {
+    p[i] = eeprom_read_byte(EEPROM_BASE_ADDR + i);
+  }
+
+  // kiểm tra CRC
+  uint16_t crc_calc = calc_crc16((uint8_t *)sys, sizeof(system_init_t) - 2);
+  uint16_t crc_read = sys->crc;
+
+  return (crc_calc == crc_read); // return 1 = OK, 0 = lỗi CRC
 }
