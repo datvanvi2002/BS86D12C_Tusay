@@ -1,6 +1,7 @@
 #include "adc.h"
 #include <stdint.h>
 #include <math.h>
+// Không đủ bộ nhớ để lưu bảng tra cứu nhiệt độ PT100
 // static const float PT100Tab[] =
 // {
 //     100, 100.39, 100.78, 101.17, 101.56, 101.95, 102.34, 102.73, 103.12, 103.51
@@ -44,7 +45,7 @@
 //     , 240.18, 240.52, 240.87, 241.22, 241.56, 241.91, 242.26, 242.6, 242.95, 243.29
 //     , 243.64, 243.99, 244.33, 244.68, 245.02, 245.37, 245.71, 246.06, 246.4, 246.75
 // };
-static const float PT100Tab[] = {};
+
 void adc_init_vdd_ref(void)
 {
     _acerl |= 0x03; // ACE1..0 = 1  => bật analog cho AN1 & AN0 (PD1 & PD0)
@@ -58,7 +59,7 @@ void adc_init_vdd_ref(void)
 // 1 to read temp, 0 to read adc pressure
 unsigned int adc_read_channel(unsigned char channel)
 {
-    channel &= 0x0F;                    // chỉ giữ 4 bit thấp
+    channel &= 0x0F;
     _sadc0 = (_sadc0 & 0xF0) | channel; // chọn kênh vào SACS3..0
 
     // Phát xung START: 0 -> 1 -> 0
@@ -69,72 +70,71 @@ unsigned int adc_read_channel(unsigned char channel)
     while (_sadc0 & 0x40)
     {
         ;
-    } // đợi ADBZ=0 (xong chuyển đổi)
+    }
 
     return ((unsigned int)_sadoh << 8) | _sadol; // ADRFS=1: right-aligned
 }
 
-// static inline float pgm_read_float(const float *p) { return *p; } // thay cho AVR
-
-// static inline float f_abs(float x) { return (x >= 0.0f) ? x : -x; }
-
-// static int comp(float pt, int i)
-// {
-//     if ((pt - pgm_read_float(&PT100Tab[i])) > (pgm_read_float(&PT100Tab[i + 1]) - pgm_read_float(&PT100Tab[i])) / 2)
-//         return i + 1;
-//     else
-//         return i;
-// }
-
-int temperature_sensor_read(uint16_t adc_value)
+float temperature_sensor_read()
 {
-    float _voltageRef = 5.0f; // Giả sử tham chiếu VDD là 5V
+    /*
+    Linear Fit for PT100
+    https://www.ti.com/lit/ug/tidu433/tidu433.pdf?ts=1763799301965
+    Sai số tối đa: +- 2 độ ở 200 độ C. Sai số sẽ giảm dần ở các mức nhiệt độ thấp hơn.
+    */
+
+    uint16_t adc_value = adc_read_channel(1);
+
+    static uint16_t adc_buf[10] = {0};
+    static uint8_t adc_buf_index = 0;
+
+    adc_buf[adc_buf_index++] = adc_value;
+
+    if (adc_buf_index >= 10)
+        adc_buf_index = 0;
+
+    uint32_t adc_sum = 0;
+    for (uint8_t i = 0; i < 10; i++)
+        adc_sum += adc_buf[i];
+
+    adc_value = adc_sum / 10;
+
+    float _voltageRef = 5.0f;
     float voltage = (float)(adc_value)*_voltageRef / 4095.0f;
     float res = 0.0f;
     res = (1800.0f * voltage + 220.9f * 18.0f) / (2.209f * 18.0f - voltage);
 
-    int front = 0, end = 0, mid = 0;
-    front = 0;
-    end = 399;
-    mid = (front + end) / 2;
+    // const float A = -244.98f;
+    // const float B = 2.34416f;
+    // const float C = 0.0010583f;
 
-    // while (front < end && pgm_read_float(&PT100Tab[mid]) != res)
-    // {
-    //     if (pgm_read_float(&PT100Tab[mid]) < res)
-    //     {
-    //         if (pgm_read_float(&PT100Tab[mid + 1]) < res)
-    //             front = mid + 1;
-    //         else
-    //         {
-    //             mid = comp(res, mid);
-    //             return mid;
-    //         }
-    //     }
-
-    //     if (pgm_read_float(&PT100Tab[mid]) > res)
-    //     {
-    //         if (pgm_read_float(&PT100Tab[mid - 1]) > res)
-    //         {
-    //             end = mid - 1;
-    //         }
-
-    //         else
-    //         {
-    //             mid = comp(res, mid - 1);
-    //             return mid;
-    //         }
-    //         mid = front + (end - front) / 2;
-    //     }
-    // }
-    return mid;
+    // float temp = A + B * res + C * res * res;
+    float temp = ((res / 100) - 1) / 0.00385; // PT100
+    return temp;
 }
 
 float pressure_sensor_read_kPa()
 {
     uint16_t adc_value = adc_read_channel(0);
+
+    static uint16_t adc_buf[10] = {0};
+    static uint8_t adc_buf_index = 0;
+
+    adc_buf[adc_buf_index++] = adc_value;
+
+    if (adc_buf_index >= 10)
+        adc_buf_index = 0;
+
+    uint32_t adc_sum = 0;
+    for (uint8_t i = 0; i < 10; i++)
+        adc_sum += adc_buf[i];
+
+    adc_value = adc_sum / 10;
+
     float _voltageRef = 5.0f; // Giả sử tham chiếu VDD là 5V
     float voltage = (float)(adc_value)*_voltageRef / 4095.0f;
     /*
+    Reference datasheet MPX5500
     https://www.mouser.vn/datasheet/3/118/1/MPX5500.pdf
     Vout=Vs*(0.0018*P+0.04) +- error;
     */

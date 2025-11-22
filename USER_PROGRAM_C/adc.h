@@ -12,10 +12,10 @@ unsigned int adc_read_channel(unsigned char channel);
 /// @param adc12 12-bit ADC value (0..4095)
 /// @param vdd_mV VDD voltage in millivolts
 
-/// @brief Read pressure sensor value in millibar from ADC value.
+/// @brief Read temperature in Celsius from the temperature sensor connected to AN0.
 /// @param adc_value ADC value from pressure sensor
 /// @return
-int temperature_sensor_read(uint16_t adc_value);
+float temperature_sensor_read();
 
 /// @brief Read pressure in channel0 PD0 pin
 /// @return kPa: 0 -550 kPa

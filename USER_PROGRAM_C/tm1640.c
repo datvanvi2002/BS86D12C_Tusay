@@ -116,7 +116,7 @@ static inline void tm_cmd(uint8_t cmd)
 
 // ======= API  =======
 
-// Xóa toàn bộ 16 địa chỉ (GRID1..GRID16)
+// //Xóa toàn bộ 16 địa chỉ (GRID1..GRID16)
 // void tm1640_clear_all(void)
 // {
 //     tm_start();
@@ -131,23 +131,23 @@ static inline void tm_cmd(uint8_t cmd)
 //     tm_stop();
 // }
 
-// void tm1640_clear_all(void)
-// {
-//     tm_start();
-//     tm_write_byte(0x40); // Data command: auto-increment
-//     tm_stop();
+void tm1640_clear_all(void)
+{
+    tm_start();
+    tm_write_byte(0x40); // Data command: auto-increment
+    tm_stop();
 
-//     tm_start();
-//     tm_write_byte(0xC0 | 0x00); // Address = 0
-//     uint8_t i = 0;
-//     for (i = 0; i < 16; i++)
-//     {
-//         tm_write_byte(0x00);
-//         tm1640_buf[i] = 0;
-//     }
+    tm_start();
+    tm_write_byte(0xC0 | 0x00); // Address = 0
+    uint8_t i = 0;
+    for (i = 0; i < 16; i++)
+    {
+        tm_write_byte(0x00);
+        tm1640_buf[i] = 0;
+    }
 
-//     tm_stop();
-// }
+    tm_stop();
+}
 
 // Khởi tạo: cấu hình chân, bật hiển thị, đặt độ sáng (0..7)
 void tm1640_init(uint8_t brightness_0_to_7)
@@ -162,7 +162,7 @@ void tm1640_init(uint8_t brightness_0_to_7)
     tm_din_high();
 
     // Xóa và bật hiển thị với độ sáng
-    // tm1640_clear_all();
+    tm1640_clear_all();
     tm_cmd(0x88 | brightness_0_to_7); // Display ON + brightness
 }
 

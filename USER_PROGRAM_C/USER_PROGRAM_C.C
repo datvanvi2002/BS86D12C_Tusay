@@ -1,5 +1,3 @@
-
-
 #include "BS86D12C.h"
 #include "USER_PROGRAM_C.INC"
 #include "adc.h"
@@ -10,13 +8,29 @@
 #include "user_config.h"
 #include <string.h>
 
-static SupState prg_state = SUP_BOOT;
+/*
+Bật chế độ TEST = 1, thì bỏ qua các kiểm tra nhiệt độ, tức đến khi cần chờ gia nhiệt, giảm nhiệt thì
+coi như đã đạt yêu cầu, khi đó sẽ tiến hành các bước tiếp theo luôn.
+
+Các chế đô DEMO_BOOT_xxx:
+  - DEMO_BOOT_90: Khi khởi động, hiển thị 90 trên TM1640
+  - DEMO_BOOT_IDLE: Khi vào trạng thái IDLE, hiển thị dE trên TM1640
+  - DEMO_BOOT_DANGER: Khi vào trạng thái DANGER, hiển thị Er trên TM1640
+  Chỉ dùng demo và bật 1 chức năng demo duy nhất
+
+-> Sản phẩm final không dùng các chế độ này, hãy đặt về 0 tất cả.
+*/
+#define TEST 1
+#define DEMO_BOOT_90 0
+#define DEMO_BOOT_IDLE 0
+#define DEMO_BOOT_DANGER 0
+
 system_init_t sys_cf = {0};
 sterilization_mode_t sterilization_mode = STERILIZATION_NULL;
 static UiField ui_led2 = UI_IDLE;
+static SupState prg_state = SUP_BOOT;
 
 uint32_t g_time_tik_10ms = 0;
-static uint16_t g_adc_temp = 0; // ADC kênh nhiệt độ
 
 void uart_debug()
 {
@@ -65,6 +79,19 @@ void SystemInit(void)
 void load_config()
 {
 }
+
+void delay_ms(unsigned int ms)
+{
+  unsigned long i;
+  while (ms--)
+  {
+    for (i = 250; i > 0; i--)
+    {
+      GCC_NOP();
+    }
+    __asm__("clr wdt");
+  }
+}
 void USER_PROGRAM_C_INITIAL()
 {
   // Executes the USER_PROGRAM_C initialization function once
@@ -96,6 +123,13 @@ void USER_PROGRAM_C_INITIAL()
   // tm1640_write_end(2);
   // tm1640_write_err(1);
   // tm1640_update_all();
+  // tm1640_write_led(1, 888);
+  tm1640_write_end(2);
+  // tm1640_write_led(3, 888);
+  tm1640_update_all();
+  // end 3 s
+  buzzer_start_blink_ms(1000, 3);
+  delay_ms(3000);
 }
 
 //==============================================
@@ -183,15 +217,6 @@ static inline void key_off_time()
   }
 }
 
-uint16_t _limit_data(uint16_t v, uint16_t lo, uint16_t hi)
-{
-  if (v < lo)
-    return lo;
-  if (v > hi)
-    return hi;
-  return v;
-}
-
 void blink_err(uint8_t led_num)
 {
   static bit err_blink = 0;
@@ -218,6 +243,15 @@ void blink_err(uint8_t led_num)
         BUZZ_ON();
     }
   }
+}
+
+uint16_t _limit_data(uint16_t v, uint16_t lo, uint16_t hi)
+{
+  if (v < lo)
+    return lo;
+  if (v > hi)
+    return hi;
+  return v;
 }
 void caculate_time_setup(int delta)
 {
@@ -309,6 +343,9 @@ void key_handle_service(KeyEvents ev)
     Đèn key1 luôn sáng
     Nhấn lần nữa sẽ tắt đèn key 1 và thoat chế độ cài đặt nhiệt độ
     */
+    if (quick_mode_setup)
+      return;
+
     if (prg_state != SUP_IDLE || steri_running)
       return;
 
@@ -330,6 +367,9 @@ void key_handle_service(KeyEvents ev)
     KEY 3 = 134 KEY 2 = 121 deg C
     Khi ấn key nào thì key đó sáng
     */
+
+    if (quick_mode_setup)
+      return;
     if (ev.pressed & KEYBIT(TEMP_UP_KEY))
     {
       sys_cf.temp_setting++;
@@ -506,24 +546,27 @@ void key_handle_service(KeyEvents ev)
       else
       {
         blink_err(2);
+        buzzer_start_blink_ms(100, 10);
       }
     }
   }
   else if (ev.pressed & KEYBIT(START_KEY) && prg_state == SUP_DANGER)
   {
-    if (danger_temp)
+    /* cancel when temp < TEMP_DANGER_C */
+    if (g_temperature < TEMP_DANGER_C && danger_temp)
     {
       danger_temp = 0; // clear danger_temp;
       return;
     }
   }
-  else if (ev.hold & KEYBIT(START_KEY) && steri_running)
+  else if (ev.hold & KEYBIT(START_KEY) && steri_running && prg_state == SUP_IDLE)
   {
     sterilization_mode = STERILIZATION_NULL;
     sterilization_stop();
     tm1640_keyring_clear(9);
     tm1640_keyring_clear(10);
     tm1640_keyring_clear(11);
+    BUZZ_OFF();
   }
 }
 
@@ -533,7 +576,7 @@ void UI_handle()
   key_off_time();
   if (ui_led1 == UI_TEMP_NOW)
   {
-    tm1640_write_led(1, (int)(g_adc_temp / 10));
+    tm1640_write_led(1, (int)(g_temperature));
 
     tm1640_keyring_clear(SETTING_TEMP_KEY);
     tm1640_keyring_clear(TEMP_UP_KEY);
@@ -555,6 +598,7 @@ void UI_handle()
     else
       tm1640_keyring_clear(TEMP_UP_KEY);
   }
+  //================= Handle LED 2: time setting or total time ==============
   // led 2
   uint16_t value_led_2 = sys_cf.time_steri;
   if (prg_state != SUP_DANGER && !danger_temp)
@@ -614,8 +658,6 @@ void UI_handle()
       }
     }
   }
-
-  // tm1640_write_led(3, g_time_tik_10ms / 100);
 
   if (g_pressure < 0)
     g_pressure = 0;
@@ -742,8 +784,9 @@ void sterilization_1_handle(void)
     /* code */
     RELAYA_ON();
     tm1640_write_led(2, sys_cf.time_steri);
-
-    g_temperature = sys_cf.temp_setting + 1; /*test*/
+#if TEST
+    g_temperature = sys_cf.temp_setting + 1;
+#endif
     if (g_temperature >= sys_cf.temp_setting)
     {
       steri1_stt = STERING_1;
@@ -768,7 +811,9 @@ void sterilization_1_handle(void)
 
   case END_STERI_1:
     /* code */
-    g_temperature = 60; /*test*/
+#if TEST
+    g_temperature = 60;
+#endif
     RELAYA_OFF();
     if (g_temperature <= 70)
     {
@@ -835,8 +880,9 @@ void sterilization_2_handle(void)
 
   case HEATING_21:
   {
-    g_temperature = 133; /*Test*/
-
+#if TEST
+    g_temperature = sys_cf.temp_setting + 1;
+#endif
     if (g_temperature >= sys_cf.temp_setting)
     {
       // Đạt nhiệt độ cài đặt -> mở B xả lần 1 trong T21
@@ -860,8 +906,11 @@ void sterilization_2_handle(void)
 
   case HEATING_22:
   {
-    // Sau khi off B, tiếp tục gia nhiệt lại tới nhiệt độ cài đặt rồi bắt đầu
-    // T1
+// Sau khi off B, tiếp tục gia nhiệt lại tới nhiệt độ cài đặt rồi bắt đầu
+// T1
+#if TEST
+    g_temperature = sys_cf.temp_setting + 1;
+#endif
     if (g_temperature >= sys_cf.temp_setting)
     {
       steri_tick = g_time_tik_10ms;
@@ -874,6 +923,7 @@ void sterilization_2_handle(void)
     // Đếm T1
     remain_count = tick_to_min(steri_tick, sys_cf.time_steri);
     tm1640_write_led(2, remain_count);
+
     if (remain_count <= 0)
     {
       // Hết T1: A = 0, B = 1; bật còi 60s
@@ -888,7 +938,10 @@ void sterilization_2_handle(void)
 
   case RELEASE_22:
   {
+    // T22 bắt đầu đếm khi nhiệt độ < = 70 độ C -> check
+#if TEST
     g_temperature = 60;
+#endif
     if (g_temperature > 70)
     {
       __asm__("nop");
@@ -955,7 +1008,9 @@ void sterilization_3_handle(void)
     → tiếp tục gia nhiệt đến nhiệt độ đã cài đặt và
     bắt đầu đếm thời gian tiệt trùng.
     */
-    g_temperature = sys_cf.temp_setting + 2;
+#if TEST
+    g_temperature = sys_cf.temp_setting + 1;
+#endif
     if (g_temperature >= sys_cf.temp_setting)
     {
       // Bắt đầu đếm T1; mở B và bắt đầu đếm T21 song song
@@ -1080,7 +1135,9 @@ void sterilization_4_handle(void)
 
   case HEATING_41:
   {
+#if TEST
     g_temperature = sys_cf.temp_setting + 1;
+#endif
     if (g_temperature >= sys_cf.temp_setting)
     {
       // Đạt Ta: mở B; bắt đầu T21
@@ -1135,7 +1192,9 @@ void sterilization_4_handle(void)
 
   case DRY_HEAT_4:
   {
-    g_temperature = sys_cf.temp_setting + 2;
+#if TEST
+    g_temperature = sys_cf.temp_setting + 1;
+#endif
     if (g_temperature >= sys_cf.temp_setting)
     {
 
@@ -1160,7 +1219,9 @@ void sterilization_4_handle(void)
   break;
 
   case END_STERI_4:
-    g_temperature = 60; /*test*/
+#if TEST
+    g_temperature = 60;
+#endif
     RELAYD_OFF();
     if (g_temperature <= 70)
     {
@@ -1198,7 +1259,9 @@ void handle_quick_mode(void)
     break;
   case HEATING:
   {
+#if TEST
     g_temperature = sys_cf.temp_setting + 1;
+#endif
     if (g_temperature >= sys_cf.temp_setting)
     {
       RELAYA_OFF();
@@ -1233,9 +1296,6 @@ void handle_quick_mode(void)
   }
 }
 
-#define DEMO_BOOT_90 0
-#define DEMO_BOOT_IDLE 1
-#define DEMO_BOOT_DANGER 0
 bit boot_started = 0;
 void main_handle_servie()
 {
@@ -1254,8 +1314,8 @@ void main_handle_servie()
       TRIACC_OFF();
       RELAYD_OFF();
       // E=1 trong 3s
-      // buzzer_start_ms(STARTUP_BUZZ_MS);
-      buzzer_start_blink_ms(1000, 3);
+      buzzer_start_ms(STARTUP_BUZZ_MS);
+
       tik_sup = g_time_tik_10ms;
     }
 
@@ -1317,12 +1377,11 @@ void main_handle_servie()
   case SUP_DANGER:
     /* 1. Nếu nhiệt độ quá 140 độ C thì lúc này A = D = 0 ( Không sấy, không gia nhiệt );  B = 1 để xả áp, E = 1 nhấp nháy còi và LED hiển thị sẽ  nhiệt độ thực tế ở LED-1 và Err ở  LED -2 dưới
      */
+    RELAYA_OFF();
+    RELAYD_OFF();
+    TRIACB_ON();
     tm1640_write_led(1, g_temperature);
     blink_err(2);
-#if DEMO_BOOT_DANGER
-    g_temperature = 150;
-
-#endif
     if (g_temperature < TEMP_SAFE_EXIT_C || !danger_temp)
     {
       prg_state = SUP_IDLE;
@@ -1400,10 +1459,11 @@ void USER_PROGRAM_C(void)
     if (++t63_cnt >= 8)
     { // ~0.5 s (chỉnh 16 => 1s nếu muốn)
       t63_cnt = 0;
-
       g_pressure = pressure_sensor_read_kPa();
-      g_adc_temp = adc_read_channel(1);
-
+      g_temperature = temperature_sensor_read();
+#if TEST
+      g_temperature = g_temperature / 10;
+#endif
       // supervisor_run_1s(); // <<< gọi giám sát an toàn/khởi động
     }
     main_handle_servie();
@@ -1459,8 +1519,10 @@ void eeprom_write_byte(uint8_t addr, uint8_t data)
 
   _mp1h = 0x00; // disable indirect access
 }
+#define EEPROM_POLL_MAX 5000
 uint8_t eeprom_read_byte(uint8_t addr)
 {
+  uint16_t timeout;
   _eea = addr; // Set address
 
   _mp1l = 0x40; // MP1L -> EEC
@@ -1470,7 +1532,8 @@ uint8_t eeprom_read_byte(uint8_t addr)
   _iar1 |= 0x01; // RD = 1
 
   // Poll RD bit
-  while (_iar1 & 0x01)
+  timeout = EEPROM_POLL_MAX;
+  while ((_iar1 & 0x01) && timeout--)
     ;
 
   _iar1 &= ~(0x02); // RDEN = 0

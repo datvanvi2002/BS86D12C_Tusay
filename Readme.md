@@ -593,7 +593,6 @@ Khi chu trình hoàn tất (tùy mode):
 
 ### Dừng chu trình giữa chừng
 - Giữ **KEY8 (START)** cho đến khi đèn **RUN** tắt, còi ngừng và máy trở về trạng thái **IDLE**.  
-- **USER_PROGRAM_C**
 
 ---
 
